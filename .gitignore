@@ -1,0 +1,24 @@
+# Build products and local tooling
+/target/
+**/target/
+/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+/build/
+/dist/
+/artifacts/
+
+# Operational data is never a test fixture. This is not a secret scanner.
+/runtime/
+/secrets/
+/evidence/
+.env
+.env.*
+*.key
+*.pem
+*.keybundle
+*.cadp
+core
+core.*

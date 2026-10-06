@@ -1,0 +1,39 @@
+Phase 0 final validation — 2026-10-06
+Runtime cryptographic/security tests: NOT IMPLEMENTED / NOT EXECUTED.
+
+$ make check
+test_01_documents (__main__.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_02_structure_and_scope (__main__.PhaseZero.test_02_structure_and_scope)
+P0-STRUCT-001: documented component paths remain scaffold-only. ... ok
+test_03_links (__main__.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (__main__.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_05_unavailable_commands (__main__.PhaseZero.test_05_unavailable_commands)
+P0-CLI-001: future runtime targets fail clearly, without outputs. ... ok
+test_06_static_and_format (__main__.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (__main__.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (__main__.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.085s
+
+OK (skipped=1)
+Exit code: 0
+
+$ make help
+Phase 0: documentation and scaffold only.
+make check       Validate Phase 0 (no runtime security tests).
+make environment Inspect tools without installing dependencies.
+build/encrypt/decrypt/pki/ledger/forensic: unavailable until approved phases.
+Exit code: 0
+
+UNCHANGED AGENTS.md SHA256 f829e75b2ec05084dffc83e6a566b689a42b0d97c616ad7ed810323e3557e72e
+UNCHANGED docs/PROJECT_SPEC.md SHA256 6c7422be9bdd4cc29cd3813ac2bed96f4c6767b9f13e11cb533a21a8275ab933
+UNCHANGED docs/IMPLEMENTATION_PLAN.md SHA256 e3a1d9f69360c6538806d9140c916311648eef0cabe38378b8a133f9a3c7bf3a
+
+Environment probe: make environment executed successfully; individual missing/failed prerequisites documented in ENVIRONMENT.md.

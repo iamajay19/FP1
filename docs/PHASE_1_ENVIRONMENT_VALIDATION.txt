@@ -1,0 +1,121 @@
+Phase 1 environment preparation evidence — 2026-10-06
+No Phase 1 implementation or cryptographic tests executed.
+MISSING means subprocess could not start; it is not a command exit code.
+
+$ cat /etc/fedora-release
+Fedora release 44 (Forty Four)
+Exit code: 0
+
+$ uname -m
+x86_64
+Exit code: 0
+
+$ uname -r
+7.2.8-200.fc44.x86_64
+Exit code: 0
+
+$ rustc --version
+MISSING: executable not found
+
+$ rustup show
+MISSING: executable not found
+
+$ cargo --version
+MISSING: executable not found
+
+$ gcc --version
+gcc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Exit code: 0
+
+$ c++ --version
+MISSING: executable not found
+
+$ cmake --version
+MISSING: executable not found
+
+$ pkg-config --version
+2.5.1
+Exit code: 0
+
+$ git --version
+git version 2.55.0
+Exit code: 0
+
+$ make --version
+GNU Make 4.4.1
+Built for x86_64-redhat-linux-gnu
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Exit code: 0
+
+$ rpm -q rust cargo rustup gcc gcc-c++ cmake pkgconf-pkg-config clang clang-libs clang-devel openssl-devel liboqs liboqs-devel
+package rust is not installed
+package cargo is not installed
+package rustup is not installed
+gcc-16.2.1-2.fc44.x86_64
+package gcc-c++ is not installed
+package cmake is not installed
+pkgconf-pkg-config-2.5.1-1.fc44.x86_64
+package clang is not installed
+package clang-libs is not installed
+package clang-devel is not installed
+openssl-devel-3.5.9-1.fc44.x86_64
+package liboqs is not installed
+package liboqs-devel is not installed
+Exit code: 10
+
+$ pkg-config --modversion liboqs
+Package liboqs was not found in the pkg-config search path.
+Perhaps you should add the directory containing `liboqs.pc'
+to the PKG_CONFIG_PATH environment variable
+Package 'liboqs' not found
+Exit code: 1
+
+$ sh -c 'ldconfig -p | rg '"'"'libclang|liboqs'"'"''
+
+Exit code: 1
+
+$ ls -ld /home/iamajay/.cargo /home/iamajay/.rustup
+ls: cannot access '/home/iamajay/.cargo': No such file or directory
+ls: cannot access '/home/iamajay/.rustup': No such file or directory
+Exit code: 2
+
+$ findmnt -no TARGET,FSTYPE,OPTIONS -T /usr
+/ btrfs ro,nosuid,nodev,relatime,seclabel,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=256,subvol=/root
+Exit code: 0
+
+$ findmnt -no TARGET,FSTYPE,OPTIONS -T .git
+/home/iamajay/Projects/FP1/.git tmpfs ro,nosuid,nodev,relatime,seclabel,mode=555,uid=1000,gid=1000,inode64
+Exit code: 0
+
+$ ls -la .git
+total 0
+dr-xr-xr-x. 2 iamajay iamajay  40 Oct  6 14:48 .
+drwxr-xr-x. 1 iamajay iamajay 240 Oct  6 14:48 ..
+Exit code: 0
+
+$ git status --short
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+Exit code: 128
+
+$ curl -I --max-time 15 https://crates.io
+% Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+
+  0      0   0      0   0      0      0      0                              0curl: (6) Could not resolve host: crates.io
+Exit code: 6
+
+Post-edit documentation/scaffold validation
+$ make check
+Ran 8 tests in 0.100s: 7 passed, 0 failed, 1 skipped (mmdc unavailable).
+Exit code: 0
+No Phase 1 cryptographic tests ran.
+Pre/post SHA-256 comparison: AGENTS.md, PROJECT_SPEC.md, IMPLEMENTATION_PLAN.md, TEST_MATRIX.md, PHASE_0_REVIEW.md and PHASE_0_VALIDATION.txt unchanged.
+Modified: docs/ENVIRONMENT.md, docs/DECISIONS.md, docs/KNOWN_LIMITATIONS.md.
+Created: docs/PHASE_1_ENVIRONMENT_VALIDATION.txt.
