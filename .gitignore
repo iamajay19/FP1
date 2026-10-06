@@ -22,3 +22,76 @@ __pycache__/
 *.cadp
 core
 core.*
+# Rust
+target/
+Cargo.lock.bak
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment / local configuration
+.env
+.env.*
+!.env.example
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+out/
+
+# Logs
+*.log
+logs/
+
+# Generated outputs
+outputs/
+evidence/
+
+# Private keys / credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*.secret
+
+# Project secret directories
+secrets/
+private/
+keys/
+
+# Generated cryptographic artifacts
+*.sk
+*.priv
+*.private
+*.keybundle
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Codex/local agent metadata if present
+.codex/
+
+# Do NOT ignore project documentation
+!docs/
+!docs/**
+
+# Local third-party source checkouts
+.deps/
