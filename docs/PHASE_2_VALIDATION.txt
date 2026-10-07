@@ -1,0 +1,1604 @@
+CURRENT DEPENDENCY GATE: READY — final verification completed 2026-10-08.
+Historical BLOCKED reports below are preserved; see the final section for current evidence.
+Phase 2 production remains unimplemented; all 19 runtime IDs PLANNED.
+
+PHASE 2 DEPENDENCY GATE — 2026-10-07
+Status: AUTHORIZED / BLOCKED before implementation. Phase 3 unapproved.
+Evidence covers inspection and dependency resolution only, not Phase 2 runtime tests.
+No downloads, system changes, production implementation, keys or passwords.
+
+Current repository HEAD inspected:
+a157ec7a4127e718c225a4e4f1132e2b774d5e5e
+Git log includes f5b2990 Complete audited Phase 1 PQC primitive integration.
+Initial git status --short had no output. Later user history file appeared separately;
+it was not created or modified by this task.
+
+$ rustc -Vv
+rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)
+binary: rustc
+commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985
+commit-date: 2026-09-01
+host: x86_64-unknown-linux-gnu
+release: 1.98.1
+LLVM version: 22.1.8
+
+$ cargo -Vv
+cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)
+release: 1.98.1
+commit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d
+commit-date: 2026-08-05
+host: x86_64-unknown-linux-gnu
+libgit2: 1.9.7 (sys:0.21.0 system)
+libcurl: 8.18.0 (sys:0.4.90+curl-8.21.0 system ssl:OpenSSL/3.5.9)
+os: Fedora 44.0.0 [64-bit]
+
+$ git -C .deps/liboqs-0.16.0 rev-parse HEAD
+5a1a854b0dc9f2141bdc771c555ee60c37950183
+$ git -C .deps/liboqs-0.16.0 status --porcelain --untracked-files=all --ignored=matching
+No output; clean. No liboqs build or PQ runtime check rerun in this task.
+
+OFFLINE SOURCE INVENTORY
+$ rg --files -uuu .deps/cargo-home /home/iamajay/.cargo /usr/share/cargo/registry 2>/dev/null | rg '(Cargo.toml$|\.crate$|config\.toml$)'
+No matching project-cache or /usr/share/cargo/registry files.
+User registry source/cache includes only terminal/support packages:
+libc 0.2.153, crossterm 0.27.0, parking_lot_core 0.9.10, mio 0.8.11,
+signal-hook 0.3.17, signal-hook-registry 1.4.2, lock_api 0.4.12, log 0.4.21,
+signal-hook-mio 0.2.3, scopeguard 1.2.0, ttype 0.1.1, parking_lot 0.12.2,
+cfg-if 1.0.0, autocfg 1.3.0, bitflags 2.5.0, smallvec 1.13.2.
+Neither aes-gcm nor argon2 is present. No SHA-256/PoP crypto crate selected.
+Project .deps/cargo-home inventory contains only Cargo cache bookkeeping files.
+No Cargo source replacement config was found in the inspected project/home paths.
+
+$ rg --files -uuu . /tmp /opt /var/cache /usr/share/cargo 2>/dev/null | rg '(^|/)(config\.toml|Cargo\.toml|Cargo\.lock)$|\.(crate|tar\.gz|tar\.xz|tgz|zip)$' | rg -v '/(target|liboqs-0\.16\.0|liboqs-rust-main|\.git)/'
+./trusted-client/Cargo.toml
+./trusted-client/Cargo.lock
+/var/cache/PackageKit/44/metadata/rpmfusion-nonfree-steam-da7688610e614f89/repodata/appstream-icons-128x128.tar.gz
+/var/cache/PackageKit/44/metadata/rpmfusion-nonfree-nvidia-driver-6358d7a81a586962/repodata/appstream-icons-128x128.tar.gz
+No alternative Phase 2 Cargo source bundle found in these inspected paths.
+
+ACTUAL DISPOSABLE RESOLUTION CHECKS
+Python TemporaryDirectory /tmp/fp1-phase2-dependency-t5v8_qmo.
+Each manifest: package phase2-dependency-probe 0.0.0, edition 2024,
+one dependency aes-gcm="*" or argon2="*". Empty Rust source; no crypto operation.
+Wildcard checks availability only, not a version pin or security approval.
+Original user registry copied with shutil.copytree into task-owned /tmp Cargo home;
+no user credentials/config or original user-cache files modified.
+
+CARGO_HOME=/home/iamajay/Projects/FP1/.deps/cargo-home
+$ cargo generate-lockfile --offline --manifest-path /tmp/fp1-phase2-dependency-t5v8_qmo/project-aes-gcm/Cargo.toml
+error: no matching package named `aes-gcm` found
+location searched: crates.io index
+required by package `phase2-dependency-probe v0.0.0 (/tmp/fp1-phase2-dependency-t5v8_qmo/project-aes-gcm)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101; lockfile_created=False
+
+CARGO_HOME=/home/iamajay/Projects/FP1/.deps/cargo-home
+$ cargo generate-lockfile --offline --manifest-path /tmp/fp1-phase2-dependency-t5v8_qmo/project-argon2/Cargo.toml
+error: no matching package named `argon2` found
+location searched: crates.io index
+required by package `phase2-dependency-probe v0.0.0 (/tmp/fp1-phase2-dependency-t5v8_qmo/project-argon2)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101; lockfile_created=False
+
+CARGO_HOME=/tmp/fp1-phase2-dependency-t5v8_qmo/user-cargo-home-copy
+$ cargo generate-lockfile --offline --manifest-path /tmp/fp1-phase2-dependency-t5v8_qmo/user-cache-copy-aes-gcm/Cargo.toml
+error: no matching package named `aes-gcm` found
+location searched: crates.io index
+required by package `phase2-dependency-probe v0.0.0 (/tmp/fp1-phase2-dependency-t5v8_qmo/user-cache-copy-aes-gcm)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101; lockfile_created=False
+
+CARGO_HOME=/tmp/fp1-phase2-dependency-t5v8_qmo/user-cargo-home-copy
+$ cargo generate-lockfile --offline --manifest-path /tmp/fp1-phase2-dependency-t5v8_qmo/user-cache-copy-argon2/Cargo.toml
+error: no matching package named `argon2` found
+location searched: crates.io index
+required by package `phase2-dependency-probe v0.0.0 (/tmp/fp1-phase2-dependency-t5v8_qmo/user-cache-copy-argon2)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101; lockfile_created=False
+
+Probe driver exited 0 after recording four actual Cargo failures; this is not a
+successful dependency build. Temporary manifests/cache copy/probe tree removed.
+No lockfile created and no production Cargo manifest/lockfile changed.
+No network access attempted. No Argon2 benchmark, AES execution or Phase 2 test run.
+
+STOP CONDITION
+User Phase 2 authorization section 12: suitable reviewed AES-GCM Rust dependency
+unavailable offline => STOP and report dependency blocker. This condition is met.
+All 19 existing Phase 2 runtime test IDs remain PLANNED. No completion claimed.
+
+DOCUMENTATION / SCOPE VALIDATION AFTER RECORDING THE BLOCKER
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only the approved primitive component contains runtime code. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+Ran 7 tests in 0.092s
+OK (skipped=1)
+exit=0; 6 passed, 0 failed, 1 skipped. Documentation/scope checks only.
+
+$ git diff --check
+No output; exit=0.
+$ git diff --exit-code -- trusted-client scripts Makefile AGENTS.md docs/PROJECT_SPEC.md docs/IMPLEMENTATION_PLAN.md docs/CRYPTO_PROTOCOL.md docs/PHASE_1_REVIEW.md docs/PHASE_1_VALIDATION.txt docs/PHASE_1_CORRECTIONS_VALIDATION.txt docs/PHASE_1_ASTRA_REAUDIT.txt
+No output; exit=0. Production/build/test code, protocol and historical evidence unchanged.
+
+Matrix inspection: 19 existing Phase 2 runtime IDs, all PLANNED:
+PKI-CERT-001..008, PKI-KEY-001..005, PKI-REV-001..004,
+PKI-ROT-001, PKI-BUNDLE-001.
+
+FILES FROM THIS TASK
+Created: docs/PHASE_2_REVIEW.md, docs/PHASE_2_VALIDATION.txt.
+Appended: docs/ENVIRONMENT.md, docs/DECISIONS.md, docs/KNOWN_LIMITATIONS.md,
+docs/TEST_MATRIX.md. Existing rows/statuses and historical evidence preserved.
+No implementation, production keys, passwords, private material or benchmark fixtures.
+Cargo fmt/Clippy/debug/release tests, make build/check and native crypto tests were
+not rerun for this documentation-only blocked task. Historical results are historical.
+Full Phase 2 testing and security self-review remain pending actual implementation.
+
+
+OFFLINE VENDOR DEPENDENCY AUDIT — 2026-10-07 (supersedes source absence only)
+Latest task: dependency-gate verification ONLY; no Phase 2 implementation.
+No network access, production keys, passwords or registry/cache downloads.
+Temporary root: /tmp/fp1-p2-audit-bj5v90cn; removed after recording evidence.
+Host rustc/Cargo 1.98.1; x86_64-unknown-linux-gnu Fedora 44.
+
+INPUT SHA-256 VALUES
+6ee62f48faae7d3fc33392ff48e6d41f057a86a561200471a9037677accb500c  .deps/phase2-bootstrap-Cargo.lock
+375cf8eeb097ba5e197c31aabe226fa5d206b28eb1e8ab97fc760df437f2c944  .deps/phase2-bootstrap-metadata.json
+076331cc9bdd4b8ce61095bcc7e97abcbbb32783757686db1abc99a841bf9c74  .deps/phase2-vendor-config.toml
+ef49ad51e0331beabc591033f6d4d7ffb34c258a92faa523975eb0a29a637fb6  .deps/phase2-vendor-SHA256SUMS.txt
+
+INDEPENDENT INTEGRITY CHECK
+Python tomllib/json/hashlib inspection compared lock package sets to metadata,
+vendor manifests and checksum metadata; hashed exact file sets against both
+Cargo file metadata and owner inventory. No archive checksum recomputation claimed.
+34 registry packages; 1421 Cargo-checksummed files; 1455 SHA256 inventory entries; exact file-set equality; 0 mismatches; 0 symlinks.
+
+ISOLATION
+CARGO_HOME=/tmp/fp1-p2-audit-bj5v90cn/cargo-home (initially empty)
+CARGO_TARGET_DIR=/tmp/fp1-p2-audit-bj5v90cn/target (fresh)
+All CARGO_* environment overrides, RUSTFLAGS and Rust wrappers removed by driver;
+source replacement below explicitly loaded from each disposable project cwd.
+No user registry cache/config/credentials copied.
+
+CONFIGURATION
+[source.crates-io]
+replace-with="vendored-sources"
+[source.vendored-sources]
+directory="/home/iamajay/Projects/FP1/.deps/phase2-vendor"
+[net]
+offline=true
+[build]
+rustflags=["--cfg", 'getrandom_backend="linux_getrandom"']
+
+SUPPLIED MANIFEST
+[package]
+name="fp1-phase2-dependency-bootstrap"
+version="0.0.0"
+edition="2024"
+[dependencies]
+aes-gcm = "=0.11.1"
+argon2 = "=0.6.0"
+sha2 = "=0.11.0"
+getrandom = "=0.4.3"
+rpassword = "=7.5.4"
+
+MINIMAL MANIFEST
+[package]
+name="fp1-phase2-dependency-bootstrap"
+version="0.0.0"
+edition="2024"
+[dependencies]
+aes-gcm = {version="=0.11.1", default-features=false, features=["aes"]}
+argon2 = {version="=0.6.0", default-features=false, features=[]}
+sha2 = {version="=0.11.0", default-features=false, features=[]}
+getrandom = {version="=0.4.3", default-features=false, features=[]}
+rpassword = {version="=7.5.4", default-features=false, features=[]}
+
+CLEANUP MANIFEST
+[package]
+name="fp1-phase2-dependency-bootstrap"
+version="0.0.0"
+edition="2024"
+[dependencies]
+aes-gcm = {version="=0.11.1", default-features=false, features=["aes", "zeroize"]}
+argon2 = {version="=0.6.0", default-features=false, features=["zeroize"]}
+sha2 = {version="=0.11.0", default-features=false, features=[]}
+getrandom = {version="=0.4.3", default-features=false, features=[]}
+rpassword = {version="=7.5.4", default-features=false, features=[]}
+
+ACTUAL COMMANDS / OUTPUT
+
+$ (cd supplied; CARGO_HOME=<empty task home> CARGO_TARGET_DIR=<fresh task target> cargo build --offline --locked)
+   Compiling libc v0.2.190
+   Compiling getrandom v0.4.3
+   Compiling rand_core v0.10.1
+   Compiling typenum v1.20.1
+   Compiling cfg-if v1.0.5
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling cpubits v0.1.1
+   Compiling const-oid v0.10.2
+   Compiling base64ct v1.8.3
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling crypto-common v0.2.2
+   Compiling phc v0.6.1
+   Compiling rpassword v7.5.4
+   Compiling password-hash v0.6.1
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling digest v0.11.3
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/supplied)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.51s
+exit=0
+
+$ (cd minimal; CARGO_HOME=<empty task home> CARGO_TARGET_DIR=<fresh task target> cargo generate-lockfile --offline)
+     Locking 30 packages to latest Rust 1.98.1 compatible versions
+exit=0
+
+$ (cd cleanup; CARGO_HOME=<empty task home> CARGO_TARGET_DIR=<fresh task target> cargo generate-lockfile --offline)
+error: no matching package named `zeroize` found
+location searched: directory source `/home/iamajay/Projects/FP1/.deps/phase2-vendor` (which is replacing registry `crates-io`)
+required by package `aes-gcm v0.11.1`
+    ... which satisfies dependency `aes-gcm = "=0.11.1"` of package `fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/cleanup)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101
+
+$ (cd minimal; CARGO_HOME=<empty task home> CARGO_TARGET_DIR=<fresh task target> cargo run --offline --locked)
+   Compiling crypto-common v0.2.2
+   Compiling getrandom v0.4.3
+   Compiling base64ct v1.8.3
+   Compiling digest v0.11.3
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/minimal)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.00s
+     Running `/tmp/fp1-p2-audit-bj5v90cn/target/debug/fp1-phase2-dependency-bootstrap`
+AES-256-GCM PASS: 32-byte key / 12-byte nonce / 16-byte tag; known vector, AAD and tag rejection, no output write on failure
+Argon2id v0x13 PASS: explicit m=32 KiB / t=3 / p=4 / 32-byte output, caller workspace, deterministic repeat, short salt rejection; NOT production parameters or benchmark
+SHA-256 PASS: abc known vector
+OS CSPRNG PASS: fill returned Ok for 32 bytes, forced linux_getrandom backend; random bytes not printed
+exit=0
+
+$ (cd minimal; CARGO_HOME=<empty task home> CARGO_TARGET_DIR=<fresh task target> cargo build --offline --locked)
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/minimal)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+exit=0
+
+Both projects: cargo metadata --offline --locked --format-version 1
+--filter-platform x86_64-unknown-linux-gnu: exit=0. Supplied resolves 31 registry
+nodes; minimal resolves 27. Supplied lockfile byte equality to owner lock: PASS.
+Supplied lock 34 registry nodes / minimal lock 30 across platforms.
+No build dependency edges or proc-macro crates in either resolved graph.
+
+$ (cd supplied; cargo tree --offline --locked --target x86_64-unknown-linux-gnu -e normal,build)
+fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/supplied)
+├── aes-gcm v0.11.1
+│   ├── aead v0.6.1
+│   │   ├── crypto-common v0.2.2
+│   │   │   ├── getrandom v0.4.3
+│   │   │   │   ├── cfg-if v1.0.5
+│   │   │   │   ├── libc v0.2.190
+│   │   │   │   └── rand_core v0.10.1
+│   │   │   ├── hybrid-array v0.4.15
+│   │   │   │   └── typenum v1.20.1
+│   │   │   └── rand_core v0.10.1
+│   │   └── inout v0.2.2
+│   │       └── hybrid-array v0.4.15 (*)
+│   ├── aes v0.9.3
+│   │   ├── cipher v0.5.2
+│   │   │   ├── block-buffer v0.12.1
+│   │   │   │   └── hybrid-array v0.4.15 (*)
+│   │   │   ├── crypto-common v0.2.2 (*)
+│   │   │   └── inout v0.2.2 (*)
+│   │   ├── cpubits v0.1.1
+│   │   └── cpufeatures v0.3.1
+│   ├── cipher v0.5.2 (*)
+│   ├── ctr v0.10.1
+│   │   └── cipher v0.5.2 (*)
+│   ├── ctutils v0.4.3
+│   │   └── cmov v0.5.4
+│   └── ghash v0.6.0
+│       └── polyval v0.7.3
+│           ├── cpubits v0.1.1
+│           ├── cpufeatures v0.3.1
+│           └── universal-hash v0.6.1
+│               ├── crypto-common v0.2.2 (*)
+│               └── ctutils v0.4.3 (*)
+├── argon2 v0.6.0
+│   ├── base64ct v1.8.3
+│   ├── blake2 v0.11.0
+│   │   └── digest v0.11.3
+│   │       ├── block-buffer v0.12.1 (*)
+│   │       ├── const-oid v0.10.2
+│   │       ├── crypto-common v0.2.2 (*)
+│   │       └── ctutils v0.4.3 (*)
+│   ├── cpufeatures v0.3.1
+│   └── password-hash v0.6.1
+│       ├── getrandom v0.4.3 (*)
+│       └── phc v0.6.1
+│           ├── base64ct v1.8.3
+│           ├── ctutils v0.4.3 (*)
+│           └── getrandom v0.4.3 (*)
+├── getrandom v0.4.3 (*)
+├── rpassword v7.5.4
+│   ├── libc v0.2.190
+│   └── rtoolbox v0.0.6
+│       └── libc v0.2.190
+└── sha2 v0.11.0
+    ├── cfg-if v1.0.5
+    ├── cpufeatures v0.3.1
+    └── digest v0.11.3 (*)
+exit=0
+
+$ (cd minimal; cargo tree --offline --locked --target x86_64-unknown-linux-gnu -e normal,build)
+fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/minimal)
+├── aes-gcm v0.11.1
+│   ├── aead v0.6.1
+│   │   ├── crypto-common v0.2.2
+│   │   │   └── hybrid-array v0.4.15
+│   │   │       └── typenum v1.20.1
+│   │   └── inout v0.2.2
+│   │       └── hybrid-array v0.4.15 (*)
+│   ├── aes v0.9.3
+│   │   ├── cipher v0.5.2
+│   │   │   ├── block-buffer v0.12.1
+│   │   │   │   └── hybrid-array v0.4.15 (*)
+│   │   │   ├── crypto-common v0.2.2 (*)
+│   │   │   └── inout v0.2.2 (*)
+│   │   ├── cpubits v0.1.1
+│   │   └── cpufeatures v0.3.1
+│   ├── cipher v0.5.2 (*)
+│   ├── ctr v0.10.1
+│   │   └── cipher v0.5.2 (*)
+│   ├── ctutils v0.4.3
+│   │   └── cmov v0.5.4
+│   └── ghash v0.6.0
+│       └── polyval v0.7.3
+│           ├── cpubits v0.1.1
+│           ├── cpufeatures v0.3.1
+│           └── universal-hash v0.6.1
+│               ├── crypto-common v0.2.2 (*)
+│               └── ctutils v0.4.3 (*)
+├── argon2 v0.6.0
+│   ├── base64ct v1.8.3
+│   ├── blake2 v0.11.0
+│   │   └── digest v0.11.3
+│   │       ├── block-buffer v0.12.1 (*)
+│   │       ├── crypto-common v0.2.2 (*)
+│   │       └── ctutils v0.4.3 (*)
+│   └── cpufeatures v0.3.1
+├── getrandom v0.4.3
+│   ├── cfg-if v1.0.5
+│   └── libc v0.2.190
+├── rpassword v7.5.4
+│   ├── libc v0.2.190
+│   └── rtoolbox v0.0.6
+│       └── libc v0.2.190
+└── sha2 v0.11.0
+    ├── cfg-if v1.0.5
+    ├── cpufeatures v0.3.1
+    └── digest v0.11.3 (*)
+exit=0
+
+PROTECTED TERMINAL CHECK
+Python pty.openpty + child controlling tty via setsid/TIOCSCTTY.
+Child command: target/debug/fp1-phase2-dependency-bootstrap --terminal-probe
+Public sentinel sent ONLY through PTY, never argv/env. No real password used.
+PTY PASS: default /dev/tty input; ECHO disabled during entry; public sentinel not echoed; returned value matched; original termios restored; exit=0. Input never in child argv/environment.
+
+RNG ERROR CHECK
+$ cc -shared -fPIC -Wall -Wextra -Werror deny_getrandom.c -o deny_getrandom.so
+exit=0
+$ LD_PRELOAD=<task>/deny_getrandom.so <task>/target/debug/fp1-phase2-dependency-bootstrap --rng-failure-probe
+RNG FAILURE PASS: EPERM returned as typed error; no fallback succeeded
+exit=0
+Test-only native fixture (removed, not production):
+#include <errno.h>
+#include <sys/types.h>
+ssize_t getrandom(void *p, size_t n, unsigned int flags) { (void)p; (void)n; (void)flags; errno=EPERM; return -1; }
+
+ISOLATED DEPENDENCY API PROBE SOURCE (removed; public synthetic fixtures only)
+use aes_gcm::{Aes256Gcm, KeyInit, Nonce, aead::AeadInOut};
+use argon2::{Algorithm, Argon2, Block, Params, Version};
+use sha2::{Digest, Sha256};
+fn main() {
+    if std::env::args().any(|a| a == "--rng-failure-probe") {
+        let mut output = [0u8;32];
+        let error = getrandom::fill(&mut output).expect_err("injected syscall failure");
+        assert_eq!(error.raw_os_error(), Some(1));
+        println!("RNG FAILURE PASS: EPERM returned as typed error; no fallback succeeded");
+        return;
+    }
+    if std::env::args().any(|a| a == "--terminal-probe") {
+        let value = rpassword::prompt_password("AUDIT INPUT: ").expect("terminal read");
+        assert_eq!(value.as_bytes(), b"PUBLIC-AUDIT-SENTINEL");
+        println!("TERMINAL PASS");
+        return;
+    }
+    let cipher = Aes256Gcm::new_from_slice(&[0u8;32]).expect("public fixture key");
+    let nonce = Nonce::from([0u8;12]);
+    let mut block = [0u8;16];
+    let tag = cipher.encrypt_inout_detached(&nonce, &[], (&mut block[..]).into()).expect("encrypt");
+    assert_eq!(block, [0xce,0xa7,0x40,0x3d,0x4d,0x60,0x6b,0x6e,0x07,0x4e,0xc5,0xd3,0xba,0xf3,0x9d,0x18]);
+    assert_eq!(&tag[..], &[0xd0,0xd1,0xc8,0xa7,0x99,0x99,0x6b,0xf0,0x26,0x5b,0x98,0xb5,0xd4,0x8a,0xb9,0x19]);
+    cipher.decrypt_inout_detached(&nonce, &[], (&mut block[..]).into(), &tag).expect("decrypt");
+    assert_eq!(block,[0;16]);
+    let mut data = *b"PUBLIC FIXTURE!!";
+    let tag = cipher.encrypt_inout_detached(&nonce, b"public aad", (&mut data[..]).into()).expect("aad encrypt");
+    let original = data;
+    assert!(cipher.decrypt_inout_detached(&nonce,b"wrong aad",(&mut data[..]).into(),&tag).is_err());
+    assert_eq!(data,original);
+    let mut bad_tag = tag; bad_tag[0] ^= 1;
+    assert!(cipher.decrypt_inout_detached(&nonce,b"public aad",(&mut data[..]).into(),&bad_tag).is_err());
+    assert_eq!(data,original);
+    cipher.decrypt_inout_detached(&nonce,b"public aad",(&mut data[..]).into(),&tag).expect("aad decrypt");
+    assert_eq!(data,*b"PUBLIC FIXTURE!!");
+    println!("AES-256-GCM PASS: 32-byte key / 12-byte nonce / 16-byte tag; known vector, AAD and tag rejection, no output write on failure");
+    let params = Params::new(32,3,4,Some(32)).expect("bounded interface fixture");
+    let argon = Argon2::new(Algorithm::Argon2id,Version::V0x13,params.clone());
+    let mut memory = vec![Block::default(); params.block_count()];
+    let mut out = [0u8;32];
+    argon.hash_password_into_with_memory(b"PUBLIC TEST INPUT",b"PUBLIC SALT 1234!",&mut out,&mut memory).expect("argon2 fixture");
+    let mut repeat = [0u8;32];
+    argon.hash_password_into_with_memory(b"PUBLIC TEST INPUT",b"PUBLIC SALT 1234!",&mut repeat,&mut memory).expect("argon2 repeat");
+    assert_eq!(out,repeat);
+    assert!(argon.hash_password_into_with_memory(b"PUBLIC TEST INPUT",b"short",&mut repeat,&mut memory).is_err());
+    println!("Argon2id v0x13 PASS: explicit m=32 KiB / t=3 / p=4 / 32-byte output, caller workspace, deterministic repeat, short salt rejection; NOT production parameters or benchmark");
+    assert_eq!(&Sha256::digest(b"abc")[..], &[0xba,0x78,0x16,0xbf,0x8f,0x01,0xcf,0xea,0x41,0x41,0x40,0xde,0x5d,0xae,0x22,0x23,0xb0,0x03,0x61,0xa3,0x96,0x17,0x7a,0x9c,0xb4,0x10,0xff,0x61,0xf2,0x00,0x15,0xad]);
+    println!("SHA-256 PASS: abc known vector");
+    let mut random = [0u8;32]; getrandom::fill(&mut random).expect("OS RNG");
+    println!("OS CSPRNG PASS: fill returned Ok for 32 bytes, forced linux_getrandom backend; random bytes not printed");
+}
+
+RESULT SUMMARY
+Integrity PASS; supplied locked offline build PASS; minimal functional resolution/
+build/API probe PASS; controlling terminal PASS; RNG failure PASS.
+Cleanup-enabled feature resolution EXPECTED BLOCKER: exit 101, missing zeroize.
+No production Argon2 benchmark and no Phase 2 runtime test ran. No FIPS validation,
+complete dependency audit, current advisory clearance or legal approval claimed.
+All 19 existing Phase 2 runtime IDs remain PLANNED. PHASE 2 DEPENDENCY GATE BLOCKED.
+
+INDEPENDENT ARGON2 CLEANUP FEATURE CHECK
+In the disposable cleanup manifest, AES zeroize was removed while Argon2 zeroize
+remained. cargo generate-lockfile --offline again returned 101:
+error: no matching package named `zeroize` found
+location searched: directory source `/home/iamajay/Projects/FP1/.deps/phase2-vendor` (which is replacing registry `crates-io`)
+required by package `argon2 v0.6.0`
+    ... which satisfies dependency `argon2 = "=0.6.0"` of package `fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-audit-bj5v90cn/cleanup)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+
+EXIT 101
+
+FINAL DOCUMENTATION/SCOPE VERIFICATION
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only the approved primitive component contains runtime code. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.076s
+
+OK (skipped=1)
+exit=0; 6 passed, 0 failed, 1 skipped (mmdc unavailable).
+$ git diff --check
+No output; exit=0.
+Protected production/build/protocol/Phase 1 evidence git diff --exit-code: no output,
+exit=0. No changes by this task to TEST_MATRIX; its existing 19 Phase 2 IDs checked
+as PLANNED. All five owner bundle/evidence paths confirmed git-ignored.
+Source checksum/supporting hash recheck passed before disposable cleanup.
+
+FILES MODIFIED BY THIS AUDIT ONLY
+docs/ENVIRONMENT.md
+docs/DECISIONS.md
+docs/KNOWN_LIMITATIONS.md
+docs/PHASE_2_REVIEW.md
+docs/PHASE_2_VALIDATION.txt
+Existing earlier documentation edits and unrelated user history file preserved.
+All task-owned probe/config/cache/build/failure-injection artifacts removed.
+No production dependencies were added, downloaded, configured or approved unconditionally.
+No cargo fmt/clippy or Phase 1 runtime/native rerun is claimed for this doc-only gate.
+
+
+======================================================================
+FINAL PHASE 2 PRE-IMPLEMENTATION GATE REVIEW — 2026-10-07
+======================================================================
+Scope: dependency/cleanup proof and CBOR/PoP/time-policy DESIGN ONLY.
+No production implementation, new unsafe, certificate, private-key bundle,
+CRL, identity, PoP runtime or Argon2 benchmark. All 19 PKI runtime IDs PLANNED.
+Historical evidence above is preserved; zeroize-absence assertions are obsolete
+for the refreshed bundle. Previous task's no-network inspection is not claimed
+for this task: read-only upstream web documentation/manifests were researched;
+NO dependency acquisition, Cargo networking or vendor modification occurred.
+
+Actual host inspection:
+rustc 1.98.1 (48a229cea 2026-09-01), Fedora 1.98.1-1.fc44
+rustc commit 48a229ceaefd4985c50990b14116b6d856af0985, LLVM 22.1.8
+cargo 1.98.1 (797e8a9bc 2026-08-05), Fedora 1.98.1-1.fc44
+Cargo commit 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d
+host x86_64-unknown-linux-gnu, Fedora 44.0.0
+
+Exact owner inputs (SHA-256, not source provenance signatures):
+e10590a685d0e7fdb9da24858ffc3bede6daf234e9ac08ddc39856cc71ea7b59  .deps/phase2-bootstrap-Cargo.lock
+12c94b335b238c0f56c8941f5fdf040337f105adf17fd16aae8a80160a554ebf  .deps/phase2-bootstrap-metadata.json
+076331cc9bdd4b8ce61095bcc7e97abcbbb32783757686db1abc99a841bf9c74  .deps/phase2-vendor-config.toml
+0e50f3447023eed734298ea2ffd77f07becdd8b42d351805d198976ed5ab557c  .deps/phase2-vendor-SHA256SUMS.txt
+
+Actual repeated full integrity result:
+31 registry packages; 1367 Cargo-checksummed source files; 1398 owner SHA-256 entries; exact sets; zero mismatches; zero symlinks.
+
+Integrity procedure checks manifest/lock/bootstrap-metadata package sets,
+Cargo package checksums and every file checksum; rejects extra/missing files,
+symlinks, duplicate inventory paths and inventory file-set/hash mismatches.
+It cannot authenticate an owner-controlled bundle, prove archive signatures or
+replace a dependency/advisory security audit. Source archive files not supplied.
+The following disposable verifier ran successfully twice (exit 0):
+
+from pathlib import Path
+import hashlib,json,tomllib
+root=Path('/home/iamajay/Projects/FP1')
+vendor=root/'.deps/phase2-vendor'
+lock=tomllib.loads((root/'.deps/phase2-bootstrap-Cargo.lock').read_text())
+packages={(p['name'],p['version']):p for p in lock['package'] if 'source' in p}
+metadata=json.loads((root/'.deps/phase2-bootstrap-metadata.json').read_text())
+assert {(p['name'],p['version']) for p in metadata['packages'] if p['source']}==set(packages)
+seen=set();source_count=0;all_files=set()
+for d in vendor.iterdir():
+ assert d.is_dir() and not d.is_symlink(),d
+ manifest=tomllib.loads((d/'Cargo.toml').read_text())['package']
+ key=(manifest['name'],manifest['version']);assert key not in seen;seen.add(key)
+ assert packages[key]['checksum']==json.loads((d/'.cargo-checksum.json').read_text())['package']
+ checksum=json.loads((d/'.cargo-checksum.json').read_text())
+ files={str(p.relative_to(d)) for p in d.rglob('*') if p.is_file()}
+ assert files==set(checksum['files'])|{'.cargo-checksum.json'},d
+ for f,h in checksum['files'].items():
+  q=d/f; assert not q.is_symlink() and hashlib.sha256(q.read_bytes()).hexdigest()==h,q
+  source_count+=1
+ for q in d.rglob('*'):assert not q.is_symlink(),q
+ all_files|={str((d/f).relative_to(root)) for f in files}
+assert seen==set(packages)
+lines=(root/'.deps/phase2-vendor-SHA256SUMS.txt').read_text().splitlines()
+inventory={}
+for line in lines:
+ h,f=line.split('  ',1);assert f not in inventory;inventory[f]=h
+assert set(inventory)==all_files
+for f,h in inventory.items():assert hashlib.sha256((root/f).read_bytes()).hexdigest()==h,f
+print(f'{len(packages)} registry packages; {source_count} Cargo-checksummed source files; {len(inventory)} owner SHA-256 entries; exact sets; zero mismatches; zero symlinks.')
+
+Initial isolated six-direct-package manifest (supplied lock copied unchanged):
+[package]
+name="fp1-phase2-dependency-bootstrap"
+version="0.0.0"
+edition="2024"
+[dependencies]
+aes-gcm={version="=0.11.1",default-features=false,features=["aes","zeroize"]}
+argon2={version="=0.6.0",default-features=false,features=["zeroize"]}
+sha2={version="=0.11.0",default-features=false}
+getrandom={version="=0.4.3",default-features=false}
+rpassword={version="=7.5.4",default-features=false}
+zeroize={version="=1.9.1",default-features=false,features=["alloc"]}
+
+Initial copied lock matched owner lock byte-for-byte. Initial CARGO_HOME was
+empty; target was fresh. No ambient Cargo caches, credential/source configs,
+Rust flags or wrappers were used. Exclusive local source replacement:
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "/home/iamajay/Projects/FP1/.deps/phase2-vendor"
+
+[net]
+offline=true
+[build]
+rustflags=["--cfg", 'getrandom_backend="linux_getrandom"']
+
+Command driver (all commands below ran in probe directory):
+import pathlib,os,subprocess,sys
+p=pathlib.Path(__file__).parent
+env=os.environ.copy()
+for k in list(env):
+ if k.startswith('CARGO_') or k in ('RUSTFLAGS','RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER'):env.pop(k)
+env.update(CARGO_HOME=str(p/'empty-cargo-home'),CARGO_TARGET_DIR=str(p/'target'))
+r=subprocess.run(sys.argv[1:],cwd=p/'probe',env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+(p/('command-'+sys.argv[2]+'.txt')).write_text(r.stdout)
+print(r.stdout);print('EXIT',r.returncode);sys.exit(r.returncode)
+
+Actual commands / exit codes:
+python3 /tmp/fp1-p2-gates-4yckmkrb/run.py cargo build --offline --locked   -> 0
+python3 /tmp/fp1-p2-gates-4yckmkrb/run.py cargo run --offline --locked     -> 0
+python3 /tmp/fp1-p2-gates-4yckmkrb/run.py cargo tree --offline --locked -e features -> 0
+python3 /tmp/fp1-p2-gates-4yckmkrb/run.py cargo metadata --offline --locked --format-version 1 --filter-platform x86_64-unknown-linux-gnu -> 0
+28 host registry crates plus fixture root; lock includes 31 across platforms.
+No build-dependency edges or proc-macro targets in the resolved Linux graph.
+
+Initial full build output:
+   Compiling typenum v1.20.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling zeroize v1.9.1
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling base64ct v1.8.3
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-gates-4yckmkrb/probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.60s
+
+Initial feature tree (actual):
+fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-gates-4yckmkrb/probe)
+├── getrandom v0.4.3
+│   ├── libc v0.2.190
+│   └── cfg-if feature "default"
+│       └── cfg-if v1.0.5
+├── rpassword v7.5.4
+│   ├── libc feature "default"
+│   │   ├── libc v0.2.190
+│   │   └── libc feature "std"
+│   │       └── libc v0.2.190
+│   └── rtoolbox feature "default"
+│       └── rtoolbox v0.0.6
+│           └── libc feature "default" (*)
+├── sha2 v0.11.0
+│   ├── cpufeatures feature "default"
+│   │   └── cpufeatures v0.3.1
+│   ├── digest feature "default"
+│   │   ├── digest v0.11.3
+│   │   │   ├── crypto-common feature "default"
+│   │   │   │   └── crypto-common v0.2.2
+│   │   │   │       └── hybrid-array feature "default"
+│   │   │   │           └── hybrid-array v0.4.15
+│   │   │   │               ├── typenum feature "const-generics"
+│   │   │   │               │   └── typenum v1.20.1
+│   │   │   │               └── typenum feature "default"
+│   │   │   │                   └── typenum v1.20.1
+│   │   │   ├── block-buffer feature "default"
+│   │   │   │   └── block-buffer v0.12.1
+│   │   │   │       └── hybrid-array feature "default" (*)
+│   │   │   └── ctutils feature "default"
+│   │   │       └── ctutils v0.4.3
+│   │   │           └── cmov feature "default"
+│   │   │               └── cmov v0.5.4
+│   │   └── digest feature "block-api"
+│   │       └── digest v0.11.3 (*)
+│   └── cfg-if feature "default" (*)
+├── aes-gcm feature "aes"
+│   └── aes-gcm v0.11.1
+│       ├── aead v0.6.1
+│       │   ├── crypto-common feature "default" (*)
+│       │   └── inout feature "default"
+│       │       └── inout v0.2.2
+│       │           └── hybrid-array feature "default" (*)
+│       ├── ghash v0.6.0
+│       │   ├── zeroize v1.9.1
+│       │   ├── polyval feature "default"
+│       │   │   └── polyval v0.7.3
+│       │   │       ├── zeroize v1.9.1
+│       │   │       ├── cpubits feature "default"
+│       │   │       │   └── cpubits v0.1.1
+│       │   │       ├── cpufeatures feature "default" (*)
+│       │   │       └── universal-hash feature "default"
+│       │   │           └── universal-hash v0.6.1
+│       │   │               ├── crypto-common feature "default" (*)
+│       │   │               └── ctutils feature "default" (*)
+│       │   └── polyval feature "hazmat"
+│       │       └── polyval v0.7.3 (*)
+│       ├── zeroize v1.9.1
+│       ├── aes feature "default"
+│       │   └── aes v0.9.3
+│       │       ├── zeroize v1.9.1
+│       │       ├── cipher feature "default"
+│       │       │   └── cipher v0.5.2
+│       │       │       ├── crypto-common feature "default" (*)
+│       │       │       ├── inout feature "default" (*)
+│       │       │       └── block-buffer feature "default" (*)
+│       │       ├── cpubits feature "default" (*)
+│       │       └── cpufeatures feature "default" (*)
+│       ├── cipher feature "default" (*)
+│       ├── ctr feature "default"
+│       │   └── ctr v0.10.1
+│       │       ├── cipher feature "default" (*)
+│       │       └── cipher feature "stream-wrapper"
+│       │           ├── cipher v0.5.2 (*)
+│       │           └── cipher feature "block-buffer"
+│       │               └── cipher v0.5.2 (*)
+│       └── ctutils feature "default" (*)
+├── aes-gcm feature "zeroize"
+│   ├── aes-gcm v0.11.1 (*)
+│   ├── aes feature "zeroize"
+│   │   └── aes v0.9.3 (*)
+│   └── ghash feature "zeroize"
+│       ├── ghash v0.6.0 (*)
+│       └── polyval feature "zeroize"
+│           └── polyval v0.7.3 (*)
+├── zeroize feature "alloc"
+│   └── zeroize v1.9.1
+└── argon2 feature "zeroize"
+    └── argon2 v0.6.0
+        ├── blake2 v0.11.0
+        │   ├── digest feature "default" (*)
+        │   └── digest feature "mac"
+        │       └── digest v0.11.3 (*)
+        ├── zeroize v1.9.1
+        ├── cpufeatures feature "default" (*)
+        └── base64ct feature "default"
+            └── base64ct v1.8.3
+
+Probe source (public fixtures only, assertions/expect confined to disposable test):
+use aes_gcm::{Aes256Gcm, KeyInit, Nonce, aead::AeadInOut};
+use argon2::{Algorithm, Argon2, Block, Params, Version};
+use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
+fn needs_drop_clean<T: ZeroizeOnDrop>() {}
+fn main() {
+    // Public dependency fixtures only; not production keys/passwords.
+    needs_drop_clean::<aes_gcm::aes::Aes256>();
+    let cipher=Aes256Gcm::new_from_slice(&[0u8;32]).expect("fixture");
+    let nonce=Nonce::from([0u8;12]);
+    let mut data=[0u8;16];
+    let tag=cipher.encrypt_inout_detached(&nonce,b"public aad",(&mut data[..]).into()).expect("fixture encrypt");
+    cipher.decrypt_inout_detached(&nonce,b"public aad",(&mut data[..]).into(),&tag).expect("fixture decrypt");
+    assert_eq!(data,[0u8;16]);
+    let params=Params::new(32,3,4,Some(32)).expect("small fixture");
+    let mut workspace=Zeroizing::new(vec![Block::default();params.block_count()]);
+    let mut output=Zeroizing::new([0u8;32]);
+    Argon2::new(Algorithm::Argon2id,Version::V0x13,params).hash_password_into_with_memory(b"PUBLIC FIXTURE",b"PUBLIC SALT 1234!",&mut output[..],&mut workspace[..]).expect("fixture KDF");
+    workspace.zeroize();
+    output.zeroize();
+    assert!(output.iter().all(|v|*v==0));
+    let mut bytes=vec![0x5au8;32];bytes.zeroize();assert!(bytes.is_empty());
+    println!("Cleanup-enabled AES-256-GCM/Argon2id API probe PASS; safe Zeroizing<Vec<Block>> available; explicit output cleansing observed. No physical-erasure or backend Drop-memory observation claimed.");
+}
+
+Interpretation: AES ZeroizeOnDrop trait compiles, AES-256-GCM in-place detached
+AAD round trip works, Argon2id V0x13 explicit params/caller-owned safe workspace
+works, explicit output wipe observed. Tiny 32-KiB params are an API fixture,
+NOT production selection/benchmark. No after-Drop backend memory inspection or
+complete physical erasure is claimed. Normal library Drop cleanup is assessed
+from source. No password terminal input or confidential material processed.
+
+Additional cleanup feature evaluations (existing sources only):
+1. sha2 =0.11.0 defaults off, features=[zeroize].
+2. additionally blake2 =0.11.0 defaults off, features=[zeroize].
+Each stage: cargo generate-lockfile --offline -> 0;
+cargo run --offline --locked -> 0;
+cargo metadata --offline --locked --format-version 1 --filter-platform x86_64-unknown-linux-gnu -> 0.
+Final proposed cleanup manifest tested in temporary project:
+[package]
+name="fp1-phase2-dependency-bootstrap"
+version="0.0.0"
+edition="2024"
+[dependencies]
+aes-gcm={version="=0.11.1",default-features=false,features=["aes","zeroize"]}
+argon2={version="=0.6.0",default-features=false,features=["zeroize"]}
+sha2={version="=0.11.0",default-features=false,features=["zeroize"]}
+getrandom={version="=0.4.3",default-features=false}
+rpassword={version="=7.5.4",default-features=false}
+zeroize={version="=1.9.1",default-features=false,features=["alloc"]}
+blake2={version="=0.11.0",default-features=false,features=["zeroize"]}
+
+Final resolved feature evidence:
+aes-gcm: ['aes', 'zeroize']
+argon2: ['zeroize']
+aes: ['zeroize']
+ghash: ['zeroize']
+polyval: ['hazmat', 'zeroize']
+zeroize: ['alloc']
+sha2: ['zeroize']
+blake2: ['zeroize']
+digest: ['block-api', 'default', 'mac', 'zeroize']
+block-buffer: ['zeroize']
+
+Final run output (after Blake2/SHA2 cleanup unification):
+   Compiling blake2 v0.11.0
+   Compiling argon2 v0.6.0
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-gates-4yckmkrb/probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.53s
+     Running `/tmp/fp1-p2-gates-4yckmkrb/target/debug/fp1-phase2-dependency-bootstrap`
+Cleanup-enabled AES-256-GCM/Argon2id API probe PASS; safe Zeroizing<Vec<Block>> available; explicit output cleansing observed. No physical-erasure or backend Drop-memory observation claimed.
+
+These are isolated feature builds, not production manifest adoption.
+The package source set remains 31 across platforms / 28 on Linux.
+Final temporary lock SHA-256: 2a779b755b0111c7935298f8038dad186635abc18a97d7a7dfdcb16dee213d23
+
+Missing dependency negative probes: each project had a fresh exact-version
+manifest, empty lib.rs, its own local vendor/offline config, empty CARGO_HOME
+and disposable target. No extra crates were vendored or downloaded.
+Exact direct candidates tested:
+minicbor =2.3.0 default-features=false features=[]
+hmac =0.13.0 default-features=false features=[zeroize]
+hkdf =0.13.0 default-features=false features=[]
+Command for each: cargo generate-lockfile --offline
+Actual outcomes all exit 101 (expected source absence):
+
+minicbor manifest:
+[package]
+name="missing-dependency-probe"
+version="0.0.0"
+edition="2024"
+[dependencies]
+minicbor={version="=2.3.0",default-features=false,features=[]}
+error: no matching package named `minicbor` found
+location searched: directory source `/home/iamajay/Projects/FP1/.deps/phase2-vendor` (which is replacing registry `crates-io`)
+required by package `missing-dependency-probe v0.0.0 (/tmp/fp1-p2-gates-4yckmkrb/missing-minicbor)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101
+
+hmac manifest:
+[package]
+name="missing-dependency-probe"
+version="0.0.0"
+edition="2024"
+[dependencies]
+hmac={version="=0.13.0",default-features=false,features=["zeroize"]}
+error: no matching package named `hmac` found
+location searched: directory source `/home/iamajay/Projects/FP1/.deps/phase2-vendor` (which is replacing registry `crates-io`)
+required by package `missing-dependency-probe v0.0.0 (/tmp/fp1-p2-gates-4yckmkrb/missing-hmac)`
+help: packages with similar names: aead, cmov, libc, ...
+
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101
+
+hkdf manifest:
+[package]
+name="missing-dependency-probe"
+version="0.0.0"
+edition="2024"
+[dependencies]
+hkdf={version="=0.13.0",default-features=false,features=[]}
+error: no matching package named `hkdf` found
+location searched: directory source `/home/iamajay/Projects/FP1/.deps/phase2-vendor` (which is replacing registry `crates-io`)
+required by package `missing-dependency-probe v0.0.0 (/tmp/fp1-p2-gates-4yckmkrb/missing-hkdf)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101
+
+Candidate upstream source research and design conclusion:
+minicbor 2.3.0: exact manifest/features and decoder/encoder behavior inspected
+read-only via docs.rs; source not present locally. It is NOT canonicality
+validation by itself. hmac/hkdf 0.13.0: RustCrypto tagged manifests/source
+inspected; fit current digest 0.11.3. Three new package sources predicted,
+not compiled. License/references and full refreshed inventory in PHASE_2_REVIEW.md.
+No registry advisory audit or cryptographic authenticity certification claimed.
+
+Decisions recorded D-22..25; KEY_MANAGEMENT.md contains the normative PoP
+fields/domains/HKDF/HMAC/signature and one-shot transaction semantics, and the
+conditional certificate/CRL time/sequence policy. CRYPTO_PROTOCOL.md preserves
+original wire profile and signed bytes, adds only parser/design clarification.
+No runtime test results exist for those decisions. Q-02 benchmark/recovery and
+actual trusted-time/host anti-rollback under Q-03 remain open. M-01 unchanged.
+
+Current verdict: PHASE 2 PRE-IMPLEMENTATION GATES BLOCKED
+Remaining source gate: supply exact minicbor/hmac/hkdf additions with refreshed
+lock/metadata/checksum/license closure and pass local integrity/offline build.
+Disposable probe/build files are removed after final evidence capture.
+
+
+Final documentation/scope verification:
+python3 scripts/validate_phase1.py -> exit 0; 6 passed, 0 failed, 1 skipped
+(mmdc unavailable; Mermaid renderer not tested). Ran after final documentation.
+One intermediate documentation check failed: an improperly escaped quote in the
+new manual Python example. Fixed the example; syntax rerun and actual fresh-home
+execution below passed. No production code or runtime crypto bug implicated.
+
+Executed the EXACT current documented manual Python block from PHASE_2_REVIEW.md
+as /tmp/fp1-p2-gates-4yckmkrb/manual_reproduction.py -> exit 0:
+   Compiling typenum v1.20.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling zeroize v1.9.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling digest v0.11.3
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-cleanup-lvhi_d3a)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.57s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `target/debug/fp1-phase2-dependency-bootstrap`
+Cleanup-enabled AES-256-GCM/Argon2id API probe PASS; safe Zeroizing<Vec<Block>> available; explicit output cleansing observed. No physical-erasure or backend Drop-memory observation claimed.
+fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-cleanup-lvhi_d3a)
+├── getrandom v0.4.3
+│   ├── libc v0.2.190
+│   └── cfg-if feature "default"
+│       └── cfg-if v1.0.5
+├── rpassword v7.5.4
+│   ├── libc feature "default"
+│   │   ├── libc v0.2.190
+│   │   └── libc feature "std"
+│   │       └── libc v0.2.190
+│   └── rtoolbox feature "default"
+│       └── rtoolbox v0.0.6
+│           └── libc feature "default" (*)
+├── sha2 v0.11.0
+│   ├── cpufeatures feature "default"
+│   │   └── cpufeatures v0.3.1
+│   ├── digest feature "default"
+│   │   ├── digest v0.11.3
+│   │   │   ├── crypto-common feature "default"
+│   │   │   │   └── crypto-common v0.2.2
+│   │   │   │       └── hybrid-array feature "default"
+│   │   │   │           └── hybrid-array v0.4.15
+│   │   │   │               ├── typenum feature "const-generics"
+│   │   │   │               │   └── typenum v1.20.1
+│   │   │   │               └── typenum feature "default"
+│   │   │   │                   └── typenum v1.20.1
+│   │   │   ├── block-buffer feature "default"
+│   │   │   │   └── block-buffer v0.12.1
+│   │   │   │       └── hybrid-array feature "default" (*)
+│   │   │   └── ctutils feature "default"
+│   │   │       └── ctutils v0.4.3
+│   │   │           └── cmov feature "default"
+│   │   │               └── cmov v0.5.4
+│   │   └── digest feature "block-api"
+│   │       └── digest v0.11.3 (*)
+│   └── cfg-if feature "default" (*)
+├── aes-gcm feature "aes"
+│   └── aes-gcm v0.11.1
+│       ├── aead v0.6.1
+│       │   ├── crypto-common feature "default" (*)
+│       │   └── inout feature "default"
+│       │       └── inout v0.2.2
+│       │           └── hybrid-array feature "default" (*)
+│       ├── ghash v0.6.0
+│       │   ├── zeroize v1.9.1
+│       │   ├── polyval feature "default"
+│       │   │   └── polyval v0.7.3
+│       │   │       ├── zeroize v1.9.1
+│       │   │       ├── cpubits feature "default"
+│       │   │       │   └── cpubits v0.1.1
+│       │   │       ├── cpufeatures feature "default" (*)
+│       │   │       └── universal-hash feature "default"
+│       │   │           └── universal-hash v0.6.1
+│       │   │               ├── crypto-common feature "default" (*)
+│       │   │               └── ctutils feature "default" (*)
+│       │   └── polyval feature "hazmat"
+│       │       └── polyval v0.7.3 (*)
+│       ├── zeroize v1.9.1
+│       ├── aes feature "default"
+│       │   └── aes v0.9.3
+│       │       ├── zeroize v1.9.1
+│       │       ├── cipher feature "default"
+│       │       │   └── cipher v0.5.2
+│       │       │       ├── crypto-common feature "default" (*)
+│       │       │       ├── inout feature "default" (*)
+│       │       │       └── block-buffer feature "default" (*)
+│       │       ├── cpubits feature "default" (*)
+│       │       └── cpufeatures feature "default" (*)
+│       ├── cipher feature "default" (*)
+│       ├── ctr feature "default"
+│       │   └── ctr v0.10.1
+│       │       ├── cipher feature "default" (*)
+│       │       └── cipher feature "stream-wrapper"
+│       │           ├── cipher v0.5.2 (*)
+│       │           └── cipher feature "block-buffer"
+│       │               └── cipher v0.5.2 (*)
+│       └── ctutils feature "default" (*)
+├── aes-gcm feature "zeroize"
+│   ├── aes-gcm v0.11.1 (*)
+│   ├── aes feature "zeroize"
+│   │   └── aes v0.9.3 (*)
+│   └── ghash feature "zeroize"
+│       ├── ghash v0.6.0 (*)
+│       └── polyval feature "zeroize"
+│           └── polyval v0.7.3 (*)
+├── zeroize feature "alloc"
+│   └── zeroize v1.9.1
+└── argon2 feature "zeroize"
+    └── argon2 v0.6.0
+        ├── blake2 v0.11.0
+        │   ├── digest feature "default" (*)
+        │   └── digest feature "mac"
+        │       └── digest v0.11.3 (*)
+        ├── zeroize v1.9.1
+        ├── cpufeatures feature "default" (*)
+        └── base64ct feature "default"
+            └── base64ct v1.8.3
+
+The manual reproduction TemporaryDirectory removed its own files on exit.
+
+Programmatic scope checks -> exit 0:
+- All 19 | PKI- rows byte-identical to this task's saved starting TEST_MATRIX.md;
+  every status PLANNED.
+- git diff --exit-code -- AGENTS.md docs/PROJECT_SPEC.md
+  docs/IMPLEMENTATION_PLAN.md trusted-client scripts Makefile
+  docs/PHASE_0_REVIEW.md docs/PHASE_0_VALIDATION.txt
+  docs/PHASE_1_REVIEW.md docs/PHASE_1_VALIDATION.txt
+  docs/PHASE_1_ASTRA_REAUDIT.txt -> no output, exit 0.
+- git check-ignore .deps/phase2-vendor .deps/phase2-bootstrap-Cargo.lock
+  .deps/phase2-bootstrap-metadata.json .deps/phase2-vendor-config.toml
+  .deps/phase2-vendor-SHA256SUMS.txt -> all five paths ignored, exit 0.
+- git diff --check -> no output, exit 0.
+- Refreshed integrity script rerun -> same 31/1367/1398 result, exit 0.
+
+Design review: no new runtime unsafe, panic path, raw-secret getter, algorithm
+choice, backend source/build change or protocol normalization permitted by this
+work. PoP confirmation requires both signature and HMAC under CA-retained state;
+replay/expiry/restart consumes/rejects. Clock/CRL checks deliberately conditional.
+Library copy/zeroization, authenticated enrollment, source authenticity and snapshot
+rollback residuals explicitly retained. This is a gate/design review, not independent
+Astra approval of a future implementation or a complete upstream security audit.
+
+Files modified by this task only:
+docs/CRYPTO_PROTOCOL.md
+docs/KEY_MANAGEMENT.md
+docs/DECISIONS.md
+docs/ENVIRONMENT.md
+docs/KNOWN_LIMITATIONS.md
+docs/TEST_MATRIX.md
+docs/PHASE_2_REVIEW.md
+docs/PHASE_2_VALIDATION.txt
+Prior user/history files and prior documentation work preserved.
+All owned disposable probe files under /tmp/fp1-p2-gates-4yckmkrb and its pointer
+are removed after recording evidence; .deps content is untouched.
+Phase 2 production runtime tests executed: 0. Passed claims: NONE.
+FINAL: PHASE 2 PRE-IMPLEMENTATION GATES BLOCKED (three missing source additions).
+
+
+======================================================================
+FINAL PHASE 2 DEPENDENCY GATE — completed 2026-10-08
+======================================================================
+CURRENT STATUS: PHASE 2 DEPENDENCY GATE READY.
+Supersedes earlier source-absence blockers, preserving historical failures.
+Scope is dependency verification ONLY, not Phase 2 implementation/completion.
+No network access, source download, vendor modification or production code change.
+No CBOR schema/parser, PoP transcript runtime, PKI, certificate, key bundle or CRL.
+All 19 existing Phase 2 runtime IDs remain PLANNED.
+
+Initial independent verification on 2026-10-07:
+/tmp/fp1-p2-final-7k_t0dan used an initially empty CARGO_HOME and fresh target;
+locked offline build/check/run/full+Linux metadata/tree all exited 0. Integrity
+34/1435/1469, features and owner graph agreement passed. Reference HMAC/HKDF
+and minicbor type probes passed. During environment refresh the original /tmp
+artifacts became unavailable before their full logs were copied here; those earlier
+results are supported by actual conversation tool output, not these later logs.
+A post-refresh attempt to read the original inventory failed with FileNotFoundError;
+this was loss of a disposable artifact, not a dependency failure. Final verification
+was repeated into a new task-owned directory to capture complete current evidence.
+
+Current fresh verification root: /tmp/fp1-p2-final-current-sopwql3h
+CARGO_HOME: <root>/cargo-home, initially empty; target: <root>/target, initially absent.
+Actual integrity result:
+PASS: 34 registry packages; 1435 Cargo-checksummed source files; 1469 owner SHA-256 entries; exact package/file sets; zero mismatches or symlinks.
+
+Supporting input SHA-256 fingerprints (internal consistency, not provenance signatures):
+00094a0bef40cb157b88b48ecc40722baa116f409865180f8eba4004d12a9a46  .deps/phase2-bootstrap-Cargo.lock
+c57a022528e294e561cd5518659709c70d294b3cbae7344d56fdee3879be6171  .deps/phase2-bootstrap-metadata.json
+076331cc9bdd4b8ce61095bcc7e97abcbbb32783757686db1abc99a841bf9c74  .deps/phase2-vendor-config.toml
+a7fd0e96005bf9c2a712bd7d4325fd6d918c04ce41183fdf6fe62f7c4d60f3dd  .deps/phase2-vendor-SHA256SUMS.txt
+
+Verifier rejects package/source version mismatches, duplicate/missing/unexpected
+package/file sets, checksum disagreement, path traversal and symlinks. Lock archive
+checksums are compared to Cargo metadata; original .crate archives not supplied,
+so no independent archive authentication/recomputation claim. Owner controls the
+bundle and evidence: local consistency is not malicious-supplier resistance.
+
+Actual integrity/setup verifier source, executed with exit 0:
+from pathlib import Path
+import json,tomllib,hashlib,subprocess,os
+root=Path('/home/iamajay/Projects/FP1');p=Path(__file__).parent;vendor=root/'.deps/phase2-vendor'
+assert not vendor.is_symlink()
+inputs=['phase2-bootstrap-Cargo.lock','phase2-bootstrap-metadata.json','phase2-vendor-config.toml','phase2-vendor-SHA256SUMS.txt']
+hashes={f:hashlib.sha256((root/'.deps'/f).read_bytes()).hexdigest() for f in inputs}
+for f in inputs:assert not (root/'.deps'/f).is_symlink()
+lock=tomllib.loads((root/'.deps'/inputs[0]).read_text());meta=json.loads((root/'.deps'/inputs[1]).read_text())
+packages={(v['name'],v['version']):v for v in lock['package'] if 'source' in v}
+assert len(packages)==sum('source' in v for v in lock['package'])
+mp={(v['name'],v['version']):v for v in meta['packages'] if v['source']};assert set(mp)==set(packages)
+seen=set();actual=set();source_count=0;inv=[]
+for d in vendor.iterdir():
+ assert d.is_dir() and not d.is_symlink(),d
+ for f in d.rglob('*'):assert not f.is_symlink() and (f.is_dir() or f.is_file()),f
+ man=tomllib.loads((d/'Cargo.toml').read_text())['package'];k=(man['name'],man['version'])
+ assert k in packages and k not in seen;seen.add(k);assert d.name==f'{k[0]}-{k[1]}'
+ assert packages[k]['source']==mp[k]['source']=='registry+https://github.com/rust-lang/crates.io-index'
+ assert man['license']==mp[k]['license']
+ orig=tomllib.loads((d/'Cargo.toml.orig').read_text())['package']
+ for field in ('name','version'):
+  if isinstance(orig[field],str):assert orig[field]==man[field]
+ c=json.loads((d/'.cargo-checksum.json').read_text());assert c['package']==packages[k]['checksum']
+ files={str(f.relative_to(d)) for f in d.rglob('*') if f.is_file()};assert files==set(c['files'])|{'.cargo-checksum.json'}
+ for name,h in c['files'].items():
+  q=Path(name);assert not q.is_absolute() and '..' not in q.parts
+  assert hashlib.sha256((d/q).read_bytes()).hexdigest()==h
+ source_count+=len(c['files']);actual|={str((d/f).relative_to(root)) for f in files}
+ inv.append({'name':k[0],'version':k[1],'license':man['license'],'checksum':c['package']})
+assert seen==set(packages)
+owner={}
+for line in (root/'.deps'/inputs[3]).read_text().splitlines():
+ h,f=line.split('  ',1);assert f not in owner;owner[f]=h
+assert set(owner)==actual
+for f,h in owner.items():assert hashlib.sha256((root/f).read_bytes()).hexdigest()==h
+config=tomllib.loads((root/'.deps'/inputs[2]).read_text());assert config=={'source':{'crates-io':{'replace-with':'vendored-sources'},'vendored-sources':{'directory':str(vendor)}}}
+text=f'PASS: {len(packages)} registry packages; {source_count} Cargo-checksummed source files; {len(owner)} owner SHA-256 entries; exact package/file sets; zero mismatches or symlinks.\n'
+(p/'integrity.txt').write_text(text);(p/'hashes.json').write_text(json.dumps(hashes,indent=2));(p/'inventory.json').write_text(json.dumps(inv,indent=2));print(text)
+r=[v for v in meta['packages'] if not v['source']];assert len(r)==1;r=r[0]
+expected={'aes-gcm':('0.11.1',['aes','zeroize']),'argon2':('0.6.0',['zeroize']),'sha2':('0.11.0',['zeroize']),'blake2':('0.11.0',['zeroize']),'getrandom':('0.4.3',[]),'rpassword':('7.5.4',[]),'zeroize':('1.9.1',['alloc']),'minicbor':('2.3.0',[]),'hmac':('0.13.0',['zeroize']),'hkdf':('0.13.0',[])}
+assert {d['name'] for d in r['dependencies']}==set(expected)
+manifest=f'[package]\nname="{r["name"]}"\nversion="{r["version"]}"\nedition="2024"\n[dependencies]\n'
+for d in r['dependencies']:
+ v,features=expected[d['name']];assert d['req']=='='+v and sorted(d['features'])==sorted(features)
+ assert d['kind'] is None and not d['optional'] and d['target'] is None
+ if d['name']!='rpassword':assert not d['uses_default_features']
+ manifest+=d['name']+'={version='+json.dumps(d['req'])+',default-features='+str(d['uses_default_features']).lower()+',features='+json.dumps(features)+'}\n'
+(p/'probe/src').mkdir(parents=True);(p/'probe/.cargo').mkdir();(p/'cargo-home').mkdir()
+assert not list((p/'cargo-home').iterdir()) and not (p/'target').exists()
+(p/'probe/Cargo.toml').write_text(manifest);(p/'probe/Cargo.lock').write_bytes((root/'.deps'/inputs[0]).read_bytes())
+(p/'probe/.cargo/config.toml').write_text((root/'.deps'/inputs[2]).read_text()+'\n[net]\noffline=true\n[build]\nrustflags=["--cfg", \'getrandom_backend="linux_getrandom"\']\n')
+print('Initially empty CARGO_HOME and fresh target confirmed; ten exact root requirements/features match.')
+
+Supplied graph mirrored exactly in disposable manifest:
+[package]
+name="fp1-phase2-dependency-bootstrap"
+version="0.0.0"
+edition="2024"
+[dependencies]
+aes-gcm={version="=0.11.1",default-features=false,features=["aes", "zeroize"]}
+argon2={version="=0.6.0",default-features=false,features=["zeroize"]}
+blake2={version="=0.11.0",default-features=false,features=["zeroize"]}
+getrandom={version="=0.4.3",default-features=false,features=[]}
+hkdf={version="=0.13.0",default-features=false,features=[]}
+hmac={version="=0.13.0",default-features=false,features=["zeroize"]}
+minicbor={version="=2.3.0",default-features=false,features=[]}
+rpassword={version="=7.5.4",default-features=true,features=[]}
+sha2={version="=0.11.0",default-features=false,features=["zeroize"]}
+zeroize={version="=1.9.1",default-features=false,features=["alloc"]}
+
+Source replacement and syscall-only probe configuration:
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "/home/iamajay/Projects/FP1/.deps/phase2-vendor"
+
+[net]
+offline=true
+[build]
+rustflags=["--cfg", 'getrandom_backend="linux_getrandom"']
+
+Environment isolation / command driver:
+from pathlib import Path
+import os,subprocess,sys,shlex
+p=Path(__file__).parent
+env={k:v for k,v in os.environ.items() if not k.startswith('CARGO_') and k not in ('RUSTFLAGS','RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER')}
+env.update(CARGO_HOME=str(p/'cargo-home'),CARGO_TARGET_DIR=str(p/'target'))
+command=sys.argv[1:];r=subprocess.run(command,cwd=p/'probe',env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+name=command[1]+('-linux' if '--filter-platform' in command else '')
+(p/(name+'.txt')).write_text(r.stdout)
+with (p/'commands.txt').open('a') as f:f.write(shlex.join(command)+' -> exit '+str(r.returncode)+'\n')
+print('Captured metadata' if command[1]=='metadata' else r.stdout);print('EXIT',r.returncode)
+sys.exit(r.returncode)
+
+Actual expanded command invocations, from this isolated project:
+cargo build --offline --locked -> exit 0
+cargo check --offline --locked -> exit 0
+cargo run --offline --locked -> exit 0
+cargo metadata --offline --locked --format-version 1 -> exit 0
+cargo metadata --offline --locked --format-version 1 --filter-platform x86_64-unknown-linux-gnu -> exit 0
+cargo tree --offline --locked -e features --target x86_64-unknown-linux-gnu -> exit 0
+
+Build output:
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling digest v0.11.3
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling hmac v0.13.0
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+   Compiling fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-final-current-sopwql3h/probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.55s
+
+Check output:
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking libc v0.2.190
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+    Checking rtoolbox v0.0.6
+    Checking getrandom v0.4.3
+    Checking rpassword v7.5.4
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking inout v0.2.2
+    Checking digest v0.11.3
+    Checking cipher v0.5.2
+    Checking universal-hash v0.6.1
+    Checking aead v0.6.1
+    Checking polyval v0.7.3
+    Checking hmac v0.13.0
+    Checking blake2 v0.11.0
+    Checking sha2 v0.11.0
+    Checking ghash v0.6.0
+    Checking aes v0.9.3
+    Checking ctr v0.10.1
+    Checking hkdf v0.13.0
+    Checking argon2 v0.6.0
+    Checking aes-gcm v0.11.1
+    Checking fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-final-current-sopwql3h/probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.11s
+
+Dependency API readiness source (public reference constants; no real secrets):
+use hmac::{Hmac, KeyInit, Mac};
+use hkdf::Hkdf;
+use sha2::Sha256;
+use zeroize::{Zeroize, Zeroizing};
+fn main() {
+    // Public dependency fixtures only, no project protocol/keys.
+    let decoder = minicbor::Decoder::new(&[]);
+    assert_eq!(decoder.position(), 0);
+    let mut scratch = [0u8;1];
+    let _encoder = minicbor::Encoder::new(&mut scratch[..]);
+    println!("minicbor 2.3.0 minimal Decoder/Encoder types PASS; no CBOR protocol implemented");
+    let expected = [0xb0,0x34,0x4c,0x61,0xd8,0xdb,0x38,0x53,0x5c,0xa8,0xaf,0xce,0xaf,0x0b,0xf1,0x2b,0x88,0x1d,0xc2,0x00,0xc9,0x83,0x3d,0xa7,0x26,0xe9,0x37,0x6c,0x2e,0x32,0xcf,0xf7];
+    let mut mac = Hmac::<Sha256>::new_from_slice(&[0x0b;20]).expect("RFC 4231 public fixture");
+    mac.update(b"Hi There");mac.verify_slice(&expected).expect("reference tag");
+    let mut bad = expected;bad[0] ^= 1;
+    for tag in [&bad[..],&expected[..31]] {
+        let mut mac = Hmac::<Sha256>::new_from_slice(&[0x0b;20]).expect("public fixture");
+        mac.update(b"Hi There");assert!(mac.verify_slice(tag).is_err());
+    }
+    println!("HMAC-SHA-256 RFC 4231 case 1 PASS; modified/short tags rejected");
+    let salt = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+    let info = [0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9];
+    let (mut prk,hk) = Hkdf::<Sha256>::extract(Some(&salt),&[0x0b;22]);
+    assert_eq!(prk.as_slice(),&[0x07,0x77,0x09,0x36,0x2c,0x2e,0x32,0xdf,0x0d,0xdc,0x3f,0x0d,0xc4,0x7b,0xba,0x63,0x90,0xb6,0xc7,0x3b,0xb5,0x0f,0x9c,0x31,0x22,0xec,0x84,0x4a,0xd7,0xc2,0xb3,0xe5]);
+    let okm = [0x3c,0xb2,0x5f,0x25,0xfa,0xac,0xd5,0x7a,0x90,0x43,0x4f,0x64,0xd0,0x36,0x2f,0x2a,0x2d,0x2d,0x0a,0x90,0xcf,0x1a,0x5a,0x4c,0x5d,0xb0,0x2d,0x56,0xec,0xc4,0xc5,0xbf,0x34,0x00,0x72,0x08,0xd5,0xb8,0x87,0x18,0x58,0x65];
+    let mut full = Zeroizing::new([0u8;42]);hk.expand(&info,&mut full[..]).expect("public vector");assert_eq!(&full[..],&okm);
+    let mut out = Zeroizing::new([0u8;32]);hk.expand(&info,&mut out[..]).expect("32-byte output");assert_eq!(&out[..],&okm[..32]);prk.as_mut_slice().zeroize();
+    println!("HKDF-SHA-256 RFC 5869 case 1 PASS; PRK, 42-byte vector and direct 32-byte output");
+    println!("Dependency readiness only; no PoP, PKI, certificates, CRLs or storage implemented");
+}
+
+Run output:
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `/tmp/fp1-p2-final-current-sopwql3h/target/debug/fp1-phase2-dependency-bootstrap`
+minicbor 2.3.0 minimal Decoder/Encoder types PASS; no CBOR protocol implemented
+HMAC-SHA-256 RFC 4231 case 1 PASS; modified/short tags rejected
+HKDF-SHA-256 RFC 5869 case 1 PASS; PRK, 42-byte vector and direct 32-byte output
+Dependency readiness only; no PoP, PKI, certificates, CRLs or storage implemented
+
+Tests assert public RFC 4231 HMAC-SHA-256 case 1, full-tag verify and modified/
+truncated-tag rejection; RFC 5869 HKDF-SHA-256 case 1 PRK, full 42-byte output
+and a direct 32-byte output. Minicbor constructors/types instantiate with no
+features; no CBOR encoding/decoding or project canonical validator implemented.
+No Q-02 domain transcript, recipient/CA identity or project key processed.
+Test assertions/expect are confined to removed disposable fixture source.
+Normal project cleanup/typed errors/parser/PoP tests remain implementation work.
+No physical erasure, FIPS validation or constant-time proof claimed.
+
+Owner graph comparison, exact features and supply-chain delta:
+Full owner/independent package/feature/edge agreement PASS; copied lock byte equality PASS.
+Registry packages: full 34; Linux-resolved 31; fixture root excluded.
+aes-gcm: ['aes', 'zeroize']
+argon2: ['zeroize']
+sha2: ['zeroize']
+blake2: ['zeroize']
+zeroize: ['alloc']
+minicbor: []
+hmac: ['zeroize']
+hkdf: []
+getrandom: []
+rpassword: []
+Build targets: ['getrandom', 'libc']
+Proc macros: []
+Build dependency edges: []
+minicbor unsafe triage: ['src/bytes.rs:37: unsafe {', 'src/bytes.rs:45: unsafe {', 'src/decode.rs:470: let array = unsafe {', 'src/decode.rs:497: unsafe {']
+minicbor native files: []
+hmac unsafe triage: []
+hmac native files: []
+hkdf unsafe triage: []
+hkdf native files: []
+Exactly three sources added; retained 31 versions/checksums unchanged PASS.
+
+Resolved feature tree:
+fp1-phase2-dependency-bootstrap v0.0.0 (/tmp/fp1-p2-final-current-sopwql3h/probe)
+├── getrandom v0.4.3
+│   ├── libc v0.2.190
+│   └── cfg-if feature "default"
+│       └── cfg-if v1.0.5
+├── hkdf v0.13.0
+│   └── hmac feature "default"
+│       └── hmac v0.13.0
+│           ├── digest feature "default"
+│           │   ├── digest v0.11.3
+│           │   │   ├── zeroize v1.9.1
+│           │   │   ├── crypto-common feature "default"
+│           │   │   │   └── crypto-common v0.2.2
+│           │   │   │       └── hybrid-array feature "default"
+│           │   │   │           └── hybrid-array v0.4.15
+│           │   │   │               ├── typenum feature "const-generics"
+│           │   │   │               │   └── typenum v1.20.1
+│           │   │   │               └── typenum feature "default"
+│           │   │   │                   └── typenum v1.20.1
+│           │   │   ├── block-buffer feature "default"
+│           │   │   │   └── block-buffer v0.12.1
+│           │   │   │       ├── zeroize v1.9.1
+│           │   │   │       └── hybrid-array feature "default" (*)
+│           │   │   └── ctutils feature "default"
+│           │   │       └── ctutils v0.4.3
+│           │   │           └── cmov feature "default"
+│           │   │               └── cmov v0.5.4
+│           │   └── digest feature "block-api"
+│           │       └── digest v0.11.3 (*)
+│           └── digest feature "mac"
+│               └── digest v0.11.3 (*)
+├── minicbor v2.3.0
+├── aes-gcm feature "aes"
+│   └── aes-gcm v0.11.1
+│       ├── aead v0.6.1
+│       │   ├── crypto-common feature "default" (*)
+│       │   └── inout feature "default"
+│       │       └── inout v0.2.2
+│       │           └── hybrid-array feature "default" (*)
+│       ├── ghash v0.6.0
+│       │   ├── zeroize v1.9.1
+│       │   ├── polyval feature "default"
+│       │   │   └── polyval v0.7.3
+│       │   │       ├── zeroize v1.9.1
+│       │   │       ├── cpubits feature "default"
+│       │   │       │   └── cpubits v0.1.1
+│       │   │       ├── cpufeatures feature "default"
+│       │   │       │   └── cpufeatures v0.3.1
+│       │   │       └── universal-hash feature "default"
+│       │   │           └── universal-hash v0.6.1
+│       │   │               ├── crypto-common feature "default" (*)
+│       │   │               └── ctutils feature "default" (*)
+│       │   └── polyval feature "hazmat"
+│       │       └── polyval v0.7.3 (*)
+│       ├── zeroize v1.9.1
+│       ├── aes feature "default"
+│       │   └── aes v0.9.3
+│       │       ├── zeroize v1.9.1
+│       │       ├── cipher feature "default"
+│       │       │   └── cipher v0.5.2
+│       │       │       ├── crypto-common feature "default" (*)
+│       │       │       ├── inout feature "default" (*)
+│       │       │       └── block-buffer feature "default" (*)
+│       │       ├── cpubits feature "default" (*)
+│       │       └── cpufeatures feature "default" (*)
+│       ├── cipher feature "default" (*)
+│       ├── ctr feature "default"
+│       │   └── ctr v0.10.1
+│       │       ├── cipher feature "default" (*)
+│       │       └── cipher feature "stream-wrapper"
+│       │           ├── cipher v0.5.2 (*)
+│       │           └── cipher feature "block-buffer"
+│       │               └── cipher v0.5.2 (*)
+│       └── ctutils feature "default" (*)
+├── aes-gcm feature "zeroize"
+│   ├── aes-gcm v0.11.1 (*)
+│   ├── aes feature "zeroize"
+│   │   └── aes v0.9.3 (*)
+│   └── ghash feature "zeroize"
+│       ├── ghash v0.6.0 (*)
+│       └── polyval feature "zeroize"
+│           └── polyval v0.7.3 (*)
+├── zeroize feature "alloc"
+│   └── zeroize v1.9.1
+├── argon2 feature "zeroize"
+│   └── argon2 v0.6.0
+│       ├── blake2 v0.11.0
+│       │   ├── digest feature "default" (*)
+│       │   └── digest feature "mac" (*)
+│       ├── zeroize v1.9.1
+│       ├── cpufeatures feature "default" (*)
+│       └── base64ct feature "default"
+│           └── base64ct v1.8.3
+├── blake2 feature "zeroize"
+│   ├── blake2 v0.11.0 (*)
+│   └── digest feature "zeroize"
+│       ├── digest v0.11.3 (*)
+│       └── block-buffer feature "zeroize"
+│           └── block-buffer v0.12.1 (*)
+├── hmac feature "zeroize"
+│   ├── hmac v0.13.0 (*)
+│   └── digest feature "zeroize" (*)
+├── rpassword feature "default"
+│   └── rpassword v7.5.4
+│       ├── libc feature "default"
+│       │   ├── libc v0.2.190
+│       │   └── libc feature "std"
+│       │       └── libc v0.2.190
+│       └── rtoolbox feature "default"
+│           └── rtoolbox v0.0.6
+│               └── libc feature "default" (*)
+└── sha2 feature "zeroize"
+    ├── sha2 v0.11.0
+    │   ├── cpufeatures feature "default" (*)
+    │   ├── digest feature "default" (*)
+    │   └── cfg-if feature "default" (*)
+    └── digest feature "zeroize" (*)
+
+Exact new source/license/checksum inventory (registry crates.io):
+{"checksum": "4aaa26c720c68b866f2c96ef5c1264b3e6f473fe5d4ce61cd44bbe913e553018", "license": "MIT OR Apache-2.0", "name": "hkdf", "version": "0.13.0"}
+{"checksum": "6303bc9732ae41b04cb554b844a762b4115a61bfaa81e3e83050991eeb56863f", "license": "MIT OR Apache-2.0", "name": "hmac", "version": "0.13.0"}
+{"checksum": "c12b4033ffaa92fbf9df03df38d19324f52bad130dd223f811734a8006dd2d69", "license": "BlueOak-1.0.0", "name": "minicbor", "version": "2.3.0"}
+
+All ten exact pins match supplied metadata and independently resolved packages;
+full registry count 34, Linux registry count 31, excluding fixture root.
+No proc macros or build dependencies; only existing libc/getrandom build scripts.
+All three new crate manifests build=false, no native source/build targets.
+Minicbor's four unsafe blocks inspected: transparent byte-slice casts and
+MaybeUninit initialized-array ownership/drop. No immediate gate blocker found;
+this is scoped triage, not a full third-party memory-safety audit. HMAC/HKDF src
+has no unsafe syntax and manifests forbid unsafe; existing transitive internals
+remain dependency scope. No new production unsafe or FFI boundary was added.
+
+rpassword root default flag is true in supplied metadata, but the crate declares
+NO features; resolved feature list is empty. HKDF's transitive hmac/default request
+likewise activates no defined default feature: hmac resolves only zeroize. Root
+crypto/codec default flags are false as required. No optional minicbor derive/half/
+alloc/std/full or hkdf/kdf dependency enabled. Required OS RNG production policy
+remains linux_getrandom; configured in this probe, not yet installed in production.
+
+Q-02 consistency: reviewed unchanged KEY_MANAGEMENT.md transcript: independent
+ML-KEM/ML-DSA roles, fresh transaction/nonce, entire certificate/ciphertext binding,
+full HKDF extract+expand, HMAC confirmation, pure empty-context signature covers
+confirmation, one-shot state; decapsulation status never possession.
+Q-03 consistency: configured/local-clock validation and retained monotonic CRL
+sequence only. No trusted time/clock rollback/snapshot protection claim. No design
+change in this task. Original pre-refresh protected hash/diff checks passed; current
+production/history git diff remains empty. All 19 PKI rows remain PLANNED.
+Full Phase 2 runtime, Argon2 benchmark, external audit and Phase 13 deployment remain
+pending. M-01 and software/library-copy cleanup limitations are not fixed.
+
+Current Rust/Cargo used: 1.98.1 (Fedora 44 x86_64); initial fresh -Vv checks recorded
+Rust commit 48a229ceaefd4985c50990b14116b6d856af0985 and Cargo commit
+797e8a9bca276c1c9f9f738d2a20f484fa4eea9d. No package/toolchain configuration changed.
+Full local source review/advisory search, legal approval, other-platform builds,
+LeakSanitizer/TSan/full-backend sanitization and Phase 1 crypto reruns NOT claimed.
+
+Files changed by this final task ONLY:
+docs/DECISIONS.md
+docs/ENVIRONMENT.md
+docs/KNOWN_LIMITATIONS.md
+docs/TEST_MATRIX.md (intro gate status only; runtime rows unchanged)
+docs/PHASE_2_REVIEW.md
+docs/PHASE_2_VALIDATION.txt
+Earlier CRYPTO_PROTOCOL.md/KEY_MANAGEMENT.md edits belong to prior design task;
+this task leaves those files untouched. Unrelated owner history files preserved.
+
+
+FINAL DOCUMENTATION / SCOPE CHECKS — 2026-10-08
+python3 scripts/validate_phase1.py -> exit 0: 6 passed, 0 failed, 1 skipped.
+Skipped: mmdc unavailable; Mermaid rendering not claimed. Scope check confirms
+trusted-client contains only approved Phase 1 files and later components are scaffolds.
+Current manual reproduction example syntax checked; that new example itself was
+not separately executed. Actual build/probe evidence is the captured fresh run above.
+
+git diff --check -> exit 0, no output.
+git check-ignore for all five owner source/support paths -> exit 0, all ignored.
+Protected code/history git diff --exit-code -> exit 0, no output.
+Post-documentation checksum/hash/scope assertions -> exit 0:
+owner support files unchanged; Q-02/Q-03/protocol unchanged; exactly 19 runtime
+rows byte-identical and PLANNED. Full vendor integrity repeated with same
+34 registry / 1435 source-file checksums / 1469 inventory result; exit 0.
+
+No dependency-gate blocker remains. Existing benchmark, implementation, source-copy/
+zeroization, operational time/rollback, licensing/deployment and independent review
+obligations remain, not waived by dependency availability. No Phase 2 runtime test
+passed claim and no Phase 2 or Phase 3 implementation performed.
+
+The current task-owned /tmp/fp1-p2-final-current-sopwql3h probe/cache/target/scripts
+and /tmp/fp1-p2-current-final-path pointer are removed after recording evidence.
+The earlier /tmp/fp1-p2-final-7k_t0dan directory had already disappeared at environment
+refresh; no unknown/user temporary directory was deleted. Owner .deps sources and
+history files were untouched. No Git metadata writes or commits attempted.
+FINAL VERDICT: PHASE 2 DEPENDENCY GATE READY

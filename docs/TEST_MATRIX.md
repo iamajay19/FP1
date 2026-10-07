@@ -9,6 +9,13 @@ Phase 2 and later tests remain PLANNED, not passed or silently removed. The impl
 plan supplies the detailed expected outcomes for its mandatory IDs. Additional cases
 close design-review gaps. Phase is the intended implementation/validation phase.
 
+Phase 2 was explicitly authorized on 2026-10-07 after the independent Astra re-audit
+approved Phase 1. The final dependency gate is READY: the refreshed ten-pin graph,
+including CBOR/HMAC/HKDF, passed integrity and independent locked offline compilation.
+Earlier failed probes remain historical evidence. No Phase 2 runtime test executed. All 19 existing Phase 2
+IDs below remain PLANNED. Evidence: [PHASE_2_VALIDATION.txt](PHASE_2_VALIDATION.txt);
+recovery: [PHASE_2_REVIEW.md](PHASE_2_REVIEW.md). No later-phase status changed.
+
 ## Phase 0 validation
 
 | ID | Phase | Test / expected outcome | Status | Evidence |
@@ -207,3 +214,20 @@ Review scope/limitations are in [PHASE_1_REVIEW.md](PHASE_1_REVIEW.md).
 | PQC-SCOPE-001 | 1 | Only approved primitive component has runtime implementation; later components stay scaffold-only | TESTED | validate_phase1.py |
 | PQC-BUILD-002 | 1 | Generated SHA3 AVX512VL must be undefined; reject enabled/zero/missing/ambiguous definitions and forbidden shim compilation | TESTED | check_pqc_native.py; build.rs test; fresh header evidence and separate ON-cache override in PHASE_1_CORRECTIONS_VALIDATION.txt |
 | PQC-SECRET-003 | 1 | Four partial native failures pass through actual Rust error/Drop/cleanse/free; observe memory only before free | TESTED | check_pqc_native.py; isolated production rlib + support fixtures; four cases and omitted-cleanse negative control in PHASE_1_CORRECTIONS_VALIDATION.txt |
+
+
+## Phase 2 pre-implementation design review — 2026-10-07
+
+This is documentation/dependency evidence only, not new runtime test results.
+Refreshed vendor integrity, cleanup-enabled compilation/API probe and SHA-2/Blake2
+cleanup feature builds passed; three missing minicbor/HMAC/HKDF offline probes failed
+as expected. See PHASE_2_VALIDATION.txt. ALL 19 existing Phase 2 rows remain PLANNED.
+
+Implementing-phase coverage must include D-23 bounded canonical decoding (shortest
+integers/lengths, exact fields, duplicate keys even with identical values, tags/floats/
+indefinite forms, trailing bytes, encoded-key ordering, depth/item/size bounds), D-24
+both proofs plus full transcript/ciphertext/key substitution, replay/expiry/restart and
+concurrent consumption, and D-25 zero-skew validity boundaries, stale/future CRLs,
+sequence rollback/conflicts/cumulative preservation and persistence failure. Add stable
+IDs when implementing these regressions without replacing existing PKI IDs. No PoP,
+CBOR, certificate, CRL, bundle, filesystem or time-policy runtime check is claimed here.

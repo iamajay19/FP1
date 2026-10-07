@@ -644,3 +644,132 @@ rg -n 'OQS_USE_SHA3_AVX512VL|OQS_USE_PTHREADS|OQS_USE_OPENSSL' "$correction_targ
 
 H-01/L-01 corrections are TESTED; Astra re-audit is pending. Phase 2 remains unapproved.
 Historical PHASE_1_VALIDATION.txt and Phase 0 evidence are unchanged.
+
+## Authorized Phase 2 dependency inspection — 2026-10-07
+
+Supersedes the historical pending re-audit/approval statements above. Phase 1's
+independent [Astra re-audit](PHASE_1_ASTRA_REAUDIT.txt) returned APPROVED. The user
+explicitly authorized Phase 2 only; Phase 3 remains unapproved. Phase 2 is currently
+BLOCKED before implementation by missing offline cryptographic dependencies.
+
+Fresh Rust/Cargo checks still report 1.98.1; liboqs source is clean at the approved
+`5a1a854b0dc9f2141bdc771c555ee60c37950183` commit. Project Git reads work at HEAD
+`a157ec7a4127e718c225a4e4f1132e2b774d5e5e`, with Phase 1 committed as `f5b2990`.
+No Git metadata, source pin, compiler or host configuration was changed.
+
+The project Cargo home has no cached crate sources. The user registry cache has
+terminal/support crates but no `aes-gcm` or `argon2`. Searches found no alternative
+offline vendor bundle in inspected repository, /tmp, /opt, /var/cache or system
+Cargo paths. Four isolated offline lockfile-resolution probes (each package against
+each cache) failed with exit 101, reporting no matching package. None produced a
+lockfile. The user cache was tested through a disposable /tmp copy; all probes were
+removed. No downloads or cryptographic operations occurred.
+
+The user's explicit AES-GCM dependency stop condition applies. Supply reviewed,
+exactly pinned offline sources and their complete transitive dependency closure
+before implementation; no Phase 2 crate versions are approved by these availability
+probes. See [PHASE_2_REVIEW.md](PHASE_2_REVIEW.md) for reproduction/recovery and
+[PHASE_2_VALIDATION.txt](PHASE_2_VALIDATION.txt) for actual failures. No Argon2 benchmark
+ran, no new unsafe boundary was added, and Phase 2 runtime tests remain PLANNED.
+
+## Phase 2 vendor dependency audit — 2026-10-07
+
+The owner's `.deps/phase2-vendor` now resolves/compiles the supplied 34-crate locked
+graph offline in an isolated empty Cargo home: 31 crates on x86_64 Fedora. Host
+rustc/Cargo 1.98.1; graph minimum Rust 1.89 (aes 0.9.3). Exact candidates: aes-gcm
+0.11.1, argon2 0.6.0, sha2 0.11.0, getrandom 0.4.3, rpassword 7.5.4. All 1,421
+Cargo source checksums and 1,455 owner inventory entries agree, with exact file sets.
+Minimal functional defaults-off graph also compiled and API probes passed; these
+are dependency checks, not Phase 2 tests or production parameter benchmarks.
+
+Original AES/Argon2 source-absence blocker is superseded. Gate remains BLOCKED:
+zeroize is missing, so the proposed AES/Argon2 cleanup-enabled features fail offline
+resolution. Argon2 additionally requires caller-owned drop-cleansed workspace; its
+internal convenience allocation does not cleanse on Drop. Linux syscall-only RNG
+configuration was tested, including forced EPERM without fallback; it must be enforced
+when production integration is separately authorized. Default terminal no-echo was
+tested via public PTY input. No Cargo source config was installed in the project.
+
+Complete pins, features, license/checksum inventory, scope caveats and reproduction:
+[PHASE_2_REVIEW.md](PHASE_2_REVIEW.md), actual evidence:
+[PHASE_2_VALIDATION.txt](PHASE_2_VALIDATION.txt). Bundle remains ignored. No network,
+implementation or production keys. All 19 Phase 2 runtime IDs remain PLANNED.
+
+
+## Phase 2 refreshed cleanup and design gate — 2026-10-07
+
+This supersedes the historical missing-zeroize blocker, preserving earlier evidence.
+Fresh rustc: 1.98.1 (48a229ceaefd4985c50990b14116b6d856af0985); Cargo 1.98.1
+(797e8a9bca276c1c9f9f738d2a20f484fa4eea9d), Fedora 44 x86_64 Linux.
+The owner's refreshed ignored vendor tree contains exactly 31 registry packages,
+1367 Cargo-checksummed source files and 1398 owner SHA-256 inventory entries;
+all sets/checksums matched, no symlinks. Zeroize is exactly 1.9.1, Apache-2.0 OR MIT,
+registry checksum e13084392c5e4bc371903e2935a5eaeed24905a7511356b883835e18a78f6879.
+
+Disposable build used a newly empty CARGO_HOME and fresh target directory, source
+replacement exclusively to .deps/phase2-vendor, net.offline=true and --offline
+--locked. Root lock was initially byte-identical to the supplied bootstrap lock.
+The exact six direct pins include zeroize and match the cleanup-enabled metadata:
+aes-gcm 0.11.1 defaults off/aes+zeroize; argon2 0.6.0 defaults off/zeroize;
+sha2 0.11.0, getrandom 0.4.3, rpassword 7.5.4 defaults off;
+zeroize 1.9.1 defaults off/alloc. Fedora OS RNG is constrained with
+--cfg getrandom_backend="linux_getrandom" (no fallback introduced).
+
+That graph compiled 28 host registry crates plus the disposable root. A public-fixture
+API probe compiled and ran: AES expanded-key ZeroizeOnDrop trait, AES-256-GCM round
+trip and safe Argon2id v0x13 caller-owned Zeroizing<Vec<Block>> plus 32-byte output.
+It checked explicit output wiping only; no claim of observing destroyed backend memory.
+Its tiny workspace was an API fixture, NOT the production Argon2 benchmark/profile.
+Additional isolated offline builds enabled sha2 zeroize and directly pinned already
+transitive blake2 0.11.0 defaults off/zeroize to activate relevant digest/core cleanup;
+no new package sources were needed. Production manifests were not changed.
+
+Remaining required source delta: minicbor =2.3.0 (defaults off, no features),
+hmac =0.13.0 (defaults off, zeroize), hkdf =0.13.0 (defaults off, no features).
+All three failed disposable offline resolution with exit 101 because absent from the
+vendor tree. Proposed CBOR/PoP design is documented, not compiled or implemented.
+An owner-supplied refreshed lock/metadata/checksum inventory/vendor closure is needed
+before production work. No dependency download happened during this task; read-only
+upstream documentation/source research is distinguished from network-free Cargo
+builds. No package/advisory authenticity guarantee or full dependency audit claimed.
+
+Phase 2 remains unimplemented and its 19 runtime IDs PLANNED. Q-02 PoP design and
+Q-03 local time boundary are recorded in KEY_MANAGEMENT.md; benchmark/recovery and
+actual trusted-time/host-rollback remain open. No new system/later-phase component,
+production secret, raw secret accessor, unsafe code or Phase 1 configuration was added.
+See PHASE_2_REVIEW.md and PHASE_2_VALIDATION.txt for details and exact reproduction.
+
+
+## Phase 2 FINAL dependency verification — 2026-10-07
+
+Current Phase 2 dependency gate: READY. This supersedes the preceding missing
+minicbor/HMAC/HKDF source conclusions without rewriting historical results.
+Actual refreshed integrity: 34 registry packages, 1435 Cargo-checksummed source
+files, 1469 owner inventory entries; exact sets/versions/checksums, no symlinks.
+All ten approved direct pins and feature intent match owner and independently
+resolved metadata. Exact package pins/features and checksum fingerprints are recorded
+in PHASE_2_REVIEW.md and PHASE_2_VALIDATION.txt.
+
+Fresh host checks still report rustc/Cargo 1.98.1 on Fedora 44 x86_64 Linux.
+A disposable project with an initially empty CARGO_HOME and nonexistent target
+compiled 31 Linux registry crates plus its root using ONLY the vendor directory,
+--offline --locked and net.offline=true. Build/check/run and full/Linux metadata plus
+feature tree succeeded. The copied lock remains byte-identical to the owner lock.
+The probe configured getrandom_backend="linux_getrandom"; production must enforce
+that policy separately rather than assume the crate defaults select it.
+
+Minimal minicbor 2.3.0 Decoder/Encoder types instantiate without optional features.
+HMAC 0.13.0 + SHA-256 passes a public RFC 4231 vector and modified/short tag rejection;
+HKDF 0.13.0 + SHA-256 passes RFC 5869 extract/expand and direct 32-byte output.
+No CBOR encoding/parser, provisioning proof, certificate, identity, storage or CRL was
+implemented. No production Argon2 benchmark or terminal/RNG runtime rerun claimed.
+No network, package download, system configuration or production manifest change.
+The supplied .deps inputs remain Git-ignored and untouched; disposable files removed.
+
+Only existing getrandom/libc have custom build targets; no build-dependency edges or
+proc macros. Added crates have no native code/build scripts. Minicbor has four Rust
+unsafe blocks for ByteSlice conversions and initialized array ownership; HMAC/HKDF
+contain no unsafe syntax in their Rust sources and forbid unsafe code via crate lints.
+This is triage, not full dependency memory-safety/security audit or FIPS certification.
+Existing cleanup/host-rollback/M-01 limitations remain. All 19 runtime IDs PLANNED;
+only the dependency availability gate is closed. Await user direction before production.

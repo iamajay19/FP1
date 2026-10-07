@@ -95,3 +95,114 @@ LeakSanitizer success or FIPS module validation is claimed. The security correct
 excludes the affected AVX-512 dispatch implementation from the build. Zeroization
 remains best effort and cannot cover process termination; later trusted-workflow
 phases must fail closed across process death rather than release unaudited output.
+
+## Phase 2 authorized dependency blocker — 2026-10-07
+
+The independent Astra re-audit APPROVED Phase 1; historical pending-review wording
+above is preserved as history. Phase 2 is now authorized, but not implemented.
+MEDIUM environment limitation: reviewed AES-GCM and Argon2 Rust sources are absent
+from both inspected Cargo caches and no alternative offline vendor bundle was found.
+Four actual offline resolution checks failed with exit 101. The user's explicit
+dependency stop condition prevents implementation until a pinned offline dependency
+closure is supplied and reviewed. This does not invalidate Phase 1 primitive approval.
+See [PHASE_2_REVIEW.md](PHASE_2_REVIEW.md) and [PHASE_2_VALIDATION.txt](PHASE_2_VALIDATION.txt).
+No benchmark or PKI/storage test ran; all Phase 2 runtime IDs remain PLANNED.
+M-01/L-19, host-memory and time/rollback limitations remain unresolved. Phase 3 remains
+unapproved. No protocol, production secret API or unsafe boundary was changed.
+
+## Refined Phase 2 dependency gate — 2026-10-07
+
+Earlier missing-AES/Argon2 statements describe historical inspection. The owner's
+vendor graph now passes integrity and offline compilation/API checks. This does not
+complete Phase 2. Remaining dependency blocker: reviewed zeroize sources are absent,
+preventing AES expanded-key/GHASH and Argon2 temporary cleanup feature selection.
+Argon2 internal alloc workspace is not wiped on Drop even with zeroize; future code
+must own/bound/cleanse it safely on all paths. Software cleanup still cannot guarantee
+physical erasure, removal of all library/register copies, swap or termination cleanup.
+
+The RNG default on this host allows an OS-device fallback; syscall-only configuration
+was proved and must be enforced during integration. rpassword returns a plain String;
+its internal logical-byte wipes do not erase reallocations/deleted buffers, and input
+is not internally length bounded. Normal terminal restoration is best effort and
+process signals can bypass Drop. No production secret owners/input code were added.
+
+The supplied graph needs Rust >=1.89, which the host meets. Vendored Cargo/file/owner
+checksums prove consistency, not malicious-supplier resistance, registry provenance
+or new-release advisory clearance. No network/current advisory lookup was permitted.
+Full dependency unsafe review and target coverage are not claimed. CBOR route, Q-02
+PoP/KDF benchmark and existing offline time/rollback assumptions remain open; no
+protocol changed. Phase 1 M-01 remains accepted/open and unaffected.
+
+[PHASE_2_REVIEW.md](PHASE_2_REVIEW.md) contains the full inventory and narrowed blocker.
+All 19 Phase 2 runtime tests remain PLANNED; no implementation or runtime pass claimed.
+
+
+## Final Phase 2 pre-implementation gate refinement — 2026-10-07
+
+Historical zeroize-absence statements above are superseded by actual refreshed
+source/feature/build proof. The cleanup-enabled closure is available and tested only
+as a disposable dependency/API probe. Production Phase 2 remains NOT IMPLEMENTED.
+Remaining MEDIUM environment blocker: minicbor 2.3.0, hmac 0.13.0 and hkdf 0.13.0
+sources are absent; three offline negative resolution checks confirmed this. Candidate
+upstream inspection does not replace local integrity review and a complete locked
+build. All 19 existing runtime IDs remain PLANNED. No Argon2 production benchmark ran.
+
+Cleanup limitations remain: AES/POLYVAL owned state Drop and Argon2 temporaries are
+covered by enabled source features; Argon2 workspace is not automatically wiped.
+SHA-2/Blake2 zeroize feature unification is additionally required and was built using
+existing vendor sources. Future code must own and cleanse password, workspace, KEK,
+PoP key/PRK, decrypted private-key plaintext and failure-path outputs with bounded,
+fallible allocations and minimal copies. Zeroizing alone is not a role-safe public
+secret API (it supports dereference/clone). Library/register/stack copies, old Vec
+allocations and premature process termination prevent complete erasure guarantees.
+HKDF's proposed API has intermediate PRK/output copies not all automatically erased;
+use explicit owner cleanup where exposed and audit remaining copies at implementation.
+
+D-23's minicbor route is not a claim that minicbor is canonical by default. It permits
+non-profile forms; explicit bounded schema/type/duplicate checks and deterministic
+re-encoding/exact comparison are mandatory. Unreviewed parser use or normalization
+before signature verification could reintroduce ambiguity. The crate is not yet local
+or compiled; future malformed-input coverage remains required.
+
+D-24 resolves only Q-02's PoP protocol. Authenticated administrative provisioning is
+required; air-gapped media alone are unauthenticated. PoP demonstrates live key access,
+not identity, exclusive possession, prevention of relay to a willing key holder or
+honesty of the CA. Its one-shot state and timers have not been implemented/tested.
+KDF benchmark, recovery and CA/publisher lifecycle procedures remain open.
+
+D-25 defines fail-closed certificate/CRL checks relative to explicitly configured local
+time, with zero skew and cumulative monotonic sequence relative to retained state.
+It supplies NO trusted time or whole-host anti-rollback. Old snapshots can restore
+clock and sequence together; first bootstrap requires authenticated administrative
+freshness. Import cadence/protected checkpoints/restore controls remain deployment
+questions under Q-03/Q-04. Persistence failures must reject, not reset sequence.
+
+Phase 1 M-01/L-19 remains OPEN/accepted: upstream fatal RNG/internal allocation may
+terminate the process before Rust Drop. No fallback RNG, process interception,
+custom entropy, new unsafe boundary, protocol downgrade or backend modification was
+introduced. No FIPS module validation or production security certification claimed.
+
+
+## Final Phase 2 dependency availability closure — 2026-10-07
+
+The historical MEDIUM missing-source environment blocker is RESOLVED by D-26.
+The owner supplied the three additions and their 34-package graph passed full file/
+checksum/version checks plus an independent empty-home locked offline build/API probe.
+This closes availability only: Phase 2 production, adversarial schema/PoP/bundle/CRL
+runtime coverage and Argon2 benchmarking are NOT IMPLEMENTED/TESTED. All 19 IDs
+remain PLANNED. Complete offline deployment/other targets remain Phase 13.
+
+The added minicbor source has four unsafe blocks (transparent byte-slice casts and
+initialized fixed-array ownership); review/triage found no dependency-gate blocker,
+but no complete third-party memory-safety audit is claimed. HMAC/HKDF source forbids
+unsafe; underlying existing hash/digest dependencies still require normal supply-chain
+review. Checksums provide owner-bundle consistency, not malicious-supplier resistance,
+upstream authenticity, current advisory clearance or legal approval. No network used.
+
+D-23 bounded exact-schema decode/re-encode/equality remains mandatory. D-24 PoP and
+D-25 time-policy documents are unchanged: signature covers KEM confirmation, implicit
+rejection is not possession, and local clock/retained sequence provide no trusted time
+or host/snapshot rollback protection. Cleanup ownership, HKDF copies, protected password
+input, syscall-only production RNG and CA recovery remain future review obligations.
+M-01/L-19 remains accepted/open; no backend patch, fallback RNG, custom primitive,
+abort interception, raw secret export or new project unsafe was added.
