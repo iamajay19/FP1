@@ -96,6 +96,4 @@ temp/
 # Local third-party source checkouts
 .deps/
 
-
-codex _history/
-
+'codex _history/'
