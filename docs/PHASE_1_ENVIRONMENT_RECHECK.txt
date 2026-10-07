@@ -1,0 +1,70 @@
+Phase 1 post-installation environment recheck — 2026-10-06
+Readiness inspection only; no Phase 1 cryptographic tests or key operations.
+Results below summarize actual executed commands, not a proposed build transcript.
+
+$ python3 scripts/inspect_environment.py
+Exit 0 (collection only): rustc/cargo 1.98.1, GCC/C++ 16.2.1, CMake 4.3.0,
+pkg-config 2.5.1, Git 2.55.0, Make 4.4.1 available.
+rustup missing (optional). liboqs pkg-config query exit 1; no linker-cache entry.
+Docker socket denied; Go/pip missing (not Phase 1 blockers).
+
+$ rustc --version --verbose
+rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)
+commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985
+host: x86_64-unknown-linux-gnu
+LLVM version: 22.1.8
+Exit 0
+
+$ cargo --version --verbose
+cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)
+commit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d
+Exit 0
+
+$ rpm -q rust cargo gcc-c++ cmake clang clang-libs clang-devel
+rust-1.98.1-1.fc44.x86_64
+cargo-1.98.1-1.fc44.x86_64
+gcc-c++-16.2.1-2.fc44.x86_64
+cmake-4.3.0-1.fc44.x86_64
+clang-22.1.8-4.fc44.x86_64
+clang-libs-22.1.8-4.fc44.x86_64
+clang-devel-22.1.8-4.fc44.x86_64
+Exit 0
+
+$ git ls-remote https://github.com/open-quantum-safe/liboqs-rust.git refs/heads/main
+Exit 128: Could not resolve host: github.com
+$ git ls-remote https://github.com/open-quantum-safe/liboqs.git refs/tags/0.16.0 refs/tags/0.16.0^{}
+Exit 128: Could not resolve host: github.com
+$ curl -I --max-time 15 https://github.com
+Exit 6: Could not resolve host: github.com
+$ curl -I --max-time 15 https://crates.io
+Exit 6: Could not resolve host: crates.io
+
+Isolated compiler-only probe, created with Python tempfile.TemporaryDirectory:
+main.rs: fn main() { println!("Rust compiler readiness only; no liboqs linked"); }
+$ rustc --edition=2024 /tmp/cadp-toolchain-check-lcemg_l0/main.rs -o /tmp/cadp-toolchain-check-lcemg_l0/probe
+Exit 0
+$ /tmp/cadp-toolchain-check-lcemg_l0/probe
+Rust compiler readiness only; no liboqs linked
+Exit 0
+Temporary source and binary removed by TemporaryDirectory cleanup.
+
+$ git status --short
+ M .gitignore
+Exit 0; initial user change, before documentation updates.
+$ git log -1 --oneline
+062a898 Phase 0 project foundation
+Exit 0
+
+liboqs build: NOT EXECUTED (no source available).
+Rust/liboqs linking and algorithm initialization: NOT EXECUTED.
+Static/dynamic linkage: NOT ESTABLISHED.
+Library source hash, current binding commit and Cargo lockfile: NOT ESTABLISHED.
+PQC-KEM-001..004 and PQC-SIG-001..005 remain PLANNED.
+
+Documentation/scaffold verification after updates:
+$ make check
+7 passed, 0 failed, 1 Mermaid skip; exit 0 (executed before continuation).
+$ git diff --check
+Exit 0.
+Authoritative requirements, cryptographic protocol/scope, test matrix and Phase 0 evidence unchanged against Git HEAD.
+Continuation access check: curl -I --max-time 15 https://github.com still exits 6 (DNS); no local liboqs source archive/checkouts found in inspected project/Downloads/tmp paths.

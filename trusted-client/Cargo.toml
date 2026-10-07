@@ -1,0 +1,15 @@
+[package]
+name = "cadp-pqc"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+publish = false
+description = "Phase 1 ML-KEM-768 and pure ML-DSA-65 wrappers for pinned liboqs"
+
+# No registry or build dependencies: the C shim and liboqs are built with host tools.
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+undocumented_unsafe_blocks = "deny"
+

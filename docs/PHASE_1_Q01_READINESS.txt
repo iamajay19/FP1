@@ -1,0 +1,648 @@
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 rev-parse HEAD
+5a1a854b0dc9f2141bdc771c555ee60c37950183
+exit=0
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+exit=0
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 describe --tags --exact-match
+0.16.0
+exit=0
+$ rustc -Vv
+rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)
+binary: rustc
+commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985
+commit-date: 2026-09-01
+host: x86_64-unknown-linux-gnu
+release: 1.98.1
+LLVM version: 22.1.8
+exit=0
+$ cargo -Vv
+cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)
+release: 1.98.1
+commit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d
+commit-date: 2026-08-05
+host: x86_64-unknown-linux-gnu
+libgit2: 1.9.7 (sys:0.21.0 system)
+libcurl: 8.18.0 (sys:0.4.90+curl-8.21.0 system ssl:OpenSSL/3.5.9)
+os: Fedora 44.0.0 [64-bit]
+exit=0
+$ gcc --version
+gcc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+exit=0
+$ g++ --version
+g++ (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+exit=0
+$ cmake --version
+cmake version 4.3.0
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+exit=0
+$ pkg-config --version
+2.5.1
+exit=0
+$ git --version
+git version 2.55.0
+exit=0
+$ cmake -S /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 -B /tmp/fp1-q01-08jrg692/build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DOQS_BUILD_ONLY_LIB=ON -DOQS_DIST_BUILD=ON -DOQS_USE_OPENSSL=OFF '-DOQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65' -DCMAKE_INSTALL_PREFIX=/tmp/fp1-q01-08jrg692/prefix
+-- The C compiler identification is GNU 16.2.1
+-- The ASM compiler identification is GNU
+-- Found assembler: /usr/bin/cc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- OQS Testing: Pytest parallel workers set to 'auto'
+-- CMAKE_BUILD_TYPE=Release
+-- Performing Test CC_SUPPORTS_WA_NOEXECSTACK
+-- Performing Test CC_SUPPORTS_WA_NOEXECSTACK - Success
+-- Performing Test LD_SUPPORTS_WL_Z_NOEXECSTACK
+-- Performing Test LD_SUPPORTS_WL_Z_NOEXECSTACK - Success
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Algorithms filtered for KEM_ml_kem_768;SIG_ml_dsa_65
+-- Looking for getentropy
+-- Looking for getentropy - found
+-- Looking for getentropy
+-- Looking for getentropy - found
+-- Looking for aligned_alloc
+-- Looking for aligned_alloc - found
+-- Looking for posix_memalign
+-- Looking for posix_memalign - found
+-- Looking for memalign
+-- Looking for memalign - found
+-- Looking for explicit_bzero
+-- Looking for explicit_bzero - found
+-- Looking for explicit_memset
+-- Looking for explicit_memset - not found
+-- Looking for memset_s
+-- Looking for memset_s - not found
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/fp1-q01-08jrg692/build
+exit=0
+$ cmake --build /tmp/fp1-q01-08jrg692/build --parallel 2
+[  0%] Building C object src/common/CMakeFiles/common.dir/aes/aes_impl.c.o
+[  1%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/ct.c.o
+[  2%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/debug.c.o
+[  3%] Building C object src/common/CMakeFiles/common.dir/aes/aes_c.c.o
+[  4%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/consts.c.o
+[  4%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/intt_avx2_asm.S.o
+[  5%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/ntt_avx2_asm.S.o
+[  6%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/nttunpack_avx2_asm.S.o
+[  7%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_acc_l4_avx2_asm.S.o
+[  8%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_acc_l5_avx2_asm.S.o
+[  8%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_acc_l7_avx2_asm.S.o
+[  9%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_avx2_asm.S.o
+[ 10%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_caddq_avx2_asm.S.o
+[ 11%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_chknorm_avx2.c.o
+[ 12%] Building C object src/common/CMakeFiles/common.dir/aes/aes128_ni.c.o
+[ 13%] Building C object src/common/CMakeFiles/common.dir/aes/aes256_ni.c.o
+[ 14%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_decompose_32_avx2.c.o
+[ 15%] Building C object src/common/CMakeFiles/common.dir/aes/aes.c.o
+[ 15%] Building C object src/common/CMakeFiles/common.dir/sha2/sha2_impl.c.o
+[ 16%] Building C object src/common/CMakeFiles/common.dir/sha2/sha2_c.c.o
+[ 16%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_decompose_88_avx2.c.o
+[ 17%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_use_hint_32_avx2.c.o
+[ 18%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_use_hint_88_avx2.c.o
+[ 19%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/polyz_unpack_17_avx2.c.o
+[ 20%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/polyz_unpack_19_avx2.c.o
+[ 21%] Building C object src/common/CMakeFiles/common.dir/sha2/sha2.c.o
+[ 22%] Building C object src/common/CMakeFiles/common.dir/sha3/xkcp_sha3.c.o
+[ 23%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_avx2.c.o
+[ 24%] Building C object src/common/CMakeFiles/common.dir/sha3/xkcp_sha3x4.c.o
+[ 24%] Building C object src/common/CMakeFiles/common.dir/sha3/avx512vl_sha3.c.o
+[ 25%] Building C object src/common/CMakeFiles/common.dir/sha3/avx512vl_sha3x4.c.o
+[ 26%] Building C object src/common/CMakeFiles/common.dir/sha3/sha3.c.o
+[ 27%] Building C object src/common/CMakeFiles/common.dir/sha3/sha3x4.c.o
+[ 27%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_eta2_avx2.c.o
+[ 28%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_eta4_avx2.c.o
+[ 29%] Building C object src/common/CMakeFiles/common.dir/common.c.o
+[ 29%] Building C object src/common/CMakeFiles/common.dir/pqclean_shims/fips202.c.o
+[ 30%] Building C object src/common/CMakeFiles/common.dir/pqclean_shims/fips202x4.c.o
+[ 31%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_table.c.o
+[ 32%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/packing.c.o
+[ 33%] Building C object src/common/CMakeFiles/common.dir/rand/rand.c.o
+[ 34%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/poly.c.o
+[ 34%] Built target common
+[ 35%] Building C object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600_plain64.dir/KeccakP-1600/plain-64bits/KeccakP-1600-opt64.c.o
+[ 35%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/poly_kl.c.o
+[ 36%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/polyvec.c.o
+[ 37%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/polyvec_lazy.c.o
+[ 38%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/sign.c.o
+[ 38%] Built target ml_dsa_65_x86_64
+[ 39%] Building C object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600times4_serial.dir/KeccakP-1600times4/serial/KeccakP-1600-times4-on1.c.o
+[ 39%] Built target xkcp_low_keccakp_1600times4_serial
+[ 40%] Building ASM object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600_avx2.dir/KeccakP-1600/avx2/KeccakP-1600-AVX2.S.o
+[ 40%] Built target xkcp_low_keccakp_1600_avx2
+[ 41%] Building C object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600times4_avx2.dir/KeccakP-1600times4/avx2/KeccakP-1600-times4-SIMD256.c.o
+[ 41%] Built target xkcp_low_keccakp_1600_plain64
+[ 42%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/KeccakP-1600-AVX512VL.S.o
+[ 43%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/SHA3-AVX512VL.S.o
+[ 43%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/KeccakP-1600-times4-AVX512VL.S.o
+[ 44%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/SHA3-times4-AVX512VL.S.o
+[ 44%] Built target sha3_avx512vl_low
+[ 45%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/kem_ml_kem_768.c.o
+[ 45%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/compress.c.o
+[ 46%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/debug.c.o
+[ 47%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/indcpa.c.o
+[ 48%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/kem.c.o
+[ 49%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/poly.c.o
+[ 49%] Built target xkcp_low_keccakp_1600times4_avx2
+[ 50%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/compress.c.o
+[ 50%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/poly_k.c.o
+[ 51%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/debug.c.o
+[ 51%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/indcpa.c.o
+[ 52%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/sampling.c.o
+[ 53%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/kem.c.o
+[ 54%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/verify.c.o
+[ 55%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/compress_consts.c.o
+[ 55%] Built target ml_kem_768_ref
+[ 56%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/sig_ml_dsa_65.c.o
+[ 57%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/consts.c.o
+[ 58%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/intt_avx2_asm.S.o
+[ 59%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/ct.c.o
+[ 59%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/ntt_avx2_asm.S.o
+[ 59%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/debug.c.o
+[ 60%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/nttfrombytes_avx2_asm.S.o
+[ 61%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/ntttobytes_avx2_asm.S.o
+[ 62%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/packing.c.o
+[ 63%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/nttunpack_avx2_asm.S.o
+[ 64%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d10_avx2_asm.S.o
+[ 65%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d11_avx2_asm.S.o
+[ 66%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/poly.c.o
+[ 66%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d4_avx2_asm.S.o
+[ 67%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d5_avx2_asm.S.o
+[ 68%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d10_avx2_asm.S.o
+[ 69%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d11_avx2_asm.S.o
+[ 70%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d4_avx2_asm.S.o
+[ 70%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d5_avx2_asm.S.o
+[ 71%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_mulcache_compute_avx2_asm.S.o
+[ 72%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/polyvec_basemul_acc_montgomery_cached_k2_avx2_asm.S.o
+[ 73%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/polyvec_basemul_acc_montgomery_cached_k3_avx2_asm.S.o
+[ 74%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/polyvec_basemul_acc_montgomery_cached_k4_avx2_asm.S.o
+[ 74%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/reduce_avx2_asm.S.o
+[ 75%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/rej_uniform_avx2_asm.S.o
+[ 76%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/rej_uniform_table.c.o
+[ 77%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/tomont_avx2_asm.S.o
+[ 78%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/poly.c.o
+[ 79%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/poly_kl.c.o
+[ 79%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/poly_k.c.o
+[ 80%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/polyvec.c.o
+[ 80%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/polyvec_lazy.c.o
+[ 81%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/sampling.c.o
+[ 82%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/sign.c.o
+[ 83%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/verify.c.o
+[ 83%] Built target ml_kem_768_x86_64
+[ 84%] Building C object src/common/CMakeFiles/internal.dir/aes/aes_impl.c.o
+[ 84%] Built target ml_dsa_65_ref
+[ 85%] Building C object src/common/CMakeFiles/internal.dir/aes/aes_c.c.o
+[ 85%] Building C object src/common/CMakeFiles/internal.dir/aes/aes128_ni.c.o
+[ 86%] Building C object src/common/CMakeFiles/internal.dir/aes/aes256_ni.c.o
+[ 87%] Building C object src/common/CMakeFiles/internal.dir/aes/aes.c.o
+[ 88%] Building C object src/common/CMakeFiles/internal.dir/sha2/sha2_impl.c.o
+[ 89%] Building C object src/common/CMakeFiles/internal.dir/sha2/sha2_c.c.o
+[ 89%] Building C object src/common/CMakeFiles/internal.dir/sha2/sha2.c.o
+[ 90%] Building C object src/common/CMakeFiles/internal.dir/sha3/xkcp_sha3.c.o
+[ 91%] Building C object src/common/CMakeFiles/internal.dir/sha3/xkcp_sha3x4.c.o
+[ 92%] Building C object src/common/CMakeFiles/internal.dir/sha3/avx512vl_sha3.c.o
+[ 93%] Building C object src/common/CMakeFiles/internal.dir/sha3/avx512vl_sha3x4.c.o
+[ 94%] Building C object src/common/CMakeFiles/internal.dir/sha3/sha3.c.o
+[ 94%] Building C object src/common/CMakeFiles/internal.dir/sha3/sha3x4.c.o
+[ 95%] Building C object src/common/CMakeFiles/internal.dir/common.c.o
+[ 96%] Building C object src/common/CMakeFiles/internal.dir/rand/rand_nist.c.o
+[ 97%] Building C object src/CMakeFiles/oqs.dir/kem/kem.c.o
+[ 98%] Building C object src/CMakeFiles/oqs.dir/sig/sig.c.o
+[ 98%] Building C object src/CMakeFiles/oqs.dir/sig_stfl/sig_stfl.c.o
+[ 98%] Built target internal
+[ 99%] Linking C static library ../lib/liboqs-internal.a
+[100%] Linking C static library ../lib/liboqs.a
+[100%] Built target oqs-internal
+[100%] Built target oqs
+exit=0
+$ cmake --install /tmp/fp1-q01-08jrg692/build
+-- Install configuration: "Release"
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/lib64/cmake/liboqs/liboqsConfig.cmake
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/lib64/cmake/liboqs/liboqsConfigVersion.cmake
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/lib64/pkgconfig/liboqs.pc
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/lib64/liboqs.a
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/lib64/cmake/liboqs/liboqsTargets.cmake
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/lib64/cmake/liboqs/liboqsTargets-release.cmake
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/oqs.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/aes_ops.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/common.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/rand.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/sha2_ops.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/sha3_ops.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/sha3x4_ops.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/kem.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/sig.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/sig_stfl.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/kem_ml_kem.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/sig_ml_dsa.h
+-- Installing: /tmp/fp1-q01-08jrg692/prefix/include/oqs/oqsconfig.h
+exit=0
+environment overrides: env['PKG_CONFIG_LIBDIR']='/tmp/fp1-q01-08jrg692/prefix/lib64/pkgconfig', env['CARGO_HOME']='/tmp/fp1-q01-08jrg692/cargo-home', env['CARGO_TARGET_DIR']='/tmp/fp1-q01-08jrg692/target'
+$ pkg-config --modversion liboqs
+0.16.0
+exit=0
+$ pkg-config --exists 'liboqs >= 0.16.0-rc1' 'liboqs < 0.17.0'
+exit=1
+$ gcc -std=c11 -Wall -Wextra -Werror -I /tmp/fp1-q01-08jrg692/prefix/include -c /tmp/fp1-q01-08jrg692/metadata.c -o /tmp/fp1-q01-08jrg692/metadata.o
+exit=0
+$ ar rcs /tmp/fp1-q01-08jrg692/libq01metadata.a /tmp/fp1-q01-08jrg692/metadata.o
+exit=0
+$ cargo fmt --manifest-path /tmp/fp1-q01-08jrg692/probe/Cargo.toml
+exit=0
+$ cargo fmt --check --manifest-path /tmp/fp1-q01-08jrg692/probe/Cargo.toml
+exit=0
+$ cargo rustc --offline --manifest-path /tmp/fp1-q01-08jrg692/probe/Cargo.toml -- -L native=/tmp/fp1-q01-08jrg692 -L native=/tmp/fp1-q01-08jrg692/prefix/lib64 -l static=q01metadata -l static=oqs
+   Compiling q01-readiness v0.0.0 (/tmp/fp1-q01-08jrg692/probe)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.17s
+exit=0
+$ /tmp/fp1-q01-08jrg692/target/debug/q01-readiness
+liboqs=0.16.0
+ML-KEM-768 enabled=1 pk=1184 sk=2400 ct=1088 ss=32
+ML-DSA-65 enabled=1 pk=1952 sk=4032 sig=3309 context_support=1
+METADATA/LINKAGE PASS; no cryptographic operations executed
+exit=0
+$ readelf -d /tmp/fp1-q01-08jrg692/target/debug/q01-readiness
+
+Dynamic section at offset 0x954b0 contains 29 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
+ 0x000000000000000c (INIT)               0x374
+ 0x000000000000000d (FINI)               0x750dc
+ 0x0000000000000019 (INIT_ARRAY)         0x93388
+ 0x000000000000001b (INIT_ARRAYSZ)       16 (bytes)
+ 0x000000000000001a (FINI_ARRAY)         0x93398
+ 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0x76020
+ 0x0000000000000005 (STRTAB)             0x76790
+ 0x0000000000000006 (SYMTAB)             0x76040
+ 0x000000000000000a (STRSZ)              1161 (bytes)
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000015 (DEBUG)              0x0
+ 0x0000000000000003 (PLTGOT)             0x956c0
+ 0x0000000000000002 (PLTRELSZ)           336 (bytes)
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000017 (JMPREL)             0x7bac8
+ 0x0000000000000007 (RELA)               0x76de8
+ 0x0000000000000008 (RELASZ)             19680 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000000000001e (FLAGS)              BIND_NOW
+ 0x000000006ffffffb (FLAGS_1)            Flags: NOW PIE
+ 0x000000006ffffffe (VERNEED)            0x76cb8
+ 0x000000006fffffff (VERNEEDNUM)         3
+ 0x000000006ffffff0 (VERSYM)             0x76c1a
+ 0x000000006ffffff9 (RELACOUNT)          752
+ 0x0000000000000000 (NULL)               0x0
+exit=0
+SHA256 /tmp/fp1-q01-08jrg692/prefix/lib64/liboqs.a: 00adeed4b3e7cea298da5b9dca810dffb93e26456febadd7947dd409295eb0f9
+SHA256 /tmp/fp1-q01-08jrg692/target/debug/q01-readiness: bed3ea6f9ec352245485018101ef27a87a46671aea9c67f3ba735282ec91a8a8
+Temporary build/install/probe artifacts removed; Q-01 probe PASS
+
+ADDITIONAL SOURCE/HOST/ROUTE EVIDENCE
+$ git -C .deps/liboqs-0.16.0 rev-parse HEAD
+5a1a854b0dc9f2141bdc771c555ee60c37950183
+exit=0
+$ git -C .deps/liboqs-0.16.0 describe --tags --always
+0.16.0
+exit=0
+$ git -C .deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+exit=0
+$ git -C .deps/liboqs-0.16.0 archive HEAD | sha256sum
+2a469ff48e73c9cd78c2f7752465ca7a066582fbaa9185f52b4725783218d39d
+$ git -C .deps/liboqs-rust-main rev-parse HEAD
+c6fd1a68179255b2461800e7da61231d7d3c61da
+exit=0
+$ git -C .deps/liboqs-rust-main describe --tags --always
+v0.11.0-12-gc6fd1a68
+exit=0
+$ git -C .deps/liboqs-rust-main status --porcelain --untracked-files=all
+exit=0
+$ git -C .deps/liboqs-rust-main archive HEAD | sha256sum
+de354d6348c8e34db63439d9ae6e69dfe8b464e15d0d0f49d411ea79000ea1f8
+$ git -C .deps/liboqs-rust-main/oqs-sys/liboqs rev-parse HEAD
+2966c35b3b7691eda295d465b500673377250810
+exit=0
+$ git -C .deps/liboqs-rust-main/oqs-sys/liboqs describe --tags --always
+0.16.0-11-g2966c35b3
+exit=0
+$ git -C .deps/liboqs-rust-main/oqs-sys/liboqs status --porcelain --untracked-files=all
+exit=0
+$ git -C .deps/liboqs-rust-main/oqs-sys/liboqs archive HEAD | sha256sum
+25270f09ae5a1e353fc4ce62321ddeeba8e0b35a7d3a05645d427a62ab43ad33
+$ git -C .deps/liboqs-rust-main submodule status
+ 2966c35b3b7691eda295d465b500673377250810 oqs-sys/liboqs (ietf116-428-g2966c35b3)
+exit=0
+$ cat /etc/fedora-release
+Fedora release 44 (Forty Four)
+exit=0
+$ uname -m
+x86_64
+exit=0
+$ rustup --version
+[Errno 2] No such file or directory: 'rustup'; executable unavailable
+$ clang --version
+clang version 22.1.8 (Fedora 22.1.8-4.fc44)
+Target: x86_64-redhat-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+Configuration file: /etc/clang/x86_64-redhat-linux-gnu-clang.cfg
+exit=0
+$ make --version
+GNU Make 4.4.1
+Built for x86_64-redhat-linux-gnu
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+exit=0
+$ git check-ignore .deps/liboqs-0.16.0 .deps/liboqs-rust-main
+.deps/liboqs-0.16.0
+.deps/liboqs-rust-main
+exit=0
+$ git rev-parse HEAD
+200bc4ab96a8d8fdf3bc5ffa846a668de7f375c8
+exit=0
+Offline empty-CARGO_HOME crate dependency check; manifest selects std,ml_kem,ml_dsa,vendored; no defaults
+$ cargo check --offline --manifest-path /tmp/fp1-q01-crate-inspect-ensco2qv/Cargo.toml
+error: no matching package named `cstr_core` found
+location searched: crates.io index
+required by package `oqs v0.11.0 (/home/iamajay/Projects/FP1/.deps/liboqs-rust-main/oqs)`
+    ... which satisfies path dependency `oqs` of package `q01-vendored-inspection v0.0.0 (/tmp/fp1-q01-crate-inspect-ensco2qv)`
+note: offline mode (via `--offline`) can sometimes cause surprising resolution failures
+help: if this error is too confusing you may wish to retry without `--offline`
+exit=101
+Additional temporary crate artifacts removed
+
+Initial independent-build generated-header evidence
+$ rg '^#define OQS_ENABLE_(KEM|SIG)' /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/oqsconfig.h
+#define OQS_ENABLE_KEM_ML_KEM 1
+#define OQS_ENABLE_KEM_ml_kem_768 1
+#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1
+#define OQS_ENABLE_SIG_ML_DSA 1
+#define OQS_ENABLE_SIG_ml_dsa_65 1
+#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1
+exit=0
+
+INITIAL INDEPENDENT BUILD COMMANDS AND OUTPUT
+
+configure.txt
+$ cmake -S /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 -B /tmp/fp1-q01-p7jm8yy8/build -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DOQS_BUILD_ONLY_LIB=ON -DOQS_DIST_BUILD=ON -DOQS_USE_OPENSSL=OFF '-DOQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65' -DCMAKE_INSTALL_PREFIX=/tmp/fp1-q01-p7jm8yy8/prefix
+-- The C compiler identification is GNU 16.2.1
+-- The ASM compiler identification is GNU
+-- Found assembler: /usr/bin/cc
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- OQS Testing: Pytest parallel workers set to 'auto'
+-- CMAKE_BUILD_TYPE=Release
+-- Performing Test CC_SUPPORTS_WA_NOEXECSTACK
+-- Performing Test CC_SUPPORTS_WA_NOEXECSTACK - Success
+-- Performing Test LD_SUPPORTS_WL_Z_NOEXECSTACK
+-- Performing Test LD_SUPPORTS_WL_Z_NOEXECSTACK - Success
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Algorithms filtered for KEM_ml_kem_768;SIG_ml_dsa_65
+-- Looking for getentropy
+-- Looking for getentropy - found
+-- Looking for getentropy
+-- Looking for getentropy - found
+-- Looking for aligned_alloc
+-- Looking for aligned_alloc - found
+-- Looking for posix_memalign
+-- Looking for posix_memalign - found
+-- Looking for memalign
+-- Looking for memalign - found
+-- Looking for explicit_bzero
+-- Looking for explicit_bzero - found
+-- Looking for explicit_memset
+-- Looking for explicit_memset - not found
+-- Looking for memset_s
+-- Looking for memset_s - not found
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/fp1-q01-p7jm8yy8/build
+
+Exit: 0
+
+build.txt
+$ cmake --build /tmp/fp1-q01-p7jm8yy8/build --parallel 2
+[  0%] Building C object src/common/CMakeFiles/common.dir/aes/aes_impl.c.o
+[  1%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/ct.c.o
+[  2%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/debug.c.o
+[  3%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/consts.c.o
+[  4%] Building C object src/common/CMakeFiles/common.dir/aes/aes_c.c.o
+[  4%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/intt_avx2_asm.S.o
+[  5%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/ntt_avx2_asm.S.o
+[  6%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/nttunpack_avx2_asm.S.o
+[  7%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_acc_l4_avx2_asm.S.o
+[  8%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_acc_l5_avx2_asm.S.o
+[  8%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_acc_l7_avx2_asm.S.o
+[  9%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/pointwise_avx2_asm.S.o
+[ 10%] Building ASM object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_caddq_avx2_asm.S.o
+[ 11%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_chknorm_avx2.c.o
+[ 12%] Building C object src/common/CMakeFiles/common.dir/aes/aes128_ni.c.o
+[ 13%] Building C object src/common/CMakeFiles/common.dir/aes/aes256_ni.c.o
+[ 14%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_decompose_32_avx2.c.o
+[ 15%] Building C object src/common/CMakeFiles/common.dir/aes/aes.c.o
+[ 15%] Building C object src/common/CMakeFiles/common.dir/sha2/sha2_impl.c.o
+[ 16%] Building C object src/common/CMakeFiles/common.dir/sha2/sha2_c.c.o
+[ 16%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_decompose_88_avx2.c.o
+[ 17%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_use_hint_32_avx2.c.o
+[ 18%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/poly_use_hint_88_avx2.c.o
+[ 19%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/polyz_unpack_17_avx2.c.o
+[ 20%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/polyz_unpack_19_avx2.c.o
+[ 21%] Building C object src/common/CMakeFiles/common.dir/sha2/sha2.c.o
+[ 22%] Building C object src/common/CMakeFiles/common.dir/sha3/xkcp_sha3.c.o
+[ 23%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_avx2.c.o
+[ 24%] Building C object src/common/CMakeFiles/common.dir/sha3/xkcp_sha3x4.c.o
+[ 24%] Building C object src/common/CMakeFiles/common.dir/sha3/avx512vl_sha3.c.o
+[ 25%] Building C object src/common/CMakeFiles/common.dir/sha3/avx512vl_sha3x4.c.o
+[ 26%] Building C object src/common/CMakeFiles/common.dir/sha3/sha3.c.o
+[ 27%] Building C object src/common/CMakeFiles/common.dir/sha3/sha3x4.c.o
+[ 27%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_eta2_avx2.c.o
+[ 28%] Building C object src/common/CMakeFiles/common.dir/common.c.o
+[ 29%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_eta4_avx2.c.o
+[ 29%] Building C object src/common/CMakeFiles/common.dir/pqclean_shims/fips202.c.o
+[ 30%] Building C object src/common/CMakeFiles/common.dir/pqclean_shims/fips202x4.c.o
+[ 31%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/native/x86_64/src/rej_uniform_table.c.o
+[ 32%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/packing.c.o
+[ 33%] Building C object src/common/CMakeFiles/common.dir/rand/rand.c.o
+[ 34%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/poly.c.o
+[ 34%] Built target common
+[ 35%] Building C object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600_plain64.dir/KeccakP-1600/plain-64bits/KeccakP-1600-opt64.c.o
+[ 35%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/poly_kl.c.o
+[ 36%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/polyvec.c.o
+[ 37%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/polyvec_lazy.c.o
+[ 38%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_x86_64.dir/mldsa-native_ml-dsa-65_x86_64/mldsa/src/sign.c.o
+[ 38%] Built target ml_dsa_65_x86_64
+[ 39%] Building C object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600times4_serial.dir/KeccakP-1600times4/serial/KeccakP-1600-times4-on1.c.o
+[ 39%] Built target xkcp_low_keccakp_1600times4_serial
+[ 40%] Building ASM object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600_avx2.dir/KeccakP-1600/avx2/KeccakP-1600-AVX2.S.o
+[ 40%] Built target xkcp_low_keccakp_1600_avx2
+[ 41%] Building C object src/common/sha3/xkcp_low/CMakeFiles/xkcp_low_keccakp_1600times4_avx2.dir/KeccakP-1600times4/avx2/KeccakP-1600-times4-SIMD256.c.o
+[ 41%] Built target xkcp_low_keccakp_1600_plain64
+[ 42%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/KeccakP-1600-AVX512VL.S.o
+[ 43%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/SHA3-AVX512VL.S.o
+[ 43%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/KeccakP-1600-times4-AVX512VL.S.o
+[ 44%] Building ASM object src/common/sha3/avx512vl_low/CMakeFiles/sha3_avx512vl_low.dir/SHA3-times4-AVX512VL.S.o
+[ 44%] Built target sha3_avx512vl_low
+[ 45%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/kem_ml_kem_768.c.o
+[ 45%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/compress.c.o
+[ 46%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/debug.c.o
+[ 47%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/indcpa.c.o
+[ 48%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/kem.c.o
+[ 49%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/poly.c.o
+[ 49%] Built target xkcp_low_keccakp_1600times4_avx2
+[ 49%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/poly_k.c.o
+[ 50%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/sampling.c.o
+[ 51%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_ref.dir/mlkem-native_ml-kem-768_ref/mlkem/src/verify.c.o
+[ 51%] Built target ml_kem_768_ref
+[ 52%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/compress.c.o
+[ 53%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/sig_ml_dsa_65.c.o
+[ 54%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/ct.c.o
+[ 54%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/debug.c.o
+[ 55%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/debug.c.o
+[ 56%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/packing.c.o
+[ 56%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/indcpa.c.o
+[ 57%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/poly.c.o
+[ 58%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/kem.c.o
+[ 59%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/poly_kl.c.o
+[ 60%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/compress_consts.c.o
+[ 61%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/consts.c.o
+[ 62%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/intt_avx2_asm.S.o
+[ 62%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/ntt_avx2_asm.S.o
+[ 63%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/nttfrombytes_avx2_asm.S.o
+[ 64%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/ntttobytes_avx2_asm.S.o
+[ 65%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/nttunpack_avx2_asm.S.o
+[ 66%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d10_avx2_asm.S.o
+[ 67%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d11_avx2_asm.S.o
+[ 67%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d4_avx2_asm.S.o
+[ 68%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_compress_d5_avx2_asm.S.o
+[ 69%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d10_avx2_asm.S.o
+[ 70%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/polyvec.c.o
+[ 71%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d11_avx2_asm.S.o
+[ 72%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d4_avx2_asm.S.o
+[ 72%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_decompress_d5_avx2_asm.S.o
+[ 72%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/polyvec_lazy.c.o
+[ 73%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/poly_mulcache_compute_avx2_asm.S.o
+[ 74%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/polyvec_basemul_acc_montgomery_cached_k2_avx2_asm.S.o
+[ 75%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/polyvec_basemul_acc_montgomery_cached_k3_avx2_asm.S.o
+[ 76%] Building C object src/sig/ml_dsa/CMakeFiles/ml_dsa_65_ref.dir/mldsa-native_ml-dsa-65_ref/mldsa/src/sign.c.o
+[ 77%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/polyvec_basemul_acc_montgomery_cached_k4_avx2_asm.S.o
+[ 77%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/reduce_avx2_asm.S.o
+[ 78%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/rej_uniform_avx2_asm.S.o
+[ 79%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/rej_uniform_table.c.o
+[ 80%] Building ASM object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/native/x86_64/src/tomont_avx2_asm.S.o
+[ 81%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/poly.c.o
+[ 81%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/poly_k.c.o
+[ 81%] Built target ml_dsa_65_ref
+[ 82%] Building C object src/common/CMakeFiles/internal.dir/aes/aes_impl.c.o
+[ 83%] Building C object src/common/CMakeFiles/internal.dir/aes/aes_c.c.o
+[ 84%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/sampling.c.o
+[ 84%] Building C object src/common/CMakeFiles/internal.dir/aes/aes128_ni.c.o
+[ 85%] Building C object src/common/CMakeFiles/internal.dir/aes/aes256_ni.c.o
+[ 86%] Building C object src/common/CMakeFiles/internal.dir/aes/aes.c.o
+[ 87%] Building C object src/common/CMakeFiles/internal.dir/sha2/sha2_impl.c.o
+[ 88%] Building C object src/common/CMakeFiles/internal.dir/sha2/sha2_c.c.o
+[ 89%] Building C object src/kem/ml_kem/CMakeFiles/ml_kem_768_x86_64.dir/mlkem-native_ml-kem-768_x86_64/mlkem/src/verify.c.o
+[ 89%] Built target ml_kem_768_x86_64
+[ 90%] Building C object src/CMakeFiles/oqs.dir/kem/kem.c.o
+[ 91%] Building C object src/CMakeFiles/oqs.dir/sig/sig.c.o
+[ 91%] Building C object src/CMakeFiles/oqs.dir/sig_stfl/sig_stfl.c.o
+[ 92%] Linking C static library ../lib/liboqs.a
+[ 92%] Built target oqs
+[ 92%] Building C object src/common/CMakeFiles/internal.dir/sha2/sha2.c.o
+[ 93%] Building C object src/common/CMakeFiles/internal.dir/sha3/xkcp_sha3.c.o
+[ 94%] Building C object src/common/CMakeFiles/internal.dir/sha3/xkcp_sha3x4.c.o
+[ 95%] Building C object src/common/CMakeFiles/internal.dir/sha3/avx512vl_sha3.c.o
+[ 96%] Building C object src/common/CMakeFiles/internal.dir/sha3/avx512vl_sha3x4.c.o
+[ 97%] Building C object src/common/CMakeFiles/internal.dir/sha3/sha3.c.o
+[ 97%] Building C object src/common/CMakeFiles/internal.dir/sha3/sha3x4.c.o
+[ 98%] Building C object src/common/CMakeFiles/internal.dir/common.c.o
+[ 99%] Building C object src/common/CMakeFiles/internal.dir/rand/rand_nist.c.o
+[ 99%] Built target internal
+[100%] Linking C static library ../lib/liboqs-internal.a
+[100%] Built target oqs-internal
+
+Exit: 0
+
+install.txt
+$ cmake --install /tmp/fp1-q01-p7jm8yy8/build
+-- Install configuration: "Release"
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/lib64/cmake/liboqs/liboqsConfig.cmake
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/lib64/cmake/liboqs/liboqsConfigVersion.cmake
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/lib64/pkgconfig/liboqs.pc
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/lib64/liboqs.a
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/lib64/cmake/liboqs/liboqsTargets.cmake
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/lib64/cmake/liboqs/liboqsTargets-release.cmake
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/oqs.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/aes_ops.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/common.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/rand.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/sha2_ops.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/sha3_ops.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/sha3x4_ops.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/kem.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/sig.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/sig_stfl.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/kem_ml_kem.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/sig_ml_dsa.h
+-- Installing: /tmp/fp1-q01-p7jm8yy8/prefix/include/oqs/oqsconfig.h
+
+Exit: 0
+
+Initial temporary build tree removed after evidence capture.
+
+DOCUMENTATION AND SCOPE VERIFICATION
+Separate probe review: opaque pointers; installed C headers; fixed C strings; null checks; matched frees; destroy after cleanup; metadata only; no key or cryptographic calls. No production boundary audit claimed.
+$ make check
+test_01_documents (__main__.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_02_structure_and_scope (__main__.PhaseZero.test_02_structure_and_scope)
+P0-STRUCT-001: documented component paths remain scaffold-only. ... ok
+test_03_links (__main__.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (__main__.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_05_unavailable_commands (__main__.PhaseZero.test_05_unavailable_commands)
+P0-CLI-001: future runtime targets fail clearly, without outputs. ... ok
+test_06_static_and_format (__main__.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (__main__.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (__main__.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.040s
+
+OK (skipped=1)
+exit=0
+$ git diff --check
+exit=0
+$ sha256sum docs/TEST_MATRIX.md docs/CRYPTO_PROTOCOL.md
+d55536a00d0e8ec924e45e66888d86e8bb425294b2452fefa308f37763d11cfe  docs/TEST_MATRIX.md
+f07f776ce1e321990ca3cb8d4ebd0797b7e96522688a56e78a1df6804a15fb53  docs/CRYPTO_PROTOCOL.md
+exit=0
+$ git -C .deps/liboqs-0.16.0 status --short
+exit=0
+$ git -C .deps/liboqs-rust-main status --short
+exit=0
+PQC-KEM-001..004 and PQC-SIG-001..005 remain PLANNED; TEST_MATRIX and CRYPTO_PROTOCOL unchanged in this evaluation.

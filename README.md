@@ -4,9 +4,9 @@ An offline engineering research project for multi-recipient encrypted document
 distribution and attribution of released document instances to cryptographic
 identities. Attribution does not establish who personally leaked a document.
 
-**Status: Phase 0 foundation IMPLEMENTED; runtime security features PLANNED.**
+**Status: Phase 1 PQC primitive wrappers IMPLEMENTED; later runtime features PLANNED.**
 There is no encryption, decryption, ledger, or watermark implementation yet.
-Do not use this scaffold to protect real documents. Phase 1 requires explicit approval.
+Do not use this prototype to protect real documents. Phase 2 requires explicit approval.
 
 ## Start here
 
@@ -16,7 +16,9 @@ The [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md),
 [protocol](docs/CRYPTO_PROTOCOL.md), and [decisions](docs/DECISIONS.md) describe
 the proposed design, not tested security guarantees.
 
-Phase 0 requires only Python 3.12+ and GNU Make; validation needs no downloads.
+Phase 1 needs Rust/Cargo, native C/CMake tools and the supplied pinned liboqs source.
+The primitive crate has no registry dependencies and builds offline. See
+[trusted-client](trusted-client/README.md) for the API and exact source pin.
 
 ```sh
 make help
@@ -24,9 +26,11 @@ make check
 make environment
 ```
 
-`make build`, `make encrypt`, `make decrypt`, `make pki`, `make ledger`, and
-`make forensic` deliberately fail with a Phase 0 message. `make test`, `make lint`,
-and `make fmt-check` validate only documentation and scaffolding.
+`make build` compiles the primitive library; `make test`, `make lint` and
+`make fmt-check` run Rust tests, strict Clippy and rustfmt respectively. `make check`
+also checks documentation, phase scope, native failure paths and source pinning.
+`make encrypt`, `make decrypt`, `make pki`, `make ledger` and `make forensic`
+remain unavailable. Historical Phase 0 evidence and test IDs are preserved.
 
 ## Repository map
 
@@ -42,7 +46,7 @@ and `make fmt-check` validate only documentation and scaffolding.
 | `tests/integration/` | Cross-component and atomic-release tests (later phases) |
 | `tests/adversarial/` | Tampering, fuzzing, failure injection (later phases) |
 | `tests/fixtures/` | Synthetic public test data only |
-| `scripts/` | Dependency-free Phase 0 validation and environment inspection |
+| `scripts/` | Environment, documentation, native and source-pin validation |
 
 See [environment evidence](docs/ENVIRONMENT.md), [test matrix](docs/TEST_MATRIX.md),
 [limitations](docs/KNOWN_LIMITATIONS.md), [user guide](docs/USER_GUIDE.md), and
@@ -51,4 +55,5 @@ and ML-DSA-65; Fabric infrastructure may retain classical cryptography. See
 [cryptographic scope](docs/CRYPTOGRAPHIC_SCOPE.md).
 
 The repository's license selection is unresolved; [LICENSE](LICENSE) does not
-grant an open-source license. No third-party dependencies are bundled.
+grant an open-source license. Local ignored `.deps/` trees are inspection/build
+inputs, not a completed offline distribution bundle.

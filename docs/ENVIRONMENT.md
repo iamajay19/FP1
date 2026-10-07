@@ -1,11 +1,16 @@
 # Development Environment Inspection
 
-Current status: Phase 1 environment preparation **BLOCKED**. The original Phase 0
-inspection is preserved below; the fresh preparation findings follow it.
+Current status: Phase 1 environment preparation **READY**, Q-01 **RESOLVED** by the
+local-source build/linkage evaluation below. Phase 1 primitive implementation is now
+authorized and its tests have executed; see the final implementation section.
+Earlier inspections and readiness-only test statuses are historical.
+The 2026-10-07 corrective section records the current enforced SHA3 configuration;
+the original implementation/readiness build descriptions below remain historical.
 
 Inspection date: 2026-10-06, from `/home/iamajay/Projects/FP1` in the agent execution
-surface. Read-only probes only; no dependency installation or host configuration
-changes. Availability means visible to this session, not proof absent everywhere.
+surface. Host inspection is read-only; the final evaluation also builds into temporary
+directories. No system installation or host configuration changes were made.
+Availability means visible to this session, not proof absent everywhere.
 
 | Probe | Observed result |
 |---|---|
@@ -192,3 +197,450 @@ Fabric, GUI or watermark dependencies as part of this preparation.
 
 Q-01 remains **BLOCKED**. Environment preparation approval does not approve Phase 1
 implementation. Phase 0 evidence remains historical and unchanged.
+
+## Post-installation reinspection — 2026-10-06
+
+This section supersedes earlier readiness conclusions. The user installed host
+prerequisites; this session re-ran `python3 scripts/inspect_environment.py` before
+further preparation. Phase 1 implementation is still unapproved. No keys generated,
+no production wrapper written, no old liboqs installed. Recorded results are in
+[PHASE_1_ENVIRONMENT_RECHECK.txt](PHASE_1_ENVIRONMENT_RECHECK.txt).
+
+### Current exact versions
+
+| Component | Observed result |
+|---|---|
+| Fedora / architecture / kernel | 44 KDE / x86_64 / 7.2.8-200.fc44.x86_64 |
+| Rust | 1.98.1; commit 48a229ceaefd4985c50990b14116b6d856af0985; Fedora 1.98.1-1.fc44 |
+| Cargo | 1.98.1; commit 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d; Fedora 1.98.1-1.fc44 |
+| Rust LLVM | 22.1.8 |
+| GCC / C++ | 16.2.1 20260819; Fedora 16.2.1-2.fc44 |
+| CMake | 4.3.0; Fedora 4.3.0-1.fc44 |
+| Clang / libclang | 22.1.8; clang, clang-libs and clang-devel 22.1.8-4.fc44 installed |
+| pkg-config / Make / Git | 2.5.1 / 4.4.1 / 2.55.0 |
+| rustup | Absent; not required with the installed Fedora toolchain |
+| liboqs | Still absent from pkg-config and linker cache |
+| oqs / oqs-sys | Not fetched, built or pinned |
+
+A disposable std-only Rust program compiled with `rustc --edition=2024` and ran
+successfully, printing `Rust compiler readiness only; no liboqs linked`. Source and
+binary were removed automatically. This proves local Rust compilation/execution,
+not Cargo dependency resolution, C library linkage or algorithm availability.
+
+### Supported liboqs and ordered integration evaluation
+
+The [upstream security policy](https://github.com/open-quantum-safe/liboqs/security/policy)
+explicitly supports only the most recent release: 0.16.0; versions below 0.16 are
+unsupported. The [0.16.0 release](https://github.com/open-quantum-safe/liboqs/releases/tag/0.16.0)
+is the preferred target. The earlier 0.13.0 candidate is withdrawn from consideration
+without explicit user approval. No such approval was requested or granted.
+
+1. **Current liboqs-rust main, pinned commit:** unresolved. The retrieved
+   [main manifest](https://raw.githubusercontent.com/open-quantum-safe/liboqs-rust/main/oqs-sys/Cargo.toml)
+   still reports 0.11.0+liboqs-0.13.0. Retrieved main files have different web crawl
+   dates, so they cannot establish a coherent current Git revision or submodule pin.
+   `git ls-remote` for main failed with exit 128 (DNS). Do not claim current main
+   is compatible or definitively incompatible until its exact tree can be inspected.
+2. **Configure oqs-sys with local liboqs 0.16.0:** the published 0.11.0 build script
+   accepts only >=0.13.0,<0.14.0. The retrieved
+   [main build script](https://raw.githubusercontent.com/open-quantum-safe/liboqs-rust/main/oqs-sys/build.rs)
+   also derives a same-minor range from package metadata. PKG_CONFIG_PATH alone
+   cannot override that range. LIBOQS_NO_VENDOR=1 prevents fallback; it does not
+   enable compatibility. Do not falsify liboqs.pc or suppress the version check.
+   A reviewed binding patch could be evaluated, but is not configuration-only:
+   current header/ABI, generated bindings and higher-level API assumptions must be
+   checked and built. No such patch or build has been performed.
+3. **Minimal audited FFI to supported liboqs:** preferable in principle to an
+   unsupported library if options 1/2 prove unsuitable, but not yet selected or
+   audited. A readiness-only boundary can use opaque OQS_KEM/OQS_SIG pointers,
+   OQS_init/version, enabled checks, new/free, and OQS_destroy without key operations.
+   It must use exact declarations checked against the pinned headers, no copied
+   struct layouts, checked null returns and balanced cleanup. C accessors compiled
+   against those headers can expose metadata without Rust layout assumptions.
+   This reduces binding surface but transfers ABI/unsafe maintenance to the project;
+   it is not a custom cryptographic primitive. Missing source prevents an actual
+   liboqs build/probe, so this option has not been demonstrated safe or ready.
+4. **Unsupported release:** not used. No downgrade is authorized.
+
+The current version's public headers define the exact requested identifiers:
+[OQS_KEM_alg_ml_kem_768 = ML-KEM-768](https://github.com/open-quantum-safe/liboqs/blob/0.16.0/src/kem/kem.h)
+and [OQS_SIG_alg_ml_dsa_65 = ML-DSA-65](https://github.com/open-quantum-safe/liboqs/blob/0.16.0/src/sig/sig.h).
+Header evidence does not establish local enablement. Neither algorithm was accessed
+through a Rust/liboqs binary. Linkage (static/dynamic): NOT ESTABLISHED. Effective
+liboqs build flags: NONE, because no build occurred. Exact source commit, archive
+SHA-256, crate revision and lockfile: NOT ESTABLISHED; release name alone is not a
+verified source pin. All Phase 1 PQC tests remain PLANNED.
+
+### Remaining access blocker and recovery
+
+Both GitHub and crates.io still fail DNS resolution from the shell. No liboqs source
+or crate bundle was found among inspected paths in the project, /tmp, Downloads or
+~/.cargo; /usr/share/cargo/registry is empty and ~/.cargo does not exist. Web pages
+are available for research but are not a complete verified build-source bundle.
+No attempt was made to evade the restricted execution surface or change networking.
+
+Provide this session with normal permitted source access, or place verified liboqs
+0.16.0 sources and an exact liboqs-rust snapshot (including its referenced submodule)
+in an accessible workspace directory. For the binding route, transitive Cargo
+sources must also be available. Re-check main first, then evaluate the local-library
+route and only then the minimal FFI fallback. Build into a workspace-local prefix
+or temporary directory; no system installation is needed. Record hashes, effective
+CMake flags, Cargo revisions if used, library version and runtime enablement before
+resolving Q-01. The fallback without third-party Rust crates still needs liboqs source.
+
+Read-only recovery checks:
+
+```sh
+cd /home/iamajay/Projects/FP1
+python3 scripts/inspect_environment.py
+rustc --version --verbose
+cargo --version --verbose
+clang --version
+cmake --version
+git ls-remote https://github.com/open-quantum-safe/liboqs-rust.git refs/heads/main
+git ls-remote https://github.com/open-quantum-safe/liboqs.git refs/tags/0.16.0 'refs/tags/0.16.0^{}'
+curl -I --max-time 15 https://crates.io
+pkg-config --modversion liboqs
+git status --short
+make check
+```
+
+### Git readiness update
+
+Git reads now succeed: HEAD is `062a898` (Phase 0 project foundation), and initial
+status showed only the user's existing `.gitignore` modification. The previous
+empty-mount diagnosis is historical. No initialization/repair was needed or attempted;
+the user's modification is preserved. Q-09's read-access blocker is resolved.
+Git metadata remains outside authorized write scope; no commit/write operation was
+attempted or validated. Q-01 remains BLOCKED; compiler availability does not close it.
+
+## Q-01 final local-source evaluation — 2026-10-06
+
+This section supersedes every earlier BLOCKED readiness conclusion in this document.
+The supplied local source trees removed the source-access blocker. Actual successful
+build and runtime metadata/linkage evidence is in
+[PHASE_1_Q01_READINESS.txt](PHASE_1_Q01_READINESS.txt). Historical evidence files
+are retained unchanged. Q-01 is RESOLVED for environment readiness only.
+
+### Host and exact source provenance
+
+Fresh inspection: Fedora 44, x86_64; Rust 1.98.1
+(`48a229ceaefd4985c50990b14116b6d856af0985`), Cargo 1.98.1
+(`797e8a9bca276c1c9f9f738d2a20f484fa4eea9d`), GCC/C++ 16.2.1
+(Fedora 16.2.1-2.fc44), CMake 4.3.0, pkg-config 2.5.1, Git 2.55.0,
+Clang/libclang 22.1.8, GNU Make 4.4.1. rustup is absent and unnecessary for the
+selected system Rust toolchain. No further host packages were installed.
+
+| Source | Exact revision / version | Working tree |
+|---|---|---|
+| `.deps/liboqs-0.16.0` | tag `0.16.0`, `5a1a854b0dc9f2141bdc771c555ee60c37950183`; CMake version 0.16.0, no prerelease suffix | CLEAN |
+| `.deps/liboqs-rust-main` | `c6fd1a68179255b2461800e7da61231d7d3c61da`; `oqs 0.11.0`, `oqs-sys 0.11.0+liboqs-0.16.0-rc1` | CLEAN |
+| Rust checkout's `oqs-sys/liboqs` submodule | `2966c35b3b7691eda295d465b500673377250810`; describes as `0.16.0-11-g2966c35b3`; CMake version 0.16.0 | CLEAN, matches recorded submodule revision |
+
+SHA-256 of `git archive HEAD` for the release source:
+`2a469ff48e73c9cd78c2f7752465ca7a066582fbaa9185f52b4725783218d39d`.
+Rust repository archive:
+`de354d6348c8e34db63439d9ae6e69dfe8b464e15d0d0f49d411ea79000ea1f8`.
+Its liboqs submodule archive:
+`25270f09ae5a1e353fc4ce62321ddeeba8e0b35a7d3a05645d427a62ab43ad33`.
+The Rust repository archive itself does not include submodule contents.
+These are locally calculated integrity fingerprints, not independently verified
+release-signature attestations.
+
+The release's local `SECURITY.md` and the current
+[upstream security policy](https://github.com/open-quantum-safe/liboqs/security/policy)
+list 0.16.0 as supported and releases below 0.16 as unsupported. The
+[release page](https://github.com/open-quantum-safe/liboqs/releases/tag/0.16.0)
+identifies the matching release commit. Recheck support before future deployment.
+
+### Rust binding evaluation in the required order
+
+A. **Current checkout with pinned vendored liboqs:** source inspection shows an
+updated ML-KEM/ML-DSA-capable wrapper and 0.16-series submodule, rather than the
+older cached 0.13 views. The vendored revision is eleven commits after the release;
+it is not the exact supported release tag. `oqs-sys/build.rs` builds that submodule,
+links it statically on Linux and runs bindgen over its installed `common.h`, `rand.h`,
+`kem.h` and `sig.h` (STFL excluded). The proper restricted features would be
+`default-features=false`, `std,ml_kem,ml_dsa,vendored`; defaults enable extra
+algorithms and OpenSSL. No complete vendored-crate build is claimed: an isolated
+`cargo check --offline` failed at dependency resolution, exit 101, missing
+`cstr_core` in an empty isolated Cargo home. This is not a demonstrated source/API
+incompatibility. The untagged submodule and additional unavailable offline Rust
+build dependencies make A unsuitable for this readiness selection.
+
+B. **Current checkout with local release 0.16.0:** its build script derives the
+range `>=0.16.0-rc1,<0.17.0` from the crate metadata. Actual pkg-config 2.5.1
+reports the built library as `0.16.0`, but exits 1 for that range. Therefore the
+unmodified build script cannot select this release here; without
+`LIBOQS_NO_VENDOR=1` it would silently fall back to the different submodule, and
+with that variable it would fail. Bindgen follows whichever headers are selected;
+the C interfaces are generated at build time, with no release-binding build proven. No complete
+external-crate build is claimed. No third-party source, submodule or `.pc` version
+was altered to force compatibility.
+
+The local high-level wrappers expose standardized `MlKem768` and generated
+`MlDsa65` algorithm variants, public size accessors, and ML-DSA sign/verify context
+methods. Empty Rust contexts become NULL with length zero. Context support is
+queried from the signature object. This source compatibility evidence does not
+replace the failed external-library selection or an actual crate build.
+
+C. **Selected route:** a small manually declared Rust FFI boundary to the exact
+liboqs 0.16.0 C API, with opaque KEM/signature handles and a header-compiled C
+accessor for metadata. This avoids duplicated C struct layouts, bindgen/libclang
+and transitive Cargo packages. No `oqs` or `oqs-sys` crate is used by the successful
+probe. Production operations, ownership/error handling and zeroization still need
+implementation and review during an explicitly approved Phase 1. The probe is
+only evidence that this dependency route works.
+
+### Independent release build and runtime availability
+
+Commands (the executed build paths and full outputs are in the evidence file):
+
+```sh
+cmake -S .deps/liboqs-0.16.0 -B "$probe_root/build" \
+  -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF \
+  -DOQS_BUILD_ONLY_LIB=ON -DOQS_DIST_BUILD=ON -DOQS_USE_OPENSSL=OFF \
+  '-DOQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65' \
+  -DCMAKE_INSTALL_PREFIX="$probe_root/prefix"
+cmake --build "$probe_root/build" --parallel 2
+cmake --install "$probe_root/build"
+```
+
+Configure, build and install all exited 0. Two isolated builds succeeded: initial
+inspection build and the retained probe's complete reproduction. Minimal-build
+filtering overrides the broader defaults shown in CMakeCache; the generated
+`oqsconfig.h` enables only the ML-KEM-768 and ML-DSA-65 variants, their family flags
+and x86_64 optimized backends. `OQS_DIST_BUILD=ON` keeps runtime CPU dispatch and
+portable fallbacks. Internal SHA3 and OS randomness are used without OpenSSL;
+no random operation was requested by this probe. Static liboqs archive from the
+recorded reproduction has SHA-256
+`00adeed4b3e7cea298da5b9dca810dffb93e26456febadd7947dd409295eb0f9`.
+Artifact hashes can change with toolchains, paths and build options; they are
+fingerprints of this run, not a bit-for-bit reproducibility claim.
+
+`OQS_version`, `OQS_KEM_alg_is_enabled`, `OQS_SIG_alg_is_enabled`, `OQS_KEM_new`
+and `OQS_SIG_new` were called successfully from Rust. Struct sizes were read by C
+compiled against the installed headers and checked by Rust:
+
+| Identifier | Public key | Secret key | Ciphertext / signature | Shared secret |
+|---|---:|---:|---:|---:|
+| `ML-KEM-768` (`OQS_KEM_alg_ml_kem_768`) | 1184 | 2400 | 1088 ciphertext | 32 |
+| `ML-DSA-65` (`OQS_SIG_alg_ml_dsa_65`) | 1952 | 4032 | 3309 signature | N/A |
+
+Both enabled checks returned 1, both constructors returned non-null, and runtime
+version was exactly `0.16.0`. Signature context support and ordinary/context
+function-pointer availability were verified through the C struct; support = 1.
+No keys, signatures, ciphertexts, shared secrets or project identities were generated.
+
+### FIPS API semantics
+
+Source inspected: `src/kem/ml_kem/kem_ml_kem_768.c`,
+`src/sig/ml_dsa/sig_ml_dsa_65.c`, and the mldsa-native backend `src/sign.c`.
+ML-KEM constructor identifies FIPS203 and calls mlkem-native, not Kyber.
+ML-DSA constructor identifies FIPS204; its ordinary sign/verify functions pass
+NULL,0 to the pure ML-DSA backend on the portable/x86_64/aarch64 dispatch branches.
+The backend prepares the pure domain prefix with `MLD_PREHASH_NONE`, yielding
+`0x00 || 0x00` for empty context. Separate external-mu and prehash paths are not
+selected. Explicit `OQS_SIG_sign_with_ctx_str`/verify with NULL,0 is also available.
+This agrees with CRYPTO_PROTOCOL.md's pure ML-DSA empty-context requirement;
+the protocol was not changed. Actual sign/verify correctness is still PLANNED.
+
+### Rust linkage proof, cleanup and reproduction
+
+The retained [probe script](../scripts/probe_liboqs_readiness.py) is justified as a
+small repeatable offline environment check, isolated from all production modules.
+It pins and checks the clean release source, builds in a TemporaryDirectory,
+compiles a metadata-only C accessor with `-Wall -Wextra -Werror`, creates a
+zero-dependency temporary Cargo project, runs `cargo fmt --check`, compiles with
+`cargo rustc --offline` and explicit `-l static=oqs`, checks runtime metadata, and
+runs `readelf -d`. Every expected command succeeded; the binding-range rejection
+is explicitly expected exit 1. Cargo build took 0.17 seconds in this run.
+`readelf` shows only libgcc_s, libc and the ELF loader as dynamic dependencies;
+liboqs is static, not a system shared library. Binary SHA-256 for this run:
+`bed3ea6f9ec352245485018101ef27a87a46671aea9c67f3ba735282ec91a8a8`.
+Both initial and reproduction temporary build/install/probe trees were removed.
+Only the script and text evidence are retained; no liboqs system installation exists.
+
+Exact manual reproduction from the project directory:
+
+```sh
+python3 scripts/probe_liboqs_readiness.py
+# Expected final line: Temporary build/install/probe artifacts removed; Q-01 probe PASS
+# Expected runtime version 0.16.0 and the size table above.
+git -C .deps/liboqs-0.16.0 status --short
+git -C .deps/liboqs-rust-main status --short
+git check-ignore .deps/liboqs-0.16.0 .deps/liboqs-rust-main
+git diff --check
+```
+
+The script prints all expanded CMake/GCC/Cargo/readelf commands and actual exits.
+It operates offline with an isolated empty Cargo home and no crate dependencies.
+Keep the pinned ignored source trees for reproducibility; retaining them is not yet
+Phase 13 offline-distribution packaging. `.deps/` remains ignored, Git read commands
+work at project HEAD `200bc4ab96a8d8fdf3bc5ffa846a668de7f375c8`; Git writes were not
+attempted because metadata is outside the writable execution scope.
+
+### Remaining scope and maintenance
+
+No Phase 1 environment blocker remains for the selected route. MEDIUM follow-up:
+maintain and audit the small project-owned FFI boundary as liboqs changes; this probe
+does not validate cryptographic operations, secret lifetimes, malformed inputs,
+constant-time behavior or FIPS module certification. Static linking requires rebuilds
+for upstream security updates. The common C API is also a plausible Phase 6 Go/cgo
+boundary; Go/Fabric compilation, deterministic verification and chaincode deployment
+remain Q-04 and were not tested. No later-phase dependency was installed.
+All `PQC-KEM-001..004` and `PQC-SIG-001..005` remain PLANNED. The specification,
+cryptographic protocol, test matrix, phase gates and production scaffold are unchanged.
+Phase 1 implementation requires explicit user approval.
+
+## Authorized Phase 1 implementation — 2026-10-06
+
+Supersedes the readiness-only scope above. User explicitly authorized primitive
+integration only. `trusted-client/Cargo.toml` is a dependency-free Rust 2024 crate;
+Cargo.lock contains only `cadp-pqc 0.1.0`. No oqs/oqs-sys crate is used. The approved
+release remains tag `0.16.0`, commit
+`5a1a854b0dc9f2141bdc771c555ee60c37950183`; no upstream files were modified.
+Tool versions remain Rust/Cargo 1.98.1, GCC/C++ 16.2.1, CMake 4.3.0, Clang 22.1.8,
+pkg-config 2.5.1 and Git 2.55.0 on Fedora 44 x86_64. System packages/configuration
+were not changed. `.deps/` and Cargo target trees remain ignored.
+
+`build.rs` checks HEAD, tag, clean status including untracked/ignored artifacts,
+and absence of assume-unchanged/skip-worktree flags. It checks again after build.
+Source defaults to `.deps/liboqs-0.16.0`; `CADP_LIBOQS_SOURCE` can select another
+checkout only if it passes the same pin checks. Missing/invalid source fails;
+there is no automatic download, vendored fallback or system-library discovery.
+Source-pin tests mutate only a disposable local clone, including an empty commit
+because the supplied original repository is shallow. The actual source stays clean.
+
+The approved liboqs configuration is unchanged:
+
+```text
+CMAKE_BUILD_TYPE=Release
+BUILD_SHARED_LIBS=OFF
+OQS_BUILD_ONLY_LIB=ON
+OQS_DIST_BUILD=ON
+OQS_USE_OPENSSL=OFF
+OQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65
+```
+
+Additional build plumbing: `CMAKE_INSTALL_LIBDIR=lib`, `CMAKE_C_COMPILER=cc`, and
+an install prefix beneath Cargo OUT_DIR. The C shim is compiled with
+`-std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror`, then archived with `ar rcs`.
+Rust links static `cadp_oqs_shim` and `oqs` plus system pthread. `-fPIC` corrected
+an actual initial Fedora PIE link failure; no liboqs source/options were changed.
+Concurrent use requires the generated `OQS_USE_PTHREADS` macro; the shim refuses
+an OpenSSL-enabled or pthread-disabled configuration. Runtime initialization checks
+version `0.16.0`, exactly one enabled KEM and signature, FIPS203/FIPS204 metadata,
+function availability and all seven standardized sizes before operations.
+
+The backend is initialized once by Rust OnceLock, with cached fail-closed errors.
+Native handles are local to C and freed before each return. A same-thread cleanup
+guard invokes `OQS_thread_stop` after each native operation. There is deliberately
+no `OQS_destroy` call or global shutdown API: initialization lives until process
+exit, and destroy is a no-op in this OpenSSL-free release configuration. Tests
+observe one initialization and matching per-operation thread cleanup; fresh-process
+concurrent startup is checked separately.
+
+Only KEM/signature/shared-secret buffers are secret owners. Fallible fixed-size heap
+allocations stay in one private non-cloneable buffer and are cleansed with
+`OQS_MEM_cleanse` before deallocation. Backend copies, fatal exits and Linux
+memory-hardening limits are documented; Phase 5 controls are not implemented here.
+No secret or project identity is written/logged. All test keys are ephemeral.
+
+The C contract harness uses Clang `-fsanitize=address,undefined`, strict warnings
+and disposable linker wrappers for native failure injection. GCC instrumentation
+was attempted but failed because visible libasan/libubsan runtimes are missing.
+Clang's compiler-rt works. LeakSanitizer was attempted and failed due to ptrace
+restrictions; default tests explicitly use `detect_leaks=0`, with native live-handle
+counts asserting cleanup. Enable `CADP_TEST_LEAKS=1` only on a suitable unrestricted
+host. No successful LeakSanitizer run is claimed. The normal backend archive and
+its assembly are not sanitizer-instrumented by this check.
+
+Manual commands from the repository root:
+
+```sh
+export CARGO_HOME="$PWD/.deps/cargo-home"
+cargo fmt --manifest-path trusted-client/Cargo.toml --check
+cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+python3 scripts/check_pqc_native.py
+python3 scripts/check_pqc_source_pin.py
+make check
+git diff --check
+```
+
+Expanded configure/compiler commands and archive hash are recorded by each build
+in `trusted-client/target/{debug,release}/build/cadp-pqc-*/out/build-evidence.txt`.
+Phase evidence is recorded in [PHASE_1_VALIDATION.txt](PHASE_1_VALIDATION.txt); the
+review and unsafe inventory are [PHASE_1_REVIEW.md](PHASE_1_REVIEW.md).
+Historical Phase 0 checks/evidence are preserved: current documentation checks
+reuse applicable tests and add Phase 1 scope checks rather than pretend the tree
+is still scaffold-only. Later-phase commands fail clearly. Go/Fabric, GUI, PDF,
+ECC, AES-GCM, HKDF, PKI and key-bundle dependencies remain outside this phase.
+
+## Authorized Phase 1 security corrections — 2026-10-07
+
+Independent Astra review identified H-01 in the original AVX-512 SHA3 configuration
+and L-01 in persistent cleanup coverage. User approved these corrections only.
+The exact release remains liboqs 0.16.0, commit
+`5a1a854b0dc9f2141bdc771c555ee60c37950183`; its source remains clean and unpatched.
+No crate, compiler, system package, host configuration or protocol was changed.
+Rust/Cargo 1.98.1, GCC 16.2.1, Clang 22.1.8 and CMake 4.3.0 remain the tested tools.
+
+Current required liboqs options (D-20 adds the explicit SHA3 exclusion):
+
+```text
+CMAKE_BUILD_TYPE=Release
+BUILD_SHARED_LIBS=OFF
+OQS_BUILD_ONLY_LIB=ON
+OQS_DIST_BUILD=ON
+OQS_USE_OPENSSL=OFF
+OQS_USE_SHA3_AVX512VL=OFF
+OQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65
+```
+
+`build.rs` validates `include/oqs/oqsconfig.h` immediately after configuration,
+before compilation, and again in the installed prefix. The pinned template must
+emit exactly `/* #undef OQS_USE_SHA3_AVX512VL */`; missing, defined or unfamiliar
+forms fail closed. The C shim independently rejects any definition of this macro,
+including a zero value. Its existing pthread/OpenSSL compile guard remains active.
+Runtime metadata still checks version, exactly the two algorithms and all seven sizes.
+
+Validation used an initially nonexistent temporary CARGO_TARGET_DIR, so debug,
+release and native artifacts were freshly compiled. Generated and installed headers
+show SHA3 AVX512VL and OpenSSL undefined, with OQS_USE_PTHREADS defined as 1.
+The resulting archives contain no avx512vl symbols. A separate CMake cache seeded
+with SHA3 AVX512VL ON was reconfigured OFF and rebuilt by the actual build script.
+Exact paths, commands, generated configuration, archive fingerprints and results
+are in [PHASE_1_CORRECTIONS_VALIDATION.txt](PHASE_1_CORRECTIONS_VALIDATION.txt).
+Artifact hashes identify this run, not bit-for-bit reproducibility across toolchains.
+
+The host lacks AVX-512; no AVX-512 hardware execution or ThreadSanitizer result is
+claimed. The affected implementation is excluded from the approved build. Remaining
+internal SHA3 dispatch pointers use pthread_once, and RNG callbacks are not changed.
+OQS_thread_stop/OQS_destroy remain no-ops in this OpenSSL-free configuration.
+
+`python3 scripts/check_pqc_native.py` now also runs PQC-BUILD-002 (generated-header
+and compile rejection) and PQC-SECRET-003 (four Rust error-path cleanup cases).
+Cargo JSON identifies the artifacts from that invocation, rather than selecting a
+potentially stale build by modification time. The script honors CARGO_TARGET_DIR
+for fresh-build reproduction. Partial-output fixtures use only synthetic public
+patterns and are not sanitizer-instrumented; the original four C shim contracts
+retain Clang ASan/UBSan with leak scanning disabled. M-01/L-19 is retained.
+
+Clean manual reproduction, without deleting any existing project target:
+
+```sh
+export CARGO_HOME="$PWD/.deps/cargo-home"
+correction_target=$(mktemp -d /tmp/fp1-correction-check.XXXXXX)
+export CARGO_TARGET_DIR="$correction_target"
+make build
+make check
+cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml pqc_conc_001 -- --test-threads=1
+rg -n 'OQS_USE_SHA3_AVX512VL|OQS_USE_PTHREADS|OQS_USE_OPENSSL' "$correction_target"/debug/build/cadp-pqc-*/out/liboqs-install/include/oqs/oqsconfig.h
+```
+
+H-01/L-01 corrections are TESTED; Astra re-audit is pending. Phase 2 remains unapproved.
+Historical PHASE_1_VALIDATION.txt and Phase 0 evidence are unchanged.

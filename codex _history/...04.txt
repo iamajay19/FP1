@@ -1,0 +1,62 @@
+ 
+  STOP.
+ 
+ 
+• I’ll read the current requirements and implementation, apply the two approved corrections, and validate them from fresh build artifacts. I’ll preserve the audit history and leave Phase 2 gated.
+ 
+• Ran pwd …
+  └ trusted-client/src/pqc/signature.rs
+    trusted-client/src/pqc/tests.rs
+    trusted-client/tests/native_contract.c
+    + 56 lines (ctrl+t to expand)                                                                                                                                                                                                           
+ 
+• Explored
+  └ Read PROJECT_SPEC.md, AGENTS.md, CRYPTO_PROTOCOL.md, CRYPTOGRAPHIC_SCOPE.md, DECISIONS.md, KNOWN_LIMITATIONS.md, IMPLEMENTATION_PLAN.md, THREAT_MODEL.md, TEST_MATRIX.md, ENVIRONMENT.md, PHASE_1_REVIEW.md
+    + Show details                                                                                                                                                                                                                          
+ 
+• The current build requires pthread support and disables OpenSSL, but it does not check the generated AVX-512 SHA3 setting. I’ll add that check immediately after CMake configuration and a second guard when compiling the shim. The
+  cleanup regression will use isolated test linkage through the existing Rust API, so production code needs no failure-injection hooks.
+ 
+• Explored
+  └ Read PHASE_1_VALIDATION.txt
+    + Show details                                                                                                                                                                                                                          
+ 
+⚠ Heads up, you have less than 10% of your 5h limit left. Run /status for a breakdown.
+ 
+• Explored · 1 failed
+  └ Read PHASE_1_VALIDATION.txt, TEST_MATRIX.md, build.rs, oqs_shim.c, oqs_shim.h, Cargo.toml, Cargo.lock, tests.rs, ffi.rs, kem.rs, signature.rs, secret.rs, error.rs, lib.rs, mod.rs
+    Read native_contract.c
+    Read check_pqc_native.py
+    + Show details                                                                                                                                                                                                                          
+ 
+⚠ Heads up, you have less than 5% of your 5h limit left. Run /status for a breakdown.
+ 
+• Ran python3 - <<'PY' …
+  └
+    if __name__ == "__main__":
+        unittest.main(verbosity=2)
+    + 75 lines (ctrl+t to expand)                                                                                                                                                                                                           
+ 
+• Edited 2 files (+54 -2)
+  └ trusted-client/build.rs (+48 -0)
+     58 +fn sha3_avx512_disabled(header: &str) -> bool {
+     59 +    // The pinned CMake template emits exactly this undef marker when disabled.
+     60 +    // Reject definitions (even 0: upstream uses #if defined), missing markers,
+ 
+  └ trusted-client/native/oqs_shim.c (+6 -2)
+     5 -/* Concurrent wrappers depend on liboqs's pthread_once SHA3 dispatch. The
+     6 - * process-lifetime policy also assumes no OpenSSL prefetched global objects. */
+     5 +/* Retain pthread_once for the internal SHA3 dispatch pointers. The AVX-512
+    + Show details                                                                                                                                                                                                                          
+ 
+• Explored
+  └ Read build.rs, validate_phase0.py
+    + Show details                                                                                                                                                                                                                          
+ 
+■ You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 10:44 AM.
+ 
+ 
+› Ask Codex to do anything
+ 
+  GPT-6.1-Sol xhigh fast · ~/Projects/FP1 · Review security project documents
+  ← for agents · ? for shortcuts                                                                                                                                                                                  ⚠ 5 warnings · f2 to view

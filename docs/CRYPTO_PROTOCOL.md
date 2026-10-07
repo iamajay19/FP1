@@ -1,7 +1,8 @@
 # Cryptographic Protocol
 
-Status: PLANNED Phase 0 version-1 design baseline. No primitives or codecs are
-implemented. Changes require a decision entry and affected tests before use.
+Status: Phase 0 version-1 design baseline; Phase 1 ML-KEM/ML-DSA primitive
+wrappers are IMPLEMENTED and TESTED. Other protocol operations/codecs remain
+PLANNED. Changes require a decision entry and affected tests before use.
 [PROJECT_SPEC.md](PROJECT_SPEC.md) remains authoritative.
 
 ## Notation and deterministic bytes
@@ -48,6 +49,16 @@ material. Every trust anchor has a locally approved issuer B[32], ML-DSA public 
 and permitted roles. CA and publisher signing keys are separate from recipient keys.
 Size constants are format requirements to verify against selected library APIs in
 Phase 1, not permission to implement the primitives manually.
+
+Phase 1 implementation clarification: pinned liboqs 0.16.0 is checked at runtime
+for these sizes and identifiers. Signing uses the ordinary pure ML-DSA API;
+cross-verification with explicit NULL,0 context APIs is tested in both directions.
+The returned signature length is checked before use; FIPS 204 ML-DSA-65 signatures
+are 3309 bytes. Malformed key/ciphertext/signature lengths reject before native
+operations. Verification permits authorization only on `Ok(true)`; `Ok(false)`
+and errors reject. Secret-key types are distinct and have no public raw export.
+No certificate, serialization, CEK wrapping or storage protocol is implemented yet.
+See [PHASE_1_REVIEW.md](PHASE_1_REVIEW.md). No approved protocol bytes changed.
 
 ## Certificate and revocation schemas
 

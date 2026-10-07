@@ -1,8 +1,11 @@
 # Test Matrix
 
 Phase 0 evidence is recorded in [PHASE_0_REVIEW.md](PHASE_0_REVIEW.md).
-TESTED means the named Phase 0 check ran; it does not validate runtime cryptography.
-All later tests remain PLANNED, not passed or silently removed. The implementation
+Phase 0 TESTED statuses retain their historical evidence. Phase 1 TESTED statuses
+now refer to actual primitive checks in PHASE_1_VALIDATION.txt and PHASE_1_REVIEW.md.
+The authorized H-01/L-01 reruns and new regressions have separate evidence in
+[PHASE_1_CORRECTIONS_VALIDATION.txt](PHASE_1_CORRECTIONS_VALIDATION.txt).
+Phase 2 and later tests remain PLANNED, not passed or silently removed. The implementation
 plan supplies the detailed expected outcomes for its mandatory IDs. Additional cases
 close design-review gaps. Phase is the intended implementation/validation phase.
 
@@ -31,16 +34,16 @@ atomic release or final acceptance test.
 
 | ID | Phase | Scenario / required assertion | Status | Evidence |
 |---|---|---|---|---|
-| ML-KEM-768 | 1 | key generation | PLANNED | Not implemented or executed |
-| PQC-KEM-001 | 1 | valid encapsulation/decapsulation | PLANNED | Not implemented or executed |
-| PQC-KEM-002 | 1 | wrong private key | PLANNED | Not implemented or executed |
-| PQC-KEM-003 | 1 | modified KEM ciphertext | PLANNED | Not implemented or executed |
-| PQC-KEM-004 | 1 | truncated KEM ciphertext | PLANNED | Not implemented or executed |
-| PQC-SIG-001 | 1 | valid sign/verify | PLANNED | Not implemented or executed |
-| PQC-SIG-002 | 1 | wrong public key | PLANNED | Not implemented or executed |
-| PQC-SIG-003 | 1 | modified message | PLANNED | Not implemented or executed |
-| PQC-SIG-004 | 1 | modified signature | PLANNED | Not implemented or executed |
-| PQC-SIG-005 | 1 | truncated signature | PLANNED | Not implemented or executed |
+| ML-KEM-768 | 1 | key generation | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-KEM-001 | 1 | valid encapsulation/decapsulation | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-KEM-002 | 1 | wrong private key | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-KEM-003 | 1 | modified KEM ciphertext | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-KEM-004 | 1 | truncated KEM ciphertext | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-SIG-001 | 1 | valid sign/verify | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-SIG-002 | 1 | wrong public key | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-SIG-003 | 1 | modified message | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-SIG-004 | 1 | modified signature | TESTED | cargo test; PHASE_1_VALIDATION.txt |
+| PQC-SIG-005 | 1 | truncated signature | TESTED | cargo test; PHASE_1_VALIDATION.txt |
 | PKI-CERT-001 | 2 | valid certificate | PLANNED | Not implemented or executed |
 | PKI-CERT-002 | 2 | modified certificate | PLANNED | Not implemented or executed |
 | PKI-CERT-003 | 2 | invalid CA signature | PLANNED | Not implemented or executed |
@@ -173,3 +176,34 @@ atomic release or final acceptance test.
 | GUI-001 | 11 | UI cannot request plaintext; errors, cancellation and repeated operations fail safely | PLANNED | Not implemented or executed |
 | FUZZ-001 | 12 | Fuzz CADP, certificate, receipt, watermark, PDF and chaincode parsers | PLANNED | Not implemented or executed |
 | OFFLINE-001 | 13 | Clean disconnected build, provisioning, encryption, release and forensics | PLANNED | Not implemented or executed |
+
+## Additional Phase 1 checks
+
+All IDs below have actual evidence in [PHASE_1_VALIDATION.txt](PHASE_1_VALIDATION.txt).
+Review scope/limitations are in [PHASE_1_REVIEW.md](PHASE_1_REVIEW.md).
+
+| ID | Phase | Scenario / required assertion | Status | Evidence |
+|---|---|---|---|---|
+| PQC-KEM-005 | 1 | Noncanonical correctly sized public key rejects; failed shared-secret output cleansed | TESTED | pqc_kem_005; cargo test |
+| PQC-BACKEND-001 | 1 | Runtime 0.16.0, exact compiled source pin, precisely the two required enabled algorithms | TESTED | pqc_backend_001; C initialization enumeration |
+| PQC-SIZE-001 | 1 | Backend sizes equal 1184/2400/1088/32 and 1952/4032/3309 | TESTED | pqc_size_001 |
+| PQC-BOUNDARY-001 | 1 | Empty/short/long KEM public key and ciphertext reject before native operation | TESTED | pqc_boundary_001; thread-local native-call counter |
+| PQC-BOUNDARY-002 | 1 | Internal KEM secret/output length guards reject before native operation | TESTED | pqc_boundary_002; generated public secret type has no raw importer |
+| PQC-BOUNDARY-003 | 1 | Empty/short/long signing public key/signature reject before native operation | TESTED | pqc_boundary_003 |
+| PQC-BOUNDARY-004 | 1 | Internal signing secret/capacity guards reject before native operation | TESTED | pqc_boundary_004 |
+| PQC-MSG-001 | 1 | Empty and borrowed 1 MiB messages sign/verify without wrapper-sized message allocation | TESTED | pqc_msg_001 |
+| PQC-CTX-001 | 1 | Ordinary and NULL,0-context sign/verify interoperate in both directions | TESTED | pqc_ctx_001; no randomized signature equality assumption |
+| PQC-SECRET-001 | 1 | Ordinary Debug prints only fixed redacted labels | TESTED | pqc_secret_001 |
+| PQC-SECRET-002 | 1 | Drop cleanses all three secret buffer sizes before deallocation | TESTED | pqc_secret_002; live-buffer test observation |
+| PQC-ALLOC-001 | 1 | Capacity-overflow allocation failure returns typed error without allocation/panic | TESTED | pqc_alloc_001 |
+| PQC-LIFE-001 | 1 | Repeated operations initialize once and execute same-thread cleanup per call | TESTED | pqc_life_001 |
+| PQC-CONC-001 | 1 | Four concurrent workers run KEM/signatures; fresh-process concurrent initialization | TESTED | pqc_conc_001; separate filtered process |
+| PQC-KEY-001 | 1 | Raw getter, Clone and signature-to-KEM secret substitution fail compilation | TESTED | Three Rust compile-fail doctests |
+| PQC-FFI-001 | 1 | Native null/length guards reject before handle allocation | TESTED | check_pqc_native.py; Clang ASan/UBSan |
+| PQC-FFI-002 | 1 | Injected native handle allocation failure safely returns and balances handles | TESTED | check_pqc_native.py; disposable linker wrapping |
+| PQC-FFI-003 | 1 | Injected native operation failures reject and free handles; cleanse works | TESTED | check_pqc_native.py; backend itself uninstrumented |
+| PQC-FFI-004 | 1 | Injected null/inconsistent metadata rejects without null dereference or handle leak | TESTED | check_pqc_native.py |
+| PQC-BUILD-001 | 1 | Missing/wrong/dirty/untracked/ignored/concealed-index source rejects; original untouched | TESTED | check_pqc_source_pin.py; six disposable-clone cases |
+| PQC-SCOPE-001 | 1 | Only approved primitive component has runtime implementation; later components stay scaffold-only | TESTED | validate_phase1.py |
+| PQC-BUILD-002 | 1 | Generated SHA3 AVX512VL must be undefined; reject enabled/zero/missing/ambiguous definitions and forbidden shim compilation | TESTED | check_pqc_native.py; build.rs test; fresh header evidence and separate ON-cache override in PHASE_1_CORRECTIONS_VALIDATION.txt |
+| PQC-SECRET-003 | 1 | Four partial native failures pass through actual Rust error/Drop/cleanse/free; observe memory only before free | TESTED | check_pqc_native.py; isolated production rlib + support fixtures; four cases and omitted-cleanse negative control in PHASE_1_CORRECTIONS_VALIDATION.txt |
