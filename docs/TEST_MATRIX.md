@@ -5,7 +5,7 @@ Phase 0 TESTED statuses retain their historical evidence. Phase 1 TESTED statuse
 now refer to actual primitive checks in PHASE_1_VALIDATION.txt and PHASE_1_REVIEW.md.
 The authorized H-01/L-01 reruns and new regressions have separate evidence in
 [PHASE_1_CORRECTIONS_VALIDATION.txt](PHASE_1_CORRECTIONS_VALIDATION.txt).
-Phase 2 and later tests remain PLANNED, not passed or silently removed. The implementation
+The original 19 Phase 2 PKI tests and later tests remain PLANNED; Phase 2A foundation evidence is separate below. The implementation
 plan supplies the detailed expected outcomes for its mandatory IDs. Additional cases
 close design-review gaps. Phase is the intended implementation/validation phase.
 
@@ -211,7 +211,7 @@ Review scope/limitations are in [PHASE_1_REVIEW.md](PHASE_1_REVIEW.md).
 | PQC-FFI-003 | 1 | Injected native operation failures reject and free handles; cleanse works | TESTED | check_pqc_native.py; backend itself uninstrumented |
 | PQC-FFI-004 | 1 | Injected null/inconsistent metadata rejects without null dereference or handle leak | TESTED | check_pqc_native.py |
 | PQC-BUILD-001 | 1 | Missing/wrong/dirty/untracked/ignored/concealed-index source rejects; original untouched | TESTED | check_pqc_source_pin.py; six disposable-clone cases |
-| PQC-SCOPE-001 | 1 | Only approved primitive component has runtime implementation; later components stay scaffold-only | TESTED | validate_phase1.py |
+| PQC-SCOPE-001 | 1 | Audited PQC boundary preserved; scope validator admits explicitly approved Phase 2A foundation only; other components stay scaffold-only | TESTED | validate_phase1.py |
 | PQC-BUILD-002 | 1 | Generated SHA3 AVX512VL must be undefined; reject enabled/zero/missing/ambiguous definitions and forbidden shim compilation | TESTED | check_pqc_native.py; build.rs test; fresh header evidence and separate ON-cache override in PHASE_1_CORRECTIONS_VALIDATION.txt |
 | PQC-SECRET-003 | 1 | Four partial native failures pass through actual Rust error/Drop/cleanse/free; observe memory only before free | TESTED | check_pqc_native.py; isolated production rlib + support fixtures; four cases and omitted-cleanse negative control in PHASE_1_CORRECTIONS_VALIDATION.txt |
 
@@ -231,3 +231,37 @@ concurrent consumption, and D-25 zero-skew validity boundaries, stale/future CRL
 sequence rollback/conflicts/cumulative preservation and persistence failure. Add stable
 IDs when implementing these regressions without replacing existing PKI IDs. No PoP,
 CBOR, certificate, CRL, bundle, filesystem or time-policy runtime check is claimed here.
+
+
+## Phase 2A foundation — 2026-10-08
+
+Foundation implementation/test evidence ONLY: PHASE_2A_REVIEW.md and
+PHASE_2A_VALIDATION.txt. Original 19 PKI rows are byte-identical and remain PLANNED.
+Phase 2 is not complete; no Phase 2B/3 workflow implemented. Existing Phase 1 IDs
+were rerun with native code/FFI unchanged; scope check now admits authorized utilities.
+
+| ID | Phase | Scenario / required assertion | Status | Evidence |
+|---|---|---|---|---|
+| P2A-DEPS-001 | 2A | Exact pins/features, vendor/owner/Cargo checksum sets and offline compilation | TESTED | PHASE_2A_VALIDATION.txt; validate_phase2a.py |
+| P2A-BUILD-001 | 2A | RNG cfg predicate accepts only one unambiguous Linux syscall selection | TESTED | PHASE_2A_VALIDATION.txt; build.rs harness |
+| P2A-BUILD-002 | 2A | Actual Cargo missing/alternate/conflicting RNG cfg fails closed | TESTED | PHASE_2A_VALIDATION.txt; validate_phase2a.py |
+| P2A-CBOR-001 | 2A | Canonical values, integer transitions, exact synthetic schema and stable map order | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-002 | 2A | Overwide integers and byte/text/map lengths reject by full-byte comparison | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-003 | 2A | Reject all indefinite forms, floats, tags, negative/simple/null/bool/break | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-004 | 2A | Reject duplicates/alternate key spelling, unknown fields, wrong order and trailing bytes | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-005 | 2A | Truncation, U64 oversized lengths, invalid UTF-8 and class byte limits | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-006 | 2A | 256-item budget, depth overflow and embedded aggregate accounting | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-007 | 2A | Exact approved domain labels and array/byte-string encoding | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-008 | 2A | 256 deterministic typed round trips/mutations and 1280 malformed inputs | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-009 | 2A | Accepted typed value requires exact whole-original re-encoding; overwide array rejects | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-CBOR-010 | 2A | Depth boundary, embedded depth, CRL item/entry ceilings and geometric bounded output growth | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-ID-001 | 2A | Distinct fixed key-ID types, exact key lengths, deterministic public golden vectors and changed keys | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-ID-002 | 2A | Identical synthetic bytes hash differently across KEM/signature labels | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-RNG-001 | 2A | OS-random output32 and independent calls | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-RNG-002 | 2A | Injected partial-fill failure returns typed error and no identifier/fallback | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-RNG-003 | 2A | Actual production RandomId rejects forced ENOSYS and EPERM syscalls | TESTED | PHASE_2A_VALIDATION.txt; validate_phase2a.py |
+| P2A-HASH-001 | 2A | SHA-256 abc vector | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-MAC-001 | 2A | RFC4231 equivalent padded key, full tag; changed message/tag and short tags reject | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-KDF-001 | 2A | RFC5869 case1 exact32-byte extract+expand output | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-SECRET-001 | 2A | Redacted Debug and actual Drop observes wiped live heap before free | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
+| P2A-SECRET-002 | 2A | Disposable omission of only Drop wipe makes persistent cleanup test fail | TESTED | PHASE_2A_VALIDATION.txt; validate_phase2a.py |

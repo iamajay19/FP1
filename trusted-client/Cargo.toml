@@ -2,14 +2,26 @@
 name = "cadp-pqc"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.89"
 publish = false
-description = "Phase 1 ML-KEM-768 and pure ML-DSA-65 wrappers for pinned liboqs"
+description = "Pinned PQ primitives and bounded Phase 2A security utilities"
 
-# No registry or build dependencies: the C shim and liboqs are built with host tools.
+# Exact offline-reviewed pins; Blake2 unifies Argon2's hash cleanup feature.
+[dependencies]
+aes-gcm = { version = "=0.11.1", default-features = false, features = ["aes", "zeroize"] }
+argon2 = { version = "=0.6.0", default-features = false, features = ["zeroize"] }
+sha2 = { version = "=0.11.0", default-features = false, features = ["zeroize"] }
+blake2 = { version = "=0.11.0", default-features = false, features = ["zeroize"] }
+getrandom = { version = "=0.4.3", default-features = false }
+rpassword = { version = "=7.5.4", default-features = false }
+zeroize = { version = "=1.9.1", default-features = false, features = ["alloc"] }
+minicbor = { version = "=2.3.0", default-features = false }
+hmac = { version = "=0.13.0", default-features = false, features = ["zeroize"] }
+hkdf = { version = "=0.13.0", default-features = false }
+
+# No registry build dependencies: native code still uses the audited host tools.
 [lints.rust]
 unsafe_op_in_unsafe_fn = "deny"
 
 [lints.clippy]
 undocumented_unsafe_blocks = "deny"
-

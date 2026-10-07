@@ -245,3 +245,32 @@ cleanup ownership, KDF benchmark and local-time/host-rollback caveats remain req
 for future implementation. Q-07's Phase 2 source subset is READY; full deployment
 closure is still Phase 13. No Phase 2 production or Phase 3 code was added, and all
 19 existing Phase 2 runtime IDs remain PLANNED. This report stops at the user gate.
+
+
+## Authorized Phase 2A implementation — 2026-10-08
+
+D-27: implement D-23 with private borrowed typed Reader/Decode/Encode, a bounded
+structural preflight, exact-field map helper and deterministic encoded-key sorting.
+Only validated() returns an accepted decoded object, after full consumption and
+whole-original-byte re-encoding equality. Embedded canonical byte objects share
+item budget and logical depth; there is no generic Value tree or unknown-field skip.
+The five supported major types match existing Phase 2 schemas; other RFC CBOR forms
+are forbidden by this approved subset. No certificate/bundle/PoP/CRL schema exists yet.
+
+D-28: enforce Cargo-wide Linux syscall-only getrandom cfg and matching rustdoc cfg,
+with build predicate and crate compile guards. Keep fixed public RandomId B[32] and
+separate KemKeyId/SignatureKeyId B[32] types. Key IDs use the unchanged exact D/H
+labels and public-key lengths. There is no algorithm/domain-string selection API.
+
+D-29: fixed SHA-256, extract+expand HKDF-SHA-256 output32 and full HMAC-SHA-256 Tag32
+helpers remain internal. HMAC takes private Secret32 and authenticates via library
+verify_slice only. Secret32 owns a fallibly allocated fixed heap buffer, redacts Debug
+and zeroizes normal Drop. Existing audited Phase 1 secret types are unchanged.
+Exposed PRK is explicitly zeroized; dependency-internal HKDF expand copies remain.
+No new project unsafe, secret export, password input, PoP state or storage boundary.
+
+D-26 dependency gate remains READY and exact pins/features are now integrated.
+Phase 2A is implemented/tested only at its foundation boundary; all 19 original PKI
+rows remain PLANNED. Q-02/Q-03 design is unchanged, with benchmark/recovery and trusted
+time/host rollback still open. Phase 2B requires review and explicit approval; no
+Phase 3 authorization. PHASE_2A_REVIEW.md / PHASE_2A_VALIDATION.txt record current evidence.

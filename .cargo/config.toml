@@ -1,0 +1,14 @@
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = ".deps/phase2-vendor"
+
+[net]
+offline = true
+
+[build]
+# Applies to dependencies too. A root-only rustc-cfg cannot select getrandom's backend.
+rustflags = ["--cfg", 'getrandom_backend="linux_getrandom"']
+# Rustdoc recompiles the crate for doctests and does not inherit rustflags.
+rustdocflags = ["--cfg", 'getrandom_backend="linux_getrandom"']

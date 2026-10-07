@@ -1,0 +1,1313 @@
+PHASE 2A IMPLEMENTATION / VALIDATION EVIDENCE
+Scope: foundation only. Full Phase 2 and Phase 3 NOT IMPLEMENTED.
+No network/downloads. Vendor source only, offline locked builds.
+Independent review is pending; this record is actual execution plus self-review.
+Historical Phase 0/1 and Phase 2 dependency-gate evidence unchanged.
+
+Environment for the final sequence:
+  CARGO_HOME=/tmp/fp1-p2a-stn46b_t/cargo-home-final
+  CARGO_TARGET_DIR=/tmp/fp1-p2a-stn46b_t/target-final
+Both were initially empty/absent before the final fresh native/clippy/debug/release
+sequence. Subsequent corrective and post-documentation reruns reused that private
+target and home. This is not a claim that each repeated command started empty.
+All resolved sources come from .deps/phase2-vendor; there was no dependency fetch.
+Disposable fixtures/targets removed after outputs are recorded.
+
+Initial failures observed and corrected before this final passing sequence:
+- Public RFC 4231 expected-tag fixture had one missing hexadecimal digit; corrected.
+- Clippy reported two test-only style/type-complexity warnings; corrected.
+- Unit tests passed but rustdoc failed because it did not inherit rustflags. Added
+  matching rustdocflags, keeping the compile guard active; three doctests now pass.
+- Mixed backend cfgs failed in getrandom before root build guard ran. The negative
+  control now correctly reports dependency rejection; separate predicate tests
+  exercise the project guard. No upstream patch or fallback was used.
+Initial per-attempt log files were overwritten by the final runner. Above is an
+observed failure summary, not a fabricated retained command transcript.
+
+Self-review fixes: bounded geometric encoder capacity growth, private typed HMAC
+key owner, dependency-aware Phase 1 native test discovery, rustdoc configuration.
+No new project-owned unsafe Rust. FFI remains one unsafe extern block and ten
+unsafe call blocks. No production unwrap/expect/panic/assert/TODO additions.
+No full-backend ASan, TSan, LeakSanitizer, AVX-512 hardware execution or fuzzing claim.
+Native shim ASan/UBSan uses detect_leaks=0; retained backend is uninstrumented.
+M-01 fatal backend failures/copy/physical-erasure limitations remain unchanged.
+
+Recorded at 2026-10-07T20:44:04.884821+00:00
+
+$ rustc --version --verbose
+exit=0
+rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)
+binary: rustc
+commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985
+commit-date: 2026-09-01
+host: x86_64-unknown-linux-gnu
+release: 1.98.1
+LLVM version: 22.1.8
+
+
+$ cargo --version --verbose
+exit=0
+cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)
+release: 1.98.1
+commit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d
+commit-date: 2026-08-05
+host: x86_64-unknown-linux-gnu
+libgit2: 1.9.7 (sys:0.21.0 system)
+libcurl: 8.18.0 (sys:0.4.90+curl-8.21.0 system ssl:OpenSSL/3.5.9)
+os: Fedora 44.0.0 [64-bit]
+
+
+$ uname -m
+exit=0
+x86_64
+
+
+$ cat /etc/fedora-release
+exit=0
+Fedora release 44 (Forty Four)
+
+
+$ git -C .deps/liboqs-0.16.0 rev-parse HEAD
+exit=0
+5a1a854b0dc9f2141bdc771c555ee60c37950183
+
+
+$ git -C .deps/liboqs-0.16.0 describe --tags --exact-match
+exit=0
+0.16.0
+
+
+$ git -C .deps/liboqs-0.16.0 status --porcelain=v1 --untracked-files=all
+exit=0
+
+
+Initial-snapshot preservation PASS: 29 protected files byte-identical.
+AGENTS.md f829e75b2ec05084dffc83e6a566b689a42b0d97c616ad7ed810323e3557e72e
+.gitignore 19248edf70f42564bebe59d5485f8d885fb1ece510dca3de366f98171228969b
+docs/PROJECT_SPEC.md 6c7422be9bdd4cc29cd3813ac2bed96f4c6767b9f13e11cb533a21a8275ab933
+docs/IMPLEMENTATION_PLAN.md e3a1d9f69360c6538806d9140c916311648eef0cabe38378b8a133f9a3c7bf3a
+docs/CRYPTO_PROTOCOL.md 95b5cfe7bb1adc79ef10033ff2580e02d48b323c44c3f2fbfaeb59585f87e3ed
+docs/KEY_MANAGEMENT.md 04643eb1bc6ce9cb613c6b7dbd7a58705427cf910138b59f7b9207269d7b08a9
+docs/PHASE_0_REVIEW.md 9368748d552e3ba33f5c035c68b986ccbac26cd72819de57932a28853d345315
+docs/PHASE_0_VALIDATION.txt e17c808f32d348dfb6619f619f91d0beb3edc08aee3716dfb3d721a267f88e90
+docs/PHASE_1_ENVIRONMENT_VALIDATION.txt 2a28b6f4cddad79a59ed14a342c89f28faa2999d42713bae40a96e372efc7968
+docs/PHASE_1_ENVIRONMENT_RECHECK.txt 03fe19d110fe7f0b63affedc3a3636a80ad246dc058d252f4557571192214234
+docs/PHASE_1_Q01_READINESS.txt dd00050565077bef110fcc9f697b7411e4675ed7b842c169b44a4c7a3b3a17b1
+docs/PHASE_1_REVIEW.md 7b54cd1326d1dc1061f6e46ff27e6f115892ec0c29875a74197a01bc12ab22fc
+docs/PHASE_1_VALIDATION.txt 5b1b3f7377569ffe440d6b37033305b361551f0e42961745c21524257abd64b6
+docs/PHASE_1_CORRECTIONS_VALIDATION.txt 7895d7ba34470deeafdd412f2e00998c7dd5f75751f09406512aeeab6a644973
+docs/PHASE_1_ASTRA_REAUDIT.txt 4f1b9fa9f63d81d861694a71558f9120e5a1941285943ad9ef2f401530b0e5f4
+docs/PHASE_2_REVIEW.md 1b712315d1b9e27997f3a072d2ddd695a314346b4c6d86952fe83daf78bd9d12
+docs/PHASE_2_VALIDATION.txt 5d07a06bf6320b44ef4e20c1fa8a4e7af0220cc79296aaa30501ceb29067cd51
+trusted-client/native/oqs_shim.h ef3145595ac60526d628c770038e0c44782a9cb4aa1f94e404d10000e31487e5
+trusted-client/native/oqs_shim.c e2bf14dfa38396108c7b5f4560b0d9627aa3258e726aa13ac434265699ced4c2
+trusted-client/tests/native_contract.c 091f35fe415a2bafe689854b22439550b7cb597f3051831e7e5a4e7b54b6f9ed
+trusted-client/tests/support/partial_output.c 4e0989e94595ba577f05927c1d9f6d309d28b184620e6919771ca31017d926cc
+trusted-client/tests/support/partial_output.rs 99b8f127bd375f40337635302f985ddea4abcf3768c8f4b98c5bf4536c7bd9ea
+trusted-client/src/pqc/mod.rs c7cc50b0dbf92ada0f865d92c0d0cd59c93cc4479f4e992235141bd93a54061f
+trusted-client/src/pqc/error.rs f026269cb990c7ea93d457c3327aa554456ec17b9133ee48376ba090fa4ecb90
+trusted-client/src/pqc/ffi.rs 493672a8695b0df6718dc5dc8191abd76251822189038a30949f2fd37f4b82e3
+trusted-client/src/pqc/secret.rs 68c1f64092af931733390b17726ee775cedd60baad066bd5b9fcaf738bacf4fd
+trusted-client/src/pqc/kem.rs b4fffdf0de3d9ca2ae3add99183aa93cc713d897de2c6c43588d93b262f1e189
+trusted-client/src/pqc/signature.rs 720e89e211e79c72dd881bbb985eefa6782b47d5729c4b5477f2d514ee996c49
+trusted-client/src/pqc/tests.rs b916e7dacf2e5092daf0af11d013362b1ee0d4f10d944ae1c8aebc7ed7e4aba9
+
+Original 19 PKI runtime rows: byte-identical / PLANNED.
+| PKI-CERT-001 | 2 | valid certificate | PLANNED | Not implemented or executed |
+| PKI-CERT-002 | 2 | modified certificate | PLANNED | Not implemented or executed |
+| PKI-CERT-003 | 2 | invalid CA signature | PLANNED | Not implemented or executed |
+| PKI-CERT-004 | 2 | wrong CA | PLANNED | Not implemented or executed |
+| PKI-CERT-005 | 2 | expired certificate | PLANNED | Not implemented or executed |
+| PKI-CERT-006 | 2 | future certificate | PLANNED | Not implemented or executed |
+| PKI-CERT-007 | 2 | malformed certificate | PLANNED | Not implemented or executed |
+| PKI-CERT-008 | 2 | unsupported algorithm | PLANNED | Not implemented or executed |
+| PKI-KEY-001 | 2 | correct password | PLANNED | Not implemented or executed |
+| PKI-KEY-002 | 2 | wrong password | PLANNED | Not implemented or executed |
+| PKI-KEY-003 | 2 | corrupted encrypted key | PLANNED | Not implemented or executed |
+| PKI-KEY-004 | 2 | key separation | PLANNED | Not implemented or executed |
+| PKI-KEY-005 | 2 | secret zeroization review | PLANNED | Not implemented or executed |
+| PKI-REV-001 | 2 | revoked signing key | PLANNED | Not implemented or executed |
+| PKI-REV-002 | 2 | revoked KEM key | PLANNED | Not implemented or executed |
+| PKI-REV-003 | 2 | modified revocation list | PLANNED | Not implemented or executed |
+| PKI-REV-004 | 2 | Reject stale CRL, sequence rollback, missing CRL and incorrect identity binding | PLANNED | Not implemented or executed |
+| PKI-ROT-001 | 2 | Rotate keys while preserving historical public verification evidence | PLANNED | Not implemented or executed |
+| PKI-BUNDLE-001 | 2 | Reject oversized KDF parameters, role/metadata swaps and reused nonces | PLANNED | Not implemented or executed |
+
+23 unique new Phase 2A test IDs: P2A-DEPS-001, P2A-BUILD-001, P2A-BUILD-002, P2A-CBOR-001, P2A-CBOR-002, P2A-CBOR-003, P2A-CBOR-004, P2A-CBOR-005, P2A-CBOR-006, P2A-CBOR-007, P2A-CBOR-008, P2A-CBOR-009, P2A-CBOR-010, P2A-ID-001, P2A-ID-002, P2A-RNG-001, P2A-RNG-002, P2A-RNG-003, P2A-HASH-001, P2A-MAC-001, P2A-KDF-001, P2A-SECRET-001, P2A-SECRET-002
+
+Generated / installed header equality PASS: /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-build/include/oqs/oqsconfig.h
+/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install/include/oqs/oqsconfig.h
+/* #undef OQS_USE_OPENSSL */
+#define OQS_USE_PTHREADS 1
+/* #undef OQS_USE_SHA3_AVX512VL */
+#define OQS_ENABLE_KEM_ml_kem_768 1
+#define OQS_ENABLE_SIG_ml_dsa_65 1
+Archive SHA256 a541a3c756e3e63fe8fda8b66f47e0be66a0cbccf3cca468f71a7cecc421fd43 /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install/lib/liboqs.a
+nm -a archive: exit=0; no avx512vl symbol reference (uninstrumented backend).
+
+Generated / installed header equality PASS: /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-build/include/oqs/oqsconfig.h
+/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include/oqs/oqsconfig.h
+/* #undef OQS_USE_OPENSSL */
+#define OQS_USE_PTHREADS 1
+/* #undef OQS_USE_SHA3_AVX512VL */
+#define OQS_ENABLE_KEM_ml_kem_768 1
+#define OQS_ENABLE_SIG_ml_dsa_65 1
+Archive SHA256 5b1b4fa974715b2729788e3ac092b6dec2f961ceb82f6202872e51fa8f13b309 /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a
+nm -a archive: exit=0; no avx512vl symbol reference (uninstrumented backend).
+
+Generated / installed header equality PASS: /tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-build/include/oqs/oqsconfig.h
+/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install/include/oqs/oqsconfig.h
+/* #undef OQS_USE_OPENSSL */
+#define OQS_USE_PTHREADS 1
+/* #undef OQS_USE_SHA3_AVX512VL */
+#define OQS_ENABLE_KEM_ml_kem_768 1
+#define OQS_ENABLE_SIG_ml_dsa_65 1
+Archive SHA256 814e5ea79e00c716ee106ed3aa7506a8655ade6ac24db1d6a5cb616a54f3b6ba /tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install/lib/liboqs.a
+nm -a archive: exit=0; no avx512vl symbol reference (uninstrumented backend).
+
+FINAL COMMAND SEQUENCE (actual captured output)
+
+$ cargo fmt --manifest-path trusted-client/Cargo.toml --check
+exit=0
+$ cargo fmt --manifest-path trusted-client/Cargo.toml --check
+
+EXIT=0
+
+
+$ cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+exit=0
+$ cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.61s
+
+EXIT=0
+
+
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+exit=0
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.79s
+     Running unittests src/lib.rs (/tmp/fp1-p2a-stn46b_t/target-final/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+EXIT=0
+
+
+$ cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+exit=0
+$ cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `release` profile [optimized] target(s) in 6.11s
+     Running unittests src/lib.rs (/tmp/fp1-p2a-stn46b_t/target-final/release/deps/cadp_pqc-2e9aae472d95fb7f)
+
+running 41 tests
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+EXIT=0
+
+
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml pqc_conc_001 -- --test-threads=1
+exit=0
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml pqc_conc_001 -- --test-threads=1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.71s
+     Running unittests src/lib.rs (/tmp/fp1-p2a-stn46b_t/target-final/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 1 test
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 0.00s
+
+
+EXIT=0
+
+
+$ python3 scripts/validate_phase2a.py
+exit=0
+$ python3 scripts/validate_phase2a.py
+P2A-DEPS-001 integrity PASS: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets, no symlinks
+P2A-DEPS-001 features PASS: exact ten pins / 31 Linux registry crates
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.55s
+$ cc -shared -fPIC -Wall -Wextra -Werror /tmp/fp1-p2a-controls-lycd_yw0/deny.c -o /tmp/fp1-p2a-controls-lycd_yw0/deny.so
+$ rustc --edition=2024 -D warnings /tmp/fp1-p2a-controls-lycd_yw0/rng.rs --extern cadp_pqc=/tmp/fp1-p2a-stn46b_t/target-final/debug/libcadp_pqc.rlib -L dependency=/tmp/fp1-p2a-stn46b_t/target-final/debug/deps -o /tmp/fp1-p2a-controls-lycd_yw0/rng
+$ /tmp/fp1-p2a-controls-lycd_yw0/rng
+P2A-RNG-003 production syscall failure ENOSYS: PASS
+$ /tmp/fp1-p2a-controls-lycd_yw0/rng
+P2A-RNG-003 production syscall failure EPERM: PASS
+Rejection source: project guard
+P2A-BUILD-002 override rejected: ''; exit=101
+Rejection source: project guard
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_raw"'; exit=101
+Rejection source: dependency configuration rejection
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'; exit=101
+P2A-SECRET-002 missing-Drop-wipe negative control rejected: exit=101
+Temporary fixtures removed; no production hook or alternate RNG
+
+EXIT=0
+
+
+$ python3 scripts/check_pqc_native.py
+exit=0
+$ python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.61s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-klu5mrwi/configuration-tests
+$ /tmp/fp1-native-test-klu5mrwi/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-klu5mrwi/forbidden -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-klu5mrwi/forbidden -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-klu5mrwi/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-klu5mrwi/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-klu5mrwi/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/tmp/fp1-p2a-stn46b_t/target-final/debug/libcadp_pqc.rlib -L dependency=/tmp/fp1-p2a-stn46b_t/target-final/debug/deps -C link-arg=/tmp/fp1-native-test-klu5mrwi/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-klu5mrwi/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-klu5mrwi/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-klu5mrwi/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-klu5mrwi/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-klu5mrwi/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+
+EXIT=0
+
+
+$ python3 scripts/check_pqc_source_pin.py
+exit=0
+$ python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-qaao8ze_/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-qaao8ze_/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-qaao8ze_/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-qaao8ze_/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-qaao8ze_/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-qaao8ze_/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-qaao8ze_/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-qaao8ze_/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-qaao8ze_/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-qaao8ze_/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-qaao8ze_/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-qaao8ze_/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-qaao8ze_/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-qaao8ze_/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-qaao8ze_/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-qaao8ze_/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-qaao8ze_/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-qaao8ze_/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-qaao8ze_/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-qaao8ze_/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-qaao8ze_/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-qaao8ze_/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling polyval v0.7.3
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling hmac v0.13.0
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-qaao8ze_/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-qaao8ze_/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-qaao8ze_/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-qaao8ze_/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling ghash v0.6.0
+   Compiling hkdf v0.13.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling argon2 v0.6.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-qaao8ze_/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-qaao8ze_/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+
+EXIT=0
+
+
+$ python3 scripts/validate_phase1.py
+exit=0
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.116s
+
+OK (skipped=1)
+
+EXIT=0
+
+
+$ make build
+exit=0
+$ make build
+cargo build --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.49s
+
+EXIT=0
+
+
+$ make check
+exit=0
+$ make check
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.117s
+
+OK (skipped=1)
+cargo fmt --manifest-path trusted-client/Cargo.toml --check
+cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.55s
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.65s
+     Running unittests src/lib.rs (/tmp/fp1-p2a-stn46b_t/target-final/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.51s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-wbhnbn_q/configuration-tests
+$ /tmp/fp1-native-test-wbhnbn_q/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-wbhnbn_q/forbidden -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-wbhnbn_q/forbidden -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-wbhnbn_q/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-wbhnbn_q/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-wbhnbn_q/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/tmp/fp1-p2a-stn46b_t/target-final/debug/libcadp_pqc.rlib -L dependency=/tmp/fp1-p2a-stn46b_t/target-final/debug/deps -C link-arg=/tmp/fp1-native-test-wbhnbn_q/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-wbhnbn_q/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-wbhnbn_q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-wbhnbn_q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-wbhnbn_q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-wbhnbn_q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s_1h86aw/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-s_1h86aw/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s_1h86aw/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-s_1h86aw/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-s_1h86aw/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s_1h86aw/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s_1h86aw/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s_1h86aw/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s_1h86aw/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-s_1h86aw/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s_1h86aw/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s_1h86aw/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s_1h86aw/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s_1h86aw/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-s_1h86aw/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s_1h86aw/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s_1h86aw/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s_1h86aw/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s_1h86aw/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-s_1h86aw/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s_1h86aw/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s_1h86aw/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling polyval v0.7.3
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling sha2 v0.11.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s_1h86aw/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s_1h86aw/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s_1h86aw/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s_1h86aw/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling ghash v0.6.0
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s_1h86aw/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s_1h86aw/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+
+EXIT=0
+
+
+$ git diff --check
+exit=0
+$ git diff --check
+
+EXIT=0
+
+
+The Makefile foundation-check prerequisite was added while the first recorded
+make check was already running. Therefore that earlier make run exercised the
+old prerequisite list. The final post-documentation make check below is required
+and separately recorded to prove the complete updated entry point.
+
+NATIVE BUILD COMMANDS (extracted verbatim from actual build logs)
+
+/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/build-evidence.txt
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "HEAD"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "refs/tags/0.16.0^{commit}"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "status" "--porcelain" "--untracked-files=all" "--ignored=matching"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "ls-files" "-v"
+$ "cmake" "-S" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "-B" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-build" "-DCMAKE_BUILD_TYPE=Release" "-DBUILD_SHARED_LIBS=OFF" "-DOQS_BUILD_ONLY_LIB=ON" "-DOQS_DIST_BUILD=ON" "-DOQS_USE_OPENSSL=OFF" "-DOQS_USE_SHA3_AVX512VL=OFF" "-DOQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65" "-DCMAKE_INSTALL_LIBDIR=lib" "-DCMAKE_C_COMPILER=cc" "-DCMAKE_INSTALL_PREFIX=/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install"
+$ "cmake" "--build" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-build" "--parallel" "2"
+$ "cmake" "--install" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-build"
+$ "cc" "-std=c11" "-O2" "-fPIC" "-Wall" "-Wextra" "-Wpedantic" "-Werror" "-I" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install/include" "-c" "/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c" "-o" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/oqs_shim.o"
+$ "ar" "rcs" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/libcadp_oqs_shim.a" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/oqs_shim.o"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "HEAD"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "refs/tags/0.16.0^{commit}"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "status" "--porcelain" "--untracked-files=all" "--ignored=matching"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "ls-files" "-v"
+$ "sha256sum" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install/lib/liboqs.a"
+
+/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/build-evidence.txt
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "HEAD"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "refs/tags/0.16.0^{commit}"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "status" "--porcelain" "--untracked-files=all" "--ignored=matching"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "ls-files" "-v"
+$ "cmake" "-S" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "-B" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-build" "-DCMAKE_BUILD_TYPE=Release" "-DBUILD_SHARED_LIBS=OFF" "-DOQS_BUILD_ONLY_LIB=ON" "-DOQS_DIST_BUILD=ON" "-DOQS_USE_OPENSSL=OFF" "-DOQS_USE_SHA3_AVX512VL=OFF" "-DOQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65" "-DCMAKE_INSTALL_LIBDIR=lib" "-DCMAKE_C_COMPILER=cc" "-DCMAKE_INSTALL_PREFIX=/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install"
+$ "cmake" "--build" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-build" "--parallel" "2"
+$ "cmake" "--install" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-build"
+$ "cc" "-std=c11" "-O2" "-fPIC" "-Wall" "-Wextra" "-Wpedantic" "-Werror" "-I" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include" "-c" "/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c" "-o" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/oqs_shim.o"
+$ "ar" "rcs" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/libcadp_oqs_shim.a" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/oqs_shim.o"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "HEAD"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "refs/tags/0.16.0^{commit}"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "status" "--porcelain" "--untracked-files=all" "--ignored=matching"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "ls-files" "-v"
+$ "sha256sum" "/tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a"
+
+/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/build-evidence.txt
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "HEAD"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "refs/tags/0.16.0^{commit}"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "status" "--porcelain" "--untracked-files=all" "--ignored=matching"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "ls-files" "-v"
+$ "cmake" "-S" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "-B" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-build" "-DCMAKE_BUILD_TYPE=Release" "-DBUILD_SHARED_LIBS=OFF" "-DOQS_BUILD_ONLY_LIB=ON" "-DOQS_DIST_BUILD=ON" "-DOQS_USE_OPENSSL=OFF" "-DOQS_USE_SHA3_AVX512VL=OFF" "-DOQS_MINIMAL_BUILD=KEM_ml_kem_768;SIG_ml_dsa_65" "-DCMAKE_INSTALL_LIBDIR=lib" "-DCMAKE_C_COMPILER=cc" "-DCMAKE_INSTALL_PREFIX=/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install"
+$ "cmake" "--build" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-build" "--parallel" "2"
+$ "cmake" "--install" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-build"
+$ "cc" "-std=c11" "-O2" "-fPIC" "-Wall" "-Wextra" "-Wpedantic" "-Werror" "-I" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install/include" "-c" "/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c" "-o" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/oqs_shim.o"
+$ "ar" "rcs" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/libcadp_oqs_shim.a" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/oqs_shim.o"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "HEAD"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "rev-parse" "refs/tags/0.16.0^{commit}"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "status" "--porcelain" "--untracked-files=all" "--ignored=matching"
+$ "git" "-C" "/home/iamajay/Projects/FP1/.deps/liboqs-0.16.0" "ls-files" "-v"
+$ "sha256sum" "/tmp/fp1-p2a-stn46b_t/target-final/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install/lib/liboqs.a"
+
+POST-DOCUMENTATION COMPLETE MAKE ENTRY POINT
+$ CARGO_HOME=/tmp/fp1-p2a-stn46b_t/cargo-home-final CARGO_TARGET_DIR=/tmp/fp1-p2a-stn46b_t/target-final make check
+exit=0
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.119s
+
+OK (skipped=1)
+cargo fmt --manifest-path trusted-client/Cargo.toml --check
+cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.61s
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.77s
+     Running unittests src/lib.rs (/tmp/fp1-p2a-stn46b_t/target-final/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.47s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-06i2note/configuration-tests
+$ /tmp/fp1-native-test-06i2note/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-06i2note/forbidden -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-06i2note/forbidden -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-06i2note/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-06i2note/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /tmp/fp1-p2a-stn46b_t/target-final/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-06i2note/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/tmp/fp1-p2a-stn46b_t/target-final/debug/libcadp_pqc.rlib -L dependency=/tmp/fp1-p2a-stn46b_t/target-final/debug/deps -C link-arg=/tmp/fp1-native-test-06i2note/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-06i2note/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-06i2note/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-06i2note/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-06i2note/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-06i2note/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-wp9o9t7q/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-wp9o9t7q/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-wp9o9t7q/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-wp9o9t7q/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-wp9o9t7q/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-wp9o9t7q/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-wp9o9t7q/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-wp9o9t7q/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-wp9o9t7q/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-wp9o9t7q/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-wp9o9t7q/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-wp9o9t7q/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-wp9o9t7q/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-wp9o9t7q/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-wp9o9t7q/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-wp9o9t7q/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-wp9o9t7q/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-wp9o9t7q/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-wp9o9t7q/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-wp9o9t7q/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-wp9o9t7q/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-wp9o9t7q/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling polyval v0.7.3
+   Compiling sha2 v0.11.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-wp9o9t7q/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-wp9o9t7q/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-wp9o9t7q/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-wp9o9t7q/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling ghash v0.6.0
+   Compiling argon2 v0.6.0
+   Compiling hkdf v0.13.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-wp9o9t7q/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-wp9o9t7q/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+python3 scripts/validate_phase2a.py
+P2A-DEPS-001 integrity PASS: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets, no symlinks
+P2A-DEPS-001 features PASS: exact ten pins / 31 Linux registry crates
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.53s
+$ cc -shared -fPIC -Wall -Wextra -Werror /tmp/fp1-p2a-controls-yrvzan02/deny.c -o /tmp/fp1-p2a-controls-yrvzan02/deny.so
+$ rustc --edition=2024 -D warnings /tmp/fp1-p2a-controls-yrvzan02/rng.rs --extern cadp_pqc=/tmp/fp1-p2a-stn46b_t/target-final/debug/libcadp_pqc.rlib -L dependency=/tmp/fp1-p2a-stn46b_t/target-final/debug/deps -o /tmp/fp1-p2a-controls-yrvzan02/rng
+$ /tmp/fp1-p2a-controls-yrvzan02/rng
+P2A-RNG-003 production syscall failure ENOSYS: PASS
+$ /tmp/fp1-p2a-controls-yrvzan02/rng
+P2A-RNG-003 production syscall failure EPERM: PASS
+Rejection source: project guard
+P2A-BUILD-002 override rejected: ''; exit=101
+Rejection source: project guard
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_raw"'; exit=101
+Rejection source: dependency configuration rejection
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'; exit=101
+P2A-SECRET-002 missing-Drop-wipe negative control rejected: exit=101
+Temporary fixtures removed; no production hook or alternate RNG
+
+$ git diff --check
+exit=0
+
+Task-start snapshot comparison: exactly 12 existing files changed by this task:
+Makefile
+docs/KNOWN_LIMITATIONS.md
+docs/DECISIONS.md
+docs/TEST_MATRIX.md
+docs/ENVIRONMENT.md
+scripts/check_pqc_native.py
+scripts/validate_phase1.py
+trusted-client/README.md
+trusted-client/Cargo.toml
+trusted-client/build.rs
+trusted-client/Cargo.lock
+trusted-client/src/lib.rs
+All other 54 baseline files unchanged, including owner protocol/key-management edits and Phase 0/1/2 historical records.
+Unsafe inventory: 1 existing extern block +10 existing call blocks in unchanged ffi.rs; ZERO new unsafe Rust.
+Reviewed occurrences of unwrap/expect/panic/assert are test-only; production additions use typed errors. No production TODO, secret logging or public raw-secret getter.
+
+Task-owned /tmp/fp1-p2a-stn46b_t and task runner/pointer files removed after evidence capture. Project .deps and existing targets retained.

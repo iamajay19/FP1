@@ -8,6 +8,23 @@ use std::process::Command;
 
 const COMMIT: &str = "5a1a854b0dc9f2141bdc771c555ee60c37950183";
 
+fn rng_flags_valid(flags: &str) -> bool {
+    let args: Vec<_> = flags.split('\u{1f}').collect();
+    let mut count = 0;
+    for (i, arg) in args.iter().enumerate() {
+        if arg.contains("getrandom_backend") {
+            let split_form =
+                *arg == "getrandom_backend=\"linux_getrandom\"" && i > 0 && args[i - 1] == "--cfg";
+            let joined_form = *arg == "--cfg=getrandom_backend=\"linux_getrandom\"";
+            if !split_form && !joined_form {
+                return false;
+            }
+            count += 1;
+        }
+    }
+    count == 1
+}
+
 fn run(command: &mut Command, log: &mut File) -> Result<String, Box<dyn Error>> {
     writeln!(log, "$ {command:?}")?;
     let output = command.output()?;
@@ -81,6 +98,14 @@ fn verify_configuration(header: &Path, log: &mut File) -> Result<(), Box<dyn Err
 }
 
 fn build() -> Result<(), Box<dyn Error>> {
+    println!("cargo:rustc-check-cfg=cfg(getrandom_backend, values(\"linux_getrandom\"))");
+    println!("cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS");
+    if !rng_flags_valid(&std::env::var("CARGO_ENCODED_RUSTFLAGS")?) {
+        return Err(
+            "Phase 2A requires Cargo-wide getrandom_backend=\"linux_getrandom\" exactly once"
+                .into(),
+        );
+    }
     println!("cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE");
     let manifest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR")?);
     let source = match std::env::var_os("CADP_LIBOQS_SOURCE") {
@@ -191,7 +216,26 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use super::sha3_avx512_disabled;
+    use super::{rng_flags_valid, sha3_avx512_disabled};
+
+    #[test]
+    fn p2a_build_001_rng_configuration_fails_closed() {
+        assert!(rng_flags_valid(
+            "--cfg\u{1f}getrandom_backend=\"linux_getrandom\""
+        ));
+        assert!(rng_flags_valid(
+            "--cfg=getrandom_backend=\"linux_getrandom\""
+        ));
+        for flags in [
+            "",
+            "getrandom_backend=\"linux_getrandom\"",
+            "--cfg\u{1f}getrandom_backend=\"linux_raw\"",
+            "--cfg\u{1f}getrandom_backend=\"linux_getrandom\"\u{1f}--cfg\u{1f}getrandom_backend=\"custom\"",
+            "--cfg=getrandom_backend=\"linux_getrandom\"\u{1f}--cfg=getrandom_backend=\"linux_getrandom\"",
+        ] {
+            assert!(!rng_flags_valid(flags));
+        }
+    }
 
     #[test]
     fn pqc_build_002_generated_configuration_is_fail_closed() {

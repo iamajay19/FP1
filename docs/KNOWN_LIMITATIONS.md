@@ -5,7 +5,7 @@ Status: Phase 1 primitives IMPLEMENTED/TESTED; later system security remains PLA
 | ID | Severity | Unresolved limitation / required follow-up |
 |---|---|---|
 | L-01 | HIGH | Usable recipient private keys permit custom-client decryption without watermark/ledger. Trusted workflow only; no universal enforcement or attestation (D-16) |
-| L-02 | HIGH | Only PQ primitive wrappers exist; no protected key storage, PKI, document encryption, ledger, atomic release or watermark implementation. Never use this prototype for real secrets |
+| L-02 | HIGH | Only PQ primitive wrappers and Phase 2A foundations exist; no protected key storage, PKI, document encryption, ledger, atomic release or watermark implementation. Never use this prototype for real secrets |
 | L-03 | HIGH | Ledger immutability depends on infrastructure/admin trust; native classical cryptography and one orderer remain (Q-04) |
 | L-04 | HIGH | Offline time/revocation freshness and rollback protection are not implemented; revocation cannot retract prior keys/content (Q-03) |
 | L-05 | HIGH | Watermark survival, false-positive rates and resistance to transplant/collusion are unmeasured. Exact-hash verification is required for strong version-1 attribution (Q-05) |
@@ -206,3 +206,31 @@ or host/snapshot rollback protection. Cleanup ownership, HKDF copies, protected 
 input, syscall-only production RNG and CA recovery remain future review obligations.
 M-01/L-19 remains accepted/open; no backend patch, fallback RNG, custom primitive,
 abort interception, raw secret export or new project unsafe was added.
+
+
+## Phase 2A foundation residuals — 2026-10-08
+
+The current utilities are not completed PKI, key storage, PoP or CRL processing.
+The CBOR helper is private and supports only the approved bounded subset. Exact
+protocol schema implementations must use validated(), perform field-specific length/
+algorithm/policy checks and decode embedded objects through the shared-budget helper.
+A successful structural scan alone is not certificate/protocol acceptance. Class
+limits are reusable policies, not claims that a certificate or CRL parser exists.
+Trusted typed encoders must stay simple/bounded; untrusted values cannot supply a
+recursive generic encoding tree. Ordinary output Vec contains public canonical bytes
+in this phase; unlocked private-key serialization needs separately reviewed cleanup.
+
+SHA/HMAC cleanup features and explicit PRK/output ownership improve normal-Drop
+cleanup. HKDF's internal expand output/previous-block copies are not universally
+wiped; no physical-erasure guarantee, root defense or fatal-exit cleanup is claimed.
+Secret32 has no Clone/Display/public raw export; its observation hook exists ONLY
+under cfg(test), before heap free. New helper does not replace PQC SecretBuffer.
+Argon2 workspace/password/bundle owners and production benchmark remain Phase 2B work.
+
+Deterministic malformed/property loops ran without a new fuzz dependency; true
+coverage-guided fuzzing/formal verification remain pending. Self-review is not an
+independent Astra/organizational audit. Phase 1 M-01/L-19 remains OPEN/accepted;
+no RNG fallback, backend patch, abort interception or new unsafe boundary.
+Vendor checks cannot establish supplier authenticity/current advisory clearance.
+Configured local time and retained CRL state still do not provide trusted time or
+clock/whole-host/snapshot rollback protection. No time-policy runtime implemented.

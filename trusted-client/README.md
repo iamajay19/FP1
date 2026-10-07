@@ -5,7 +5,7 @@ Rust PQ integration (Phase 1), trusted decryption (Phase 5), atomic release (Pha
 Phase 1 primitive wrappers IMPLEMENTED. The full trusted decryption workflow remains
 PLANNED. Follow the [implementation plan](../docs/IMPLEMENTATION_PLAN.md) and phase gates.
 
-The dependency-free `cadp-pqc` Rust library uses pinned liboqs 0.16.0 through an
+The `cadp-pqc` Rust library uses pinned liboqs 0.16.0 through an
 internal FFI module and C shim. It supports only ML-KEM-768 and pure ML-DSA-65 with
 empty context. Backend metadata is checked before operations. No real identities,
 private-key storage, document encryption, ledger or watermarking exist yet.
@@ -51,3 +51,32 @@ swap/dumps or privileged observations. Some upstream fatal RNG/allocation failur
 terminate the process and bypass Rust Drop. See the
 [Phase 1 review](../docs/PHASE_1_REVIEW.md) and
 [limitations](../docs/KNOWN_LIMITATIONS.md).
+
+
+## Phase 2A foundation
+
+Implemented utilities: strict bounded deterministic CBOR infrastructure (private),
+separate public KEM/signature key IDs, random 32-byte identifiers, and internal
+SHA-256/HKDF/HMAC/Secret32 helpers. Exact ten reviewed dependencies are pinned;
+minimum Rust 1.89, tested with 1.98.1. AES/Argon2/rpassword are dependency integration
+only: no bundle, password workflow, certificate, CA, PoP or CRL implementation.
+
+Run Cargo from the repository root or trusted-client so .cargo/config.toml applies.
+The ignored .deps/phase2-vendor bundle must be present; Cargo never downloads it.
+Build flags apply linux_getrandom to dependencies, with matching rustdoc flags.
+Overrides dropping/changing the policy fail closed. The audited native backend and
+its config/unsafe boundary remain unchanged. Public utilities expose no secrets.
+
+```sh
+export CARGO_HOME="$PWD/.deps/cargo-home"
+make build
+make check
+cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml p2a_
+```
+
+For a public demonstration, show the p2a_ test names/results and run
+`python3 scripts/validate_phase2a.py`: exact offline graph, actual syscall failure,
+flag rejection and an omitted-wipe negative control. No key or identifier bytes need
+be printed. Details: [Phase 2A review](../docs/PHASE_2A_REVIEW.md).
+Phase 2B requires explicit approval following review.

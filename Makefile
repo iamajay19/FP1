@@ -4,12 +4,12 @@ CARGO_HOME ?= $(CURDIR)/.deps/cargo-home
 export CARGO_HOME
 PQC_ARGS := --offline --locked --manifest-path trusted-client/Cargo.toml
 .DEFAULT_GOAL := help
-.PHONY: help check docs-check test lint fmt-check native-check source-pin-check environment build encrypt decrypt pki ledger forensic
+.PHONY: help check docs-check test lint fmt-check native-check source-pin-check foundation-check environment build encrypt decrypt pki ledger forensic
 
 help:
-	@printf '%s\n' 'Phase 1: ML-KEM-768 / ML-DSA-65 primitive library only.' 'make check       Documentation, scope, Rust, native and source-pin checks.' 'make build       Build pinned liboqs and safe Rust primitives offline.' 'make environment Inspect tools without installing dependencies.' 'encrypt/decrypt/pki/ledger/forensic: unavailable until approved phases.'
+	@printf '%s\n' 'Phase 1 PQ primitives and Phase 2A foundation only.' 'make check       Documentation, Rust, native, source-pin and foundation checks.' 'make build       Build pinned primitives and utilities offline.' 'make environment Inspect tools without installing dependencies.' 'encrypt/decrypt/pki/ledger/forensic: unavailable until approved phases.'
 
-check: docs-check fmt-check lint test native-check source-pin-check
+check: docs-check fmt-check lint test native-check source-pin-check foundation-check
 
 docs-check:
 	@$(PYTHON) scripts/validate_phase1.py
@@ -29,6 +29,9 @@ native-check:
 source-pin-check:
 	$(PYTHON) scripts/check_pqc_source_pin.py
 
+foundation-check:
+	$(PYTHON) scripts/validate_phase2a.py
+
 environment:
 	@$(PYTHON) scripts/inspect_environment.py
 
@@ -36,5 +39,5 @@ build:
 	$(CARGO) build $(PQC_ARGS)
 
 encrypt decrypt pki ledger forensic:
-	@printf '%s\n' 'NOT IMPLEMENTED: Phase 1 primitives only; later phases require explicit approval.' >&2
+	@printf '%s\n' 'NOT IMPLEMENTED: primitives and Phase 2A utilities only; workflows require explicit approval.' >&2
 	@exit 2

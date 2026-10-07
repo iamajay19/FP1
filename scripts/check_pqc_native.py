@@ -25,12 +25,15 @@ def build_artifacts(env):
     messages = [json.loads(line) for line in result.stdout.splitlines()]
     # Select artifacts from this invocation, including Cargo's fresh results;
     # never choose an unrelated old native build by directory modification time.
-    outputs = [Path(m["out_dir"]) for m in messages if m["reason"] == "build-script-executed"]
+    package_ids = {m["package_id"] for m in messages if m["reason"] == "compiler-artifact"
+                   and m["target"]["name"] == "cadp_pqc"}
+    outputs = [Path(m["out_dir"]) for m in messages if m["reason"] == "build-script-executed"
+               and m["package_id"] in package_ids]
     libraries = [Path(f) for m in messages if m["reason"] == "compiler-artifact"
                  and m["target"]["name"] == "cadp_pqc" for f in m["filenames"]
                  if f.endswith(".rlib")]
     if len(outputs) != 1 or len(libraries) != 1:
-        raise RuntimeError("expected the single dependency-free crate's native build and rlib")
+        raise RuntimeError("expected this invocation's cadp-pqc native build and rlib")
     return outputs[0], libraries[0]
 
 
@@ -74,6 +77,7 @@ def partial_output_regression(work, library, prefix, env):
          "-I", prefix / "include", "-c", source / "partial_output.c", "-o", obj], env)
     command = ["rustc", "--edition=2024", "-D", "warnings", "-C", "opt-level=2",
                source / "partial_output.rs", "--extern", f"cadp_pqc={library}",
+               "-L", f"dependency={library.parent / 'deps'}",
                "-C", f"link-arg={obj}"]
     for symbol in ("OQS_KEM_keypair", "OQS_SIG_keypair", "OQS_KEM_encaps",
                    "OQS_KEM_decaps", "OQS_MEM_cleanse", "free"):

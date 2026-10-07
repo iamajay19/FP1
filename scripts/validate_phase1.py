@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class PhaseOneScope(unittest.TestCase):
     def test_phase1_scope(self):
-        """PQC-SCOPE-001: only the approved primitive component contains runtime code."""
+        """PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist."""
         for directory in (
             "pki", "publisher", "ledger/network", "ledger/chaincode", "forensic",
             "tests/integration", "tests/adversarial", "tests/fixtures",
@@ -25,6 +25,11 @@ class PhaseOneScope(unittest.TestCase):
             "src/pqc/signature.rs", "src/pqc/error.rs", "src/pqc/secret.rs",
             "src/pqc/tests.rs", "tests/native_contract.c",
             "tests/support/partial_output.c", "tests/support/partial_output.rs",
+            # Explicitly authorized Phase 2A foundation; no PKI/storage workflow.
+            "src/foundation/mod.rs", "src/foundation/error.rs",
+            "src/foundation/cbor.rs", "src/foundation/crypto.rs",
+            "src/foundation/identifiers.rs", "src/foundation/secret.rs",
+            "src/foundation/tests.rs",
         }
         actual = {
             str(p.relative_to(client)) for p in client.rglob("*")

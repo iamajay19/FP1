@@ -773,3 +773,41 @@ contain no unsafe syntax in their Rust sources and forbid unsafe code via crate 
 This is triage, not full dependency memory-safety/security audit or FIPS certification.
 Existing cleanup/host-rollback/M-01 limitations remain. All 19 runtime IDs PLANNED;
 only the dependency availability gate is closed. Await user direction before production.
+
+
+## Phase 2A foundation implementation — 2026-10-08
+
+Authorized scope: deterministic CBOR and utility foundation only; full Phase 2 is
+NOT COMPLETE. All 19 PKI runtime IDs remain PLANNED. No certificate, provisioning,
+CA, bundle, CRL, revocation, document workflow or Phase 3 implementation.
+Historical dependency-gate and Phase 0/1 evidence remain unchanged.
+
+The component now integrates D-26's exact ten pins and minimal features in
+trusted-client/Cargo.toml/Cargo.lock. Rust minimum is 1.89 for the approved graph;
+actual compiler/Cargo remains Fedora 1.98.1, x86_64-unknown-linux-gnu. Source
+replacement lives in .cargo/config.toml; .deps/phase2-vendor remains ignored.
+Cargo uses ONLY local directory sources and offline/locked mode. No downloads or
+host changes. Integrity: 34 packages / 1435 Cargo files / 1469 owner hashes;
+Linux resolution 31 packages, exact requested features. Checksum consistency is
+not supplier authentication, a new advisory audit, legal approval or FIPS validation.
+
+Cargo-wide rustflags explicitly select getrandom_backend="linux_getrandom";
+build.rs rejects absent, duplicated, alternate or ambiguous backend flags.
+Rustdoc needs the matching rustdocflags separately for its recompilation. The crate
+also has a Linux/backend compile guard. Consumers building from another directory
+must supply the same dependency-wide configuration; it fails closed without it.
+ENOSYS/EPERM failure controls invoke the actual public RandomId API; no OS-device
+or custom RNG fallback. Invalid flag configurations fail building. The conflicting
+linux_getrandom/linux_raw control was rejected by getrandom's dependency setup
+before the project guard ran; the guard predicate is independently unit-tested.
+
+The liboqs commit/version, audited CMake arguments, shim, FFI, PQ secret ownership,
+static linkage, pthread requirement, OpenSSL OFF and AVX512 SHA3 OFF are unchanged.
+Fresh target builds revalidate generated/installed configuration and runtime sizes.
+Project source requires a clean exact Git checkout as before. Registry dependencies
+use the owner's final reviewed source bundle rather than an arbitrary system cache.
+
+Actual checks and initial failed attempts are in PHASE_2A_VALIDATION.txt; scope,
+self-review, cleanup limitations and demonstration are in PHASE_2A_REVIEW.md.
+No Argon2 production benchmark, protected password input implementation, true fuzzing,
+TSan, successful LeakSanitizer, AVX-512 execution or full-backend sanitization claim.
