@@ -12,6 +12,11 @@ fn rng_flags_valid(flags: &str) -> bool {
     let args: Vec<_> = flags.split('\u{1f}').collect();
     let mut count = 0;
     for (i, arg) in args.iter().enumerate() {
+        // rustc expands @files after Cargo's literal flag handling. Never read
+        // them here: even harmless/duplicate/nested response files are forbidden.
+        if arg.starts_with('@') {
+            return false;
+        }
         if arg.contains("getrandom_backend") {
             let split_form =
                 *arg == "getrandom_backend=\"linux_getrandom\"" && i > 0 && args[i - 1] == "--cfg";
@@ -98,9 +103,15 @@ fn verify_configuration(header: &Path, log: &mut File) -> Result<(), Box<dyn Err
 }
 
 fn build() -> Result<(), Box<dyn Error>> {
-    println!("cargo:rustc-check-cfg=cfg(getrandom_backend, values(\"linux_getrandom\"))");
+    // Complete opt-in backend set from pinned getrandom 0.4.3 backends.rs.
+    println!(
+        "cargo:rustc-check-cfg=cfg(getrandom_backend, values(\"custom\", \"efi_rng\", \"rdrand\", \"rndr\", \"linux_getrandom\", \"linux_raw\", \"windows_legacy\", \"unsupported\", \"extern_impl\"))"
+    );
     println!("cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS");
-    if !rng_flags_valid(&std::env::var("CARGO_ENCODED_RUSTFLAGS")?) {
+    println!("cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND");
+    if !rng_flags_valid(&std::env::var("CARGO_ENCODED_RUSTFLAGS")?)
+        || std::env::var("CARGO_CFG_GETRANDOM_BACKEND")?.as_str() != "linux_getrandom"
+    {
         return Err(
             "Phase 2A requires Cargo-wide getrandom_backend=\"linux_getrandom\" exactly once"
                 .into(),
@@ -108,6 +119,36 @@ fn build() -> Result<(), Box<dyn Error>> {
     }
     println!("cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE");
     let manifest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR")?);
+    // Cargo does not expose configuration-supplied effective rustdocflags to a
+    // build script. Require the argument-checking launcher for that separate path.
+    let rustdoc_guard = manifest
+        .join("../scripts/guard_rustdoc.py")
+        .canonicalize()?;
+    println!("cargo:rerun-if-env-changed=RUSTDOC");
+    println!("cargo:rerun-if-changed={}", rustdoc_guard.display());
+    if PathBuf::from(std::env::var_os("RUSTDOC").ok_or("missing guarded RUSTDOC")?)
+        .canonicalize()
+        .map_err(|_| "Phase 2A requires the guarded rustdoc launcher")?
+        != rustdoc_guard
+    {
+        return Err("Phase 2A requires the guarded rustdoc launcher".into());
+    }
+    // Environment flag sources may coexist. Validate each provided source too;
+    // the encoded Rust flags above remain authoritative for effective compilation.
+    for name in ["RUSTFLAGS", "RUSTDOCFLAGS", "CARGO_ENCODED_RUSTDOCFLAGS"] {
+        println!("cargo:rerun-if-env-changed={name}");
+        if let Some(value) = std::env::var_os(name) {
+            let value = value.to_str().ok_or("non-UTF-8 compiler flags rejected")?;
+            let encoded = if name.starts_with("CARGO_ENCODED_") {
+                value.to_owned()
+            } else {
+                value.split_whitespace().collect::<Vec<_>>().join("\u{1f}")
+            };
+            if !rng_flags_valid(&encoded) {
+                return Err("Phase 2A rejects conflicting flag sources or response files".into());
+            }
+        }
+    }
     let source = match std::env::var_os("CADP_LIBOQS_SOURCE") {
         Some(path) => PathBuf::from(path),
         None => manifest.join("../.deps/liboqs-0.16.0"),
@@ -232,6 +273,9 @@ mod tests {
             "--cfg\u{1f}getrandom_backend=\"linux_raw\"",
             "--cfg\u{1f}getrandom_backend=\"linux_getrandom\"\u{1f}--cfg\u{1f}getrandom_backend=\"custom\"",
             "--cfg=getrandom_backend=\"linux_getrandom\"\u{1f}--cfg=getrandom_backend=\"linux_getrandom\"",
+            "--cfg=getrandom_backend=\"linux_getrandom\"\u{1f}@anything",
+            "@outer\u{1f}--cfg=getrandom_backend=\"linux_getrandom\"",
+            "--cfg\u{1f}getrandom_backend = \"linux_getrandom\"",
         ] {
             assert!(!rng_flags_valid(flags));
         }

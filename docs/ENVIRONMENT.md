@@ -811,3 +811,45 @@ Actual checks and initial failed attempts are in PHASE_2A_VALIDATION.txt; scope,
 self-review, cleanup limitations and demonstration are in PHASE_2A_REVIEW.md.
 No Argon2 production benchmark, protected password input implementation, true fuzzing,
 TSan, successful LeakSanitizer, AVX-512 execution or full-backend sanitization claim.
+
+
+## Phase 2A P2A-A-M01 corrective build policy — 2026-10-12
+
+The normal default configuration still selects only getrandom 0.4.3's
+linux_getrandom syscall backend. The prior literal-only guard accepted hidden cfgs
+in rustc response files; independent Astra evidence is retained unchanged.
+
+Build.rs now rejects every @response-file token in effective Cargo encoded Rust
+flags, validates exactly one approved literal and requires Cargo's effective backend
+cfg to be exactly linux_getrandom. It also checks exposed Rust/rustdoc environment
+flag sources. CARGO_ENCODED_RUSTFLAGS uses U+001F separators, not whitespace.
+Cargo's precedence decides effective Rust flags; ignored lower-precedence settings
+are not additional active cfgs. No project guard reads response-file contents.
+
+A root compile-time guard independently forbids all eight other values recognized
+by the pinned getrandom dispatcher; the complete nine-value set is declared in
+check-cfg. This catches hidden CUSTOM after expansion even if textual validation is
+bypassed. Multiplicity of identical cfgs is lost during cfg evaluation, so duplicate
+approved options are rejected by argument validation rather than that compile guard.
+
+Rustdoc's separately supplied configuration flags are not available to build.rs.
+The portable checkout-relative build.rustdoc launcher scripts/guard_rustdoc.py checks
+actual argv, rejects @files/conflicting/missing/duplicate backend options and then
+execs PATH rustdoc without a shell. Build.rs fails closed if the selected launcher
+does not resolve to that checked-in script. Python3 is an existing host prerequisite;
+keep this script executable. Rustc/rustdoc/Python/Cargo/PATH and local sources remain
+trusted build inputs, not a malicious-toolchain sandbox.
+
+Validation used a fresh ignored verified-target and initially empty
+.deps/p2a-m01-correction/verified-cargo-home, offline/locked vendor sources only.
+Subsequent commands share that task-owned target/home; not every invocation is fresh.
+P2A-BUILD-003 exercises 36 actual Cargo check/build/doctest rejections, including the
+original hidden CUSTOM attack. P2A-BUILD-004 independently compiles root guard text
+with rustc/rustdoc: each rejects eight alternatives and hidden CUSTOM; removing only
+exclusivity makes both controls succeed. Existing ENOSYS/EPERM controls still run
+the production RandomId API. Exact commands/output are in
+PHASE_2A_CORRECTIONS_VALIDATION.txt; assessment in PHASE_2A_CORRECTIONS_REVIEW.md.
+
+Pins/features, audited liboqs configuration, static linkage, algorithms, FFI and
+foundation runtime implementations are unchanged. No Phase 2B/3 implementation or
+independent correction approval is claimed.

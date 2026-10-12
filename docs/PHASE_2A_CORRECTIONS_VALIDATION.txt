@@ -1,0 +1,1558 @@
+PHASE 2A P2A-A-M01 CORRECTIVE VALIDATION
+Status: FIXED / READY FOR TARGETED ASTRA RE-AUDIT. Not independently approved.
+Scope: RNG compiler/rustdoc build-policy correction only. No Phase 2B or Phase 3.
+No downloads/network; exact approved vendor/locked graph and liboqs remain.
+
+Final environment:
+ CARGO_HOME=$REPO/.deps/p2a-m01-correction/verified-cargo-home
+ CARGO_TARGET_DIR=$REPO/.deps/p2a-m01-correction/verified-target
+Both began absent/empty for the final format/clippy/debug/release sequence. Later
+commands reused that private target/home. All dependency sources are the vendor
+replacement; no preexisting registry cache is needed. Temporary public response/
+negative fixtures are automatically removed by the test runner. Task-owned ignored
+logs and approved build artifacts remain for review; they contain no project secrets.
+
+RESULTS:
+12 required top-level commands: exit 0.
+Debug and release each: 41 unit tests + 3 doctests passed; 0 failed/ignored.
+Fresh-process PQC-CONC-001: 1 passed, 40 filtered.
+Native: 2 build-script tests, 4 native contracts, 2 expected forbidden-header
+compilations, 4 Rust partial-output Drop/cleanse/free paths passed.
+Source pin: 6 expected rejections passed.
+Foundation: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets/no symlinks;
+31 Linux registry crates / exact ten pins/features; 2 production RNG syscall faults;
+3 original ordinary configuration rejections; 1 expected omitted-wipe test failure.
+P2A-BUILD-003: 36 expected actual Cargo check/build/doctest rejections, all passed.
+P2A-BUILD-004: rustc and rustdoc each reject 8 recognized alternate cfgs + expanded
+CUSTOM (18 expected failures); both approved cases and both omitted-exclusivity
+negative controls compile successfully. No custom RNG linked/executed after fix.
+Document/scope: 6 passed, 1 skipped because mmdc is unavailable. make check repeats
+checks and IDs, not additional unique tests. Formatting/strict Clippy/whitespace pass.
+No TSan, successful LeakSanitizer, AVX512 hardware or full-backend sanitizer claim.
+
+PRESERVATION:
+Runtime foundation, PQC/native/test sources, manifest/lock, native/source-pin scripts
+and Makefile match HEAD. Liboqs remains tag 0.16.0 at
+5a1a854b0dc9f2141bdc771c555ee60c37950183, static; SHA3 AVX512VL/OpenSSL disabled,
+pthreads enabled; same ML-KEM-768 and pure empty-context ML-DSA-65 metadata/context
+checks pass. Three generated/installed header pairs were independently compared.
+Unsafe inventory unchanged: 1 extern + 10 call blocks, ffi.rs only. No new unsafe.
+All 19 PKI runtime matrix rows remain PLANNED. Q-02/Q-03/protocol unchanged.
+Historical Astra SHA256 values unchanged:
+ b35a54dedefed405fb9d0dd4719139b0c15d0eb196519cb43d5ec0cf1345b56f PHASE_2A_ASTRA_AUDIT.md
+ 98cc64a086c64bdaabf703fafce37f6edda91851dc1c8564e1e740ff1d4b7a5b PHASE_2A_ASTRA_VALIDATION.txt
+Original Phase 2A validation is also preserved; this corrective record is separate.
+
+INITIAL ISSUES (not hidden):
+[env] RUSTDOC did not select Cargo's tool path; initial guarded build rejected it.
+Fixed by build.rustdoc configuration. An overridden bare launcher initially gave
+an IO canonicalization diagnostic; now explicitly rejects the guarded-launcher
+policy. First full run failed P0-STATIC-001 on a 102-character new Python line;
+wrapped all new long lines. A later documentation link check ran between appending
+references and creating the new evidence files and failed P0-LINK-001. Created
+those files, reran the applicable document/static checks and finished the full
+sequence. Neither transient issue changed crypto/runtime behavior. Initial failed
+checks below are separate from the final results. Source tests were not repeated
+merely for a document-only intermediate failure; make check repeats them normally.
+
+Recorded UTC: 2026-10-12T04:21:02.466359+00:00
+
+$ rustc --version
+rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)
+
+$ cargo --version
+cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)
+
+$ git rev-parse HEAD
+252eb63328195d87a5f922b3439dc9b9f0f477e8
+
+$ git -C .deps/liboqs-0.16.0 rev-parse HEAD
+5a1a854b0dc9f2141bdc771c555ee60c37950183
+
+$ git -C .deps/liboqs-0.16.0 describe --tags --exact-match
+0.16.0
+
+$ git -C .deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+
+===== FINAL COMMAND RESULTS =====
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "trusted-client/Cargo.toml",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 0.04
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "trusted-client/Cargo.toml",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 8.68
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "trusted-client/Cargo.toml"
+    ],
+    "exit": 0,
+    "seconds": 9.29
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "trusted-client/Cargo.toml"
+    ],
+    "exit": 0,
+    "seconds": 9.36
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "trusted-client/Cargo.toml",
+      "pqc_conc_001",
+      "--",
+      "--test-threads=1"
+    ],
+    "exit": 0,
+    "seconds": 5.81
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/validate_phase2a.py"
+    ],
+    "exit": 0,
+    "seconds": 46.02
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/check_pqc_native.py"
+    ],
+    "exit": 0,
+    "seconds": 6.23
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/check_pqc_source_pin.py"
+    ],
+    "exit": 0,
+    "seconds": 2.87
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/validate_phase1.py"
+    ],
+    "exit": 0,
+    "seconds": 0.16
+  },
+  {
+    "command": [
+      "make",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 5.67
+  },
+  {
+    "command": [
+      "make",
+      "check"
+    ],
+    "exit": 0,
+    "seconds": 66.68
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 0.0
+  }
+]
+
+===== FINAL COMMAND 1 =====
+$ cargo fmt --manifest-path trusted-client/Cargo.toml --check
+
+===== FINAL COMMAND 2 =====
+$ cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking inout v0.2.2
+    Checking rtoolbox v0.0.6
+    Checking rpassword v7.5.4
+    Checking digest v0.11.3
+    Checking cipher v0.5.2
+    Checking universal-hash v0.6.1
+    Checking aead v0.6.1
+    Checking polyval v0.7.3
+    Checking blake2 v0.11.0
+    Checking hmac v0.13.0
+    Checking sha2 v0.11.0
+    Checking ghash v0.6.0
+    Checking aes v0.9.3
+    Checking ctr v0.10.1
+    Checking hkdf v0.13.0
+    Checking argon2 v0.6.0
+    Checking aes-gcm v0.11.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.65s
+
+===== FINAL COMMAND 3 =====
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling base64ct v1.8.3
+   Compiling minicbor v2.3.0
+   Compiling libc v0.2.190
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+   Compiling rpassword v7.5.4
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling digest v0.11.3
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.15s
+     Running unittests src/lib.rs (.deps/p2a-m01-correction/verified-target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+===== FINAL COMMAND 4 =====
+$ cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling hkdf v0.13.0
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+    Finished `release` profile [optimized] target(s) in 9.28s
+     Running unittests src/lib.rs (.deps/p2a-m01-correction/verified-target/release/deps/cadp_pqc-2e9aae472d95fb7f)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+===== FINAL COMMAND 5 =====
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml pqc_conc_001 -- --test-threads=1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.80s
+     Running unittests src/lib.rs (.deps/p2a-m01-correction/verified-target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 1 test
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 0.00s
+
+
+===== FINAL COMMAND 6 =====
+$ python3 scripts/validate_phase2a.py
+P2A-DEPS-001 integrity PASS: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets, no symlinks
+P2A-DEPS-001 features PASS: exact ten pins / 31 Linux registry crates
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.66s
+$ cc -shared -fPIC -Wall -Wextra -Werror /tmp/fp1-p2a-controls-kq9a22zx/deny.c -o /tmp/fp1-p2a-controls-kq9a22zx/deny.so
+$ rustc --edition=2024 -D warnings /tmp/fp1-p2a-controls-kq9a22zx/rng.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/deps -o /tmp/fp1-p2a-controls-kq9a22zx/rng
+$ /tmp/fp1-p2a-controls-kq9a22zx/rng
+P2A-RNG-003 production syscall failure ENOSYS: PASS
+$ /tmp/fp1-p2a-controls-kq9a22zx/rng
+P2A-RNG-003 production syscall failure EPERM: PASS
+Rejection source: project guard
+P2A-BUILD-002 override rejected: ''; exit=101
+Rejection source: project guard
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_raw"'; exit=101
+Rejection source: dependency configuration rejection
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'; exit=101
+P2A-SECRET-002 missing-Drop-wipe negative control rejected: exit=101
+Temporary fixtures removed; no production hook or alternate RNG
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="custom"'
+P2A-BUILD-004 effective cfg custom: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="efi_rng"'
+P2A-BUILD-004 effective cfg efi_rng: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="extern_impl"'
+P2A-BUILD-004 effective cfg extern_impl: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="linux_raw"'
+P2A-BUILD-004 effective cfg linux_raw: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rdrand"'
+P2A-BUILD-004 effective cfg rdrand: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rndr"'
+P2A-BUILD-004 effective cfg rndr: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="unsupported"'
+P2A-BUILD-004 effective cfg unsupported: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="windows_legacy"'
+P2A-BUILD-004 effective cfg windows_legacy: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-h6833le7/guard.rs -o /tmp/fp1-rng-policy-h6833le7/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' @/tmp/fp1-rng-policy-h6833le7/compile-hidden.rsp
+P2A-BUILD-004 expanded hidden CUSTOM: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="custom"'
+P2A-BUILD-004 rustdoc effective cfg custom: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="efi_rng"'
+P2A-BUILD-004 rustdoc effective cfg efi_rng: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="extern_impl"'
+P2A-BUILD-004 rustdoc effective cfg extern_impl: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="linux_raw"'
+P2A-BUILD-004 rustdoc effective cfg linux_raw: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rdrand"'
+P2A-BUILD-004 rustdoc effective cfg rdrand: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rndr"'
+P2A-BUILD-004 rustdoc effective cfg rndr: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="unsupported"'
+P2A-BUILD-004 rustdoc effective cfg unsupported: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="windows_legacy"'
+P2A-BUILD-004 rustdoc effective cfg windows_legacy: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-h6833le7/guard.rs '--cfg=getrandom_backend="linux_getrandom"' @/tmp/fp1-rng-policy-h6833le7/compile-hidden.rsp
+P2A-BUILD-004 rustdoc expanded hidden CUSTOM: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+P2A-BUILD-004 PASS: rustc AND rustdoc each reject 8 alternate cfgs + hidden CUSTOM; both omitted-exclusivity negative controls accepted
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/custom.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/alternate.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-alternate: rejected exit=101; error: could not compile `getrandom` (lib) due to 5 previous errors
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/duplicate.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-duplicate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/conflict.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/outer.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-nested: rejected exit=101;   error: multiple input filenames provided (first two filenames are `-` and `@/tmp/fp1-rng-policy-h6833le7/custom.rsp`)
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f@/tmp/fp1-rng-policy-h6833le7/custom.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 encoded-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 approved-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 approved-alternate: rejected exit=101; error: could not compile `getrandom` (lib) due to 5 previous errors
+RUSTFLAGS=''
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 missing: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 duplicate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='@/tmp/fp1-rng-policy-h6833le7/custom.rsp --cfg=getrandom_backend="linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 ordering: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg\x1fgetrandom_backend = "linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 whitespace: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f--cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 encoded-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --config 'build.rustflags=["--cfg=getrandom_backend=\"linux_getrandom\"", "@/tmp/fp1-rng-policy-h6833le7/custom.rsp"]'
+P2A-BUILD-003 cli-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --target x86_64-unknown-linux-gnu --config 'target.x86_64-unknown-linux-gnu.rustflags=["--cfg=getrandom_backend=\"linux_getrandom\"", "@/tmp/fp1-rng-policy-h6833le7/custom.rsp"]'
+P2A-BUILD-003 target-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTDOC='rustdoc'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 launcher-override: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires the guarded rustdoc launcher
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="not_a_backend"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 unknown: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg\x1fgetrandom_backend="custom"\x1f--cfg\x1fgetrandom_backend="linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 split-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f--cfg\x1fgetrandom_backend = "custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 quoted: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --target x86_64-unknown-linux-gnu
+P2A-BUILD-003 target-env-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"'
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f--cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 encoded-wins-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/custom.rsp'
+$ cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 original Astra CUSTOM cargo build: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/custom.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/duplicate.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-duplicate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/alternate.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-alternate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/conflict.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-h6833le7/outer.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-nested: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="custom"'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS=''
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-missing: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+CARGO_ENCODED_RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f@/tmp/fp1-rng-policy-h6833le7/custom.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-encoded-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdocflags=["@/tmp/fp1-rng-policy-h6833le7/custom.rsp"]'
+P2A-BUILD-003 doc-cli-response: rejected exit=1; Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdocflags=["@/tmp/fp1-rng-policy-h6833le7/duplicate.rsp"]'
+P2A-BUILD-003 doc-cli-duplicate-response: rejected exit=1; Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdocflags=["--cfg=getrandom_backend=\"custom\""]'
+P2A-BUILD-003 doc-cli-conflict: rejected exit=1; Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="custom"'
+CARGO_ENCODED_RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom"'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-conflicting-sources: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdoc="rustdoc"'
+P2A-BUILD-003 doc-cli-launcher-override: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires the guarded rustdoc launcher
+P2A-BUILD-003 PASS: 36 actual Cargo rejections; disposable response files removed
+
+===== FINAL COMMAND 7 =====
+$ python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.65s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-xinhue8n/configuration-tests
+$ /tmp/fp1-native-test-xinhue8n/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-xinhue8n/forbidden -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-xinhue8n/forbidden -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-xinhue8n/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-xinhue8n/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-xinhue8n/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/deps -C link-arg=/tmp/fp1-native-test-xinhue8n/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-xinhue8n/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-xinhue8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-xinhue8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-xinhue8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-xinhue8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+
+===== FINAL COMMAND 8 =====
+$ python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-j7tmj1ll/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-j7tmj1ll/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-j7tmj1ll/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-j7tmj1ll/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-j7tmj1ll/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-j7tmj1ll/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-j7tmj1ll/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-j7tmj1ll/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-j7tmj1ll/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-j7tmj1ll/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-j7tmj1ll/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-j7tmj1ll/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-j7tmj1ll/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-j7tmj1ll/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-j7tmj1ll/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-j7tmj1ll/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-j7tmj1ll/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-j7tmj1ll/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-j7tmj1ll/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-j7tmj1ll/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-j7tmj1ll/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-j7tmj1ll/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling sha2 v0.11.0
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-j7tmj1ll/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-j7tmj1ll/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-j7tmj1ll/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-j7tmj1ll/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling ghash v0.6.0
+   Compiling argon2 v0.6.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling hkdf v0.13.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-j7tmj1ll/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-j7tmj1ll/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+
+===== FINAL COMMAND 9 =====
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.129s
+
+OK (skipped=1)
+
+===== FINAL COMMAND 10 =====
+$ make build
+cargo build --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.66s
+
+===== FINAL COMMAND 11 =====
+$ make check
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.126s
+
+OK (skipped=1)
+cargo fmt --manifest-path trusted-client/Cargo.toml --check
+cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.74s
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.79s
+     Running unittests src/lib.rs (.deps/p2a-m01-correction/verified-target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.66s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-6c5b_9nu/configuration-tests
+$ /tmp/fp1-native-test-6c5b_9nu/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-6c5b_9nu/forbidden -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-6c5b_9nu/forbidden -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-6c5b_9nu/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-6c5b_9nu/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-6c5b_9nu/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/deps -C link-arg=/tmp/fp1-native-test-6c5b_9nu/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-6c5b_9nu/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-6c5b_9nu/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-6c5b_9nu/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-6c5b_9nu/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-6c5b_9nu/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s6lwvblv/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-s6lwvblv/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling base64ct v1.8.3
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s6lwvblv/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-s6lwvblv/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-s6lwvblv/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s6lwvblv/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s6lwvblv/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s6lwvblv/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s6lwvblv/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-s6lwvblv/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s6lwvblv/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s6lwvblv/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s6lwvblv/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s6lwvblv/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-s6lwvblv/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s6lwvblv/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s6lwvblv/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s6lwvblv/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s6lwvblv/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-s6lwvblv/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s6lwvblv/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s6lwvblv/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling polyval v0.7.3
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s6lwvblv/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s6lwvblv/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-s6lwvblv/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-s6lwvblv/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling ghash v0.6.0
+   Compiling hkdf v0.13.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling argon2 v0.6.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-s6lwvblv/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("custom", "efi_rng", "rdrand", "rndr", "linux_getrandom", "linux_raw", "windows_legacy", "unsupported", "extern_impl"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CARGO_CFG_GETRANDOM_BACKEND
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-env-changed=RUSTDOC
+  cargo:rerun-if-changed=/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py
+  cargo:rerun-if-env-changed=RUSTFLAGS
+  cargo:rerun-if-env-changed=RUSTDOCFLAGS
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTDOCFLAGS
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-s6lwvblv/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+python3 scripts/validate_phase2a.py
+P2A-DEPS-001 integrity PASS: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets, no symlinks
+P2A-DEPS-001 features PASS: exact ten pins / 31 Linux registry crates
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.62s
+$ cc -shared -fPIC -Wall -Wextra -Werror /tmp/fp1-p2a-controls-3a8yr9_5/deny.c -o /tmp/fp1-p2a-controls-3a8yr9_5/deny.so
+$ rustc --edition=2024 -D warnings /tmp/fp1-p2a-controls-3a8yr9_5/rng.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/verified-target/debug/deps -o /tmp/fp1-p2a-controls-3a8yr9_5/rng
+$ /tmp/fp1-p2a-controls-3a8yr9_5/rng
+P2A-RNG-003 production syscall failure ENOSYS: PASS
+$ /tmp/fp1-p2a-controls-3a8yr9_5/rng
+P2A-RNG-003 production syscall failure EPERM: PASS
+Rejection source: project guard
+P2A-BUILD-002 override rejected: ''; exit=101
+Rejection source: project guard
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_raw"'; exit=101
+Rejection source: dependency configuration rejection
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'; exit=101
+P2A-SECRET-002 missing-Drop-wipe negative control rejected: exit=101
+Temporary fixtures removed; no production hook or alternate RNG
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="custom"'
+P2A-BUILD-004 effective cfg custom: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="efi_rng"'
+P2A-BUILD-004 effective cfg efi_rng: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="extern_impl"'
+P2A-BUILD-004 effective cfg extern_impl: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="linux_raw"'
+P2A-BUILD-004 effective cfg linux_raw: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rdrand"'
+P2A-BUILD-004 effective cfg rdrand: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rndr"'
+P2A-BUILD-004 effective cfg rndr: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="unsupported"'
+P2A-BUILD-004 effective cfg unsupported: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="windows_legacy"'
+P2A-BUILD-004 effective cfg windows_legacy: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustc --edition=2024 --crate-type=lib --emit=metadata /tmp/fp1-rng-policy-mdcfrsy1/guard.rs -o /tmp/fp1-rng-policy-mdcfrsy1/guard.rmeta '--cfg=getrandom_backend="linux_getrandom"' @/tmp/fp1-rng-policy-mdcfrsy1/compile-hidden.rsp
+P2A-BUILD-004 expanded hidden CUSTOM: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="custom"'
+P2A-BUILD-004 rustdoc effective cfg custom: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="efi_rng"'
+P2A-BUILD-004 rustdoc effective cfg efi_rng: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="extern_impl"'
+P2A-BUILD-004 rustdoc effective cfg extern_impl: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="linux_raw"'
+P2A-BUILD-004 rustdoc effective cfg linux_raw: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rdrand"'
+P2A-BUILD-004 rustdoc effective cfg rdrand: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="rndr"'
+P2A-BUILD-004 rustdoc effective cfg rndr: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="unsupported"'
+P2A-BUILD-004 rustdoc effective cfg unsupported: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' '--cfg=getrandom_backend="windows_legacy"'
+P2A-BUILD-004 rustdoc effective cfg windows_legacy: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+$ rustdoc --edition=2024 --test /tmp/fp1-rng-policy-mdcfrsy1/guard.rs '--cfg=getrandom_backend="linux_getrandom"' @/tmp/fp1-rng-policy-mdcfrsy1/compile-hidden.rsp
+P2A-BUILD-004 rustdoc expanded hidden CUSTOM: rejected exit=1; error: Phase 2A rejects non-approved getrandom backend cfg / 20 | compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+P2A-BUILD-004 PASS: rustc AND rustdoc each reject 8 alternate cfgs + hidden CUSTOM; both omitted-exclusivity negative controls accepted
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/alternate.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-alternate: rejected exit=101; error: could not compile `getrandom` (lib) due to 5 previous errors
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/duplicate.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-duplicate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/conflict.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/outer.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 response-nested: rejected exit=101;   error: multiple input filenames provided (first two filenames are `-` and `@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp`)
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 encoded-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 approved-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 approved-alternate: rejected exit=101; error: could not compile `getrandom` (lib) due to 5 previous errors
+RUSTFLAGS=''
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 missing: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 duplicate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp --cfg=getrandom_backend="linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 ordering: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg\x1fgetrandom_backend = "linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 whitespace: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f--cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 encoded-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --config 'build.rustflags=["--cfg=getrandom_backend=\"linux_getrandom\"", "@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp"]'
+P2A-BUILD-003 cli-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --target x86_64-unknown-linux-gnu --config 'target.x86_64-unknown-linux-gnu.rustflags=["--cfg=getrandom_backend=\"linux_getrandom\"", "@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp"]'
+P2A-BUILD-003 target-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTDOC='rustdoc'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 launcher-override: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires the guarded rustdoc launcher
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="not_a_backend"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 unknown: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg\x1fgetrandom_backend="custom"\x1f--cfg\x1fgetrandom_backend="linux_getrandom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 split-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f--cfg\x1fgetrandom_backend = "custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 quoted: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --target x86_64-unknown-linux-gnu
+P2A-BUILD-003 target-env-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"'
+CARGO_ENCODED_RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f--cfg=getrandom_backend="custom"'
+$ cargo check --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 encoded-wins-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp'
+$ cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+P2A-BUILD-003 original Astra CUSTOM cargo build: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/duplicate.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-duplicate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/alternate.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-alternate: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/conflict.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-hidden-conflict: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" @/tmp/fp1-rng-policy-mdcfrsy1/outer.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-nested: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="custom"'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-custom: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+RUSTDOCFLAGS=''
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-missing: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+CARGO_ENCODED_RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom"\x1f@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-encoded-response: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdocflags=["@/tmp/fp1-rng-policy-mdcfrsy1/custom.rsp"]'
+P2A-BUILD-003 doc-cli-response: rejected exit=1; Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdocflags=["@/tmp/fp1-rng-policy-mdcfrsy1/duplicate.rsp"]'
+P2A-BUILD-003 doc-cli-duplicate-response: rejected exit=1; Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdocflags=["--cfg=getrandom_backend=\"custom\""]'
+P2A-BUILD-003 doc-cli-conflict: rejected exit=1; Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+RUSTDOCFLAGS='--cfg=getrandom_backend="custom"'
+CARGO_ENCODED_RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom"'
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc
+P2A-BUILD-003 doc-conflicting-sources: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A rejects conflicting flag sources or response files
+$ cargo test --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml --doc --config 'build.rustdoc="rustdoc"'
+P2A-BUILD-003 doc-cli-launcher-override: rejected exit=101;   Phase 1 pinned liboqs build rejected: Phase 2A requires the guarded rustdoc launcher
+P2A-BUILD-003 PASS: 36 actual Cargo rejections; disposable response files removed
+
+===== FINAL COMMAND 12 =====
+$ git diff --check
+
+===== VERIFIED GENERATED/INSTALLED CONFIGURATION =====
+[
+  {
+    "header": ".deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install/include/oqs/oqsconfig.h",
+    "evidence": [
+      "#define OQS_VERSION_TEXT \"0.16.0\"",
+      "/* #undef OQS_USE_OPENSSL */",
+      "#define OQS_USE_PTHREADS 1",
+      "#define OQS_ENABLE_SHA3_xkcp_low_avx2 1",
+      "/* #undef OQS_USE_SHA3_AVX512VL */",
+      "#define OQS_ENABLE_KEM_ML_KEM 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1",
+      "#define OQS_ENABLE_SIG_ML_DSA 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1"
+    ],
+    "archive_sha256": "4a590db7ba9ac899d5b141eb5bc2138ae176baefb77f8cb9c31419718924feca"
+  },
+  {
+    "header": ".deps/p2a-m01-correction/verified-target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include/oqs/oqsconfig.h",
+    "evidence": [
+      "#define OQS_VERSION_TEXT \"0.16.0\"",
+      "/* #undef OQS_USE_OPENSSL */",
+      "#define OQS_USE_PTHREADS 1",
+      "#define OQS_ENABLE_SHA3_xkcp_low_avx2 1",
+      "/* #undef OQS_USE_SHA3_AVX512VL */",
+      "#define OQS_ENABLE_KEM_ML_KEM 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1",
+      "#define OQS_ENABLE_SIG_ML_DSA 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1"
+    ],
+    "archive_sha256": "183a526441615a7136fce5b9f043449aa41b9e3715c4d12e4123588c5fae82fb"
+  },
+  {
+    "header": ".deps/p2a-m01-correction/verified-target/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install/include/oqs/oqsconfig.h",
+    "evidence": [
+      "#define OQS_VERSION_TEXT \"0.16.0\"",
+      "/* #undef OQS_USE_OPENSSL */",
+      "#define OQS_USE_PTHREADS 1",
+      "#define OQS_ENABLE_SHA3_xkcp_low_avx2 1",
+      "/* #undef OQS_USE_SHA3_AVX512VL */",
+      "#define OQS_ENABLE_KEM_ML_KEM 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1",
+      "#define OQS_ENABLE_SIG_ML_DSA 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1"
+    ],
+    "archive_sha256": "afdf1be70708d1809586b0a8f5637306c5dc72d494091595ae5169fa99ddca0b"
+  }
+]
+
+===== FRESH CARGO CONFIG RUSTDOC ENVIRONMENT PROOF =====
+$ cargo test --offline --manifest-path /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/env-probe/Cargo.toml --doc --config build.rustdocflags=["@unopened-response-file"]
+   Compiling flag-env-probe v0.1.0 (/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/env-probe)
+warning: flag-env-probe@0.1.0: PROBE CARGO_CFG_GETRANDOM_BACKEND="linux_getrandom"
+warning: flag-env-probe@0.1.0: PROBE CARGO_ENCODED_RUSTFLAGS="--cfg\u{1f}getrandom_backend=\"linux_getrandom\""
+warning: flag-env-probe@0.1.0: PROBE CARGO_MAKEFLAGS="-j --jobserver-fds=3,5 --jobserver-auth=3,5"
+warning: flag-env-probe@0.1.0: PROBE RUSTDOC="/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py"
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
+   Doc-tests flag_env_probe
+Phase 2A rustdoc policy rejected: exclusive linux_getrandom cfg; no response files
+error: doctest failed, to rerun pass `--doc`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/scripts/guard_rustdoc.py --edition=2024 --crate-type lib --color auto --crate-name flag_env_probe --test src/lib.rs --test-run-directory /home/iamajay/Projects/FP1/.deps/p2a-m01-correction/env-probe --extern flag_env_probe=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/fresh-doc-env-target/debug/deps/libflag_env_probe-f840d8aab2ee2731.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/p2a-m01-correction/fresh-doc-env-target/debug/deps -C embed-bitcode=no --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' --cfg 'getrandom_backend="linux_getrandom"' '@unopened-response-file' --error-format human` (exit status: 1)
+note: test exited abnormally; to see the full output pass --no-capture to the harness.
+
+exit=1
+
+===== INITIAL STATIC FORMAT FAILURE (CORRECTED) =====
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... FAIL
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+======================================================================
+FAIL: test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/iamajay/Projects/FP1/scripts/validate_phase0.py", line 126, in test_06_static_and_format
+    self.assertLessEqual(len(line), 100, f"{path}:{number}")
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 102 not less than or equal to 100 : /home/iamajay/Projects/FP1/scripts/guard_rustdoc.py:38
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.123s
+
+FAILED (failures=1, skipped=1)
+
+===== INTERMEDIATE DOCUMENT LINK FAILURE (CORRECTED) =====
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... FAIL
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+======================================================================
+FAIL: test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/iamajay/Projects/FP1/scripts/validate_phase0.py", line 84, in test_03_links
+    self.assertTrue(resolved.exists(), (path, target))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : (PosixPath('/home/iamajay/Projects/FP1/docs/PHASE_2A_REVIEW.md'), 'PHASE_2A_CORRECTIONS_REVIEW.md')
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.124s
+
+FAILED (failures=1, skipped=1)
+
+===== POST-EVIDENCE DOCUMENT / WHITESPACE VERIFICATION =====
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.127s
+
+OK (skipped=1)
+
+exit=0
+$ git diff --check
+
+exit=0

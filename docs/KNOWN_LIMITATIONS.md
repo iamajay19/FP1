@@ -234,3 +234,28 @@ no RNG fallback, backend patch, abort interception or new unsafe boundary.
 Vendor checks cannot establish supplier authenticity/current advisory clearance.
 Configured local time and retained CRL state still do not provide trusted time or
 clock/whole-host/snapshot rollback protection. No time-policy runtime implemented.
+
+
+## Phase 2A independent RNG finding and correction — 2026-10-12
+
+P2A-A-M01 (MEDIUM): FIXED / READY FOR TARGETED ASTRA RE-AUDIT. The independent audit
+demonstrated response-file CUSTOM dispatch despite the literal approved flag. The
+original finding/verdict/evidence are preserved in PHASE_2A_ASTRA_AUDIT.md and
+PHASE_2A_ASTRA_VALIDATION.txt; correction evidence is separate.
+
+The approved build now rejects @response files rather than parsing arbitrary paths,
+requires effective exclusive Linux cfg and forbids every recognized alternate cfg
+at compile time. The rustdoc launcher is required because build.rs cannot inspect
+configuration-supplied rustdoc flags. Disabling this launcher via supported Cargo
+overrides is rejected. Build tools/wrappers/PATH/local sources remain trusted; these
+checks do not sandbox a malicious compiler or prove toolchain authenticity. Cargo
+may ask rustc to process flags before the project build script runs; some invalid
+configurations reject in rustc/getrandom instead of the project guard. No accepted
+project build results. This is not protection against arbitrary hostile response
+files' effects inside a compromised compiler.
+
+No randomness fallback, new unsafe, secret export, protocol or algorithm change.
+M-01/L-19 fatal upstream failure remains OPEN/accepted and may bypass Rust Drop.
+No TSan, successful LeakSanitizer, AVX-512 hardware or full-backend sanitizer claim.
+Independent targeted review remains required; Phase 2B is unapproved and all 19 PKI
+tests remain PLANNED. See PHASE_2A_CORRECTIONS_REVIEW.md.

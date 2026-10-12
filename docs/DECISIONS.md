@@ -274,3 +274,32 @@ Phase 2A is implemented/tested only at its foundation boundary; all 19 original 
 rows remain PLANNED. Q-02/Q-03 design is unchanged, with benchmark/recovery and trusted
 time/host rollback still open. Phase 2B requires review and explicit approval; no
 Phase 3 authorization. PHASE_2A_REVIEW.md / PHASE_2A_VALIDATION.txt record current evidence.
+
+
+## Phase 2A RNG corrective decision — 2026-10-12
+
+D-30: P2A-A-M01 is corrected at the build-policy boundary, pending targeted Astra
+re-audit. Keep exactly one effective getrandom_backend="linux_getrandom" and reject
+all compiler/rustdoc @response-file arguments. Do not expand or read these files in
+project guards. Build.rs validates Cargo's effective unit-separated Rust arguments
+and CARGO_CFG_GETRANDOM_BACKEND, plus environment flag sources exposed to it.
+
+The pinned getrandom 0.4.3 dispatcher recognizes custom, linux_getrandom, linux_raw,
+rdrand, rndr, efi_rng, windows_legacy, unsupported and extern_impl. The root compile
+guard independently rejects all eight non-approved values, including simultaneous
+approved/alternate cfgs after rustc expansion. Check-cfg declares this complete set;
+persistent tests compare it against the pinned dispatcher and actually compile the
+root guards with rustc and rustdoc, with omitted-exclusivity sensitivity controls.
+
+Cargo does not expose configuration-supplied effective rustdocflags to build.rs.
+Therefore .cargo/config.toml selects scripts/guard_rustdoc.py via build.rustdoc. The
+launcher checks actual arguments for @files and exactly one approved backend cfg,
+then execs trusted PATH rustdoc without a shell or argument rewriting. Build.rs
+requires that launcher and tracks it/RUSTDOC/environment flags for cache invalidation.
+No additional dependency, RNG implementation, project unsafe or protocol change.
+
+P2A-BUILD-001/002 are preserved; new P2A-BUILD-003/004 record the adversarial Cargo
+routes and independent cfg guard sensitivity. Historical Astra evidence and verdict
+remain unchanged. Phase 2A is not yet independently approved; Phase 2B remains
+unapproved, all 19 PKI runtime tests PLANNED. See PHASE_2A_CORRECTIONS_REVIEW.md and
+PHASE_2A_CORRECTIONS_VALIDATION.txt.

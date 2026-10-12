@@ -8,6 +8,9 @@ directory = ".deps/phase2-vendor"
 offline = true
 
 [build]
+# Guard actual rustdoc arguments, including --config overrides not exposed to
+# build.rs. Toolchain/PATH remain trusted build inputs.
+rustdoc = "scripts/guard_rustdoc.py"
 # Applies to dependencies too. A root-only rustc-cfg cannot select getrandom's backend.
 rustflags = ["--cfg", 'getrandom_backend="linux_getrandom"']
 # Rustdoc recompiles the crate for doctests and does not inherit rustflags.

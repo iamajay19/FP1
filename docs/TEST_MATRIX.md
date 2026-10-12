@@ -265,3 +265,15 @@ were rerun with native code/FFI unchanged; scope check now admits authorized uti
 | P2A-KDF-001 | 2A | RFC5869 case1 exact32-byte extract+expand output | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
 | P2A-SECRET-001 | 2A | Redacted Debug and actual Drop observes wiped live heap before free | TESTED | PHASE_2A_VALIDATION.txt; cargo test debug/release |
 | P2A-SECRET-002 | 2A | Disposable omission of only Drop wipe makes persistent cleanup test fail | TESTED | PHASE_2A_VALIDATION.txt; validate_phase2a.py |
+
+
+### Phase 2A RNG correction — 2026-10-12
+
+P2A-A-M01 is FIXED / READY FOR TARGETED ASTRA RE-AUDIT, not independently approved.
+Existing test IDs and all 19 PLANNED PKI rows are preserved. Original evidence
+remains historical; these added controls address the demonstrated coverage gap.
+
+| ID | Phase | Scenario / required assertion | Status | Evidence |
+|---|---|---|---|---|
+| P2A-BUILD-003 | 2A | 36 actual offline Cargo Rust/rustdoc route rejections: hidden CUSTOM/alternate/duplicate/conflict, nested/encoded/config/target flags and launcher overrides | TESTED | PHASE_2A_CORRECTIONS_VALIDATION.txt; check_rng_policy.py via validate_phase2a.py |
+| P2A-BUILD-004 | 2A | Pinned nine-backend set; exact root rustc/rustdoc guards reject each alternate plus expanded hidden CUSTOM; omitted-exclusivity negative controls succeed | TESTED | PHASE_2A_CORRECTIONS_VALIDATION.txt; check_rng_policy.py |

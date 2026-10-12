@@ -201,3 +201,21 @@ public fixtures. No production identities or persistent secret files are generat
 Show the unchanged backend macro evidence and PQC tests. All original19 PKI rows
 remain PLANNED;23 new foundation/control IDs have actual evidence. Propose review,
 then an explicitly scoped Phase2B decision; do not begin it automatically.
+
+
+## Independent review and required correction — 2026-10-12
+
+Independent Astra returned APPROVED WITH REQUIRED FIXES, with one required MEDIUM
+P2A-A-M01: response-file RNG cfg bypass. The earlier literal-only override assurance
+above describes the original tests, not universal flag-route protection. Do not
+interpret this self-review as independent approval. Astra's original report and
+validation are unchanged.
+
+Authorized correction: reject @response files, validate effective exclusive cfg,
+independently compile-reject every pinned recognized alternate, and guard actual
+rustdoc argv through the required launcher. New P2A-BUILD-003/004 complement existing
+IDs and preserved tests. Status: FIXED / READY FOR TARGETED ASTRA RE-AUDIT, not yet
+independently approved. Scope, architecture, runtime crypto/CBOR and Phase 1 boundary
+are preserved; all 19 PKI tests PLANNED. Separate assessment and actual evidence:
+[PHASE_2A_CORRECTIONS_REVIEW.md](PHASE_2A_CORRECTIONS_REVIEW.md),
+[PHASE_2A_CORRECTIONS_VALIDATION.txt](PHASE_2A_CORRECTIONS_VALIDATION.txt).

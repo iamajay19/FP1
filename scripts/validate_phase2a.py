@@ -13,6 +13,7 @@ import tomllib
 from pathlib import Path
 
 from check_pqc_native import build_artifacts, run
+from check_rng_policy import controls as rng_policy_controls
 
 ROOT = Path(__file__).resolve().parents[1]
 PINS = {
@@ -139,6 +140,9 @@ def controls(env):
         copy = work / "without-cleanse"
         shutil.copytree(ROOT / "trusted-client", copy,
                         ignore=shutil.ignore_patterns("target"))
+        # The copied crate preserves the production relative launcher check.
+        # Only this disposable fixture links back to the real checked-in script.
+        (work / "scripts").symlink_to(ROOT / "scripts", target_is_directory=True)
         secret = copy / "src/foundation/secret.rs"
         contents = secret.read_text()
         marker = "        self.bytes.as_mut().zeroize();"
@@ -162,6 +166,7 @@ def main():
     env.setdefault("CARGO_HOME", str(ROOT / ".deps/cargo-home"))
     features(env)
     controls(env)
+    rng_policy_controls(env)
 
 
 if __name__ == "__main__":
