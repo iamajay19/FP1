@@ -277,3 +277,14 @@ remains historical; these added controls address the demonstrated coverage gap.
 |---|---|---|---|---|
 | P2A-BUILD-003 | 2A | 36 actual offline Cargo Rust/rustdoc route rejections: hidden CUSTOM/alternate/duplicate/conflict, nested/encoded/config/target flags and launcher overrides | TESTED | PHASE_2A_CORRECTIONS_VALIDATION.txt; check_rng_policy.py via validate_phase2a.py |
 | P2A-BUILD-004 | 2A | Pinned nine-backend set; exact root rustc/rustdoc guards reject each alternate plus expanded hidden CUSTOM; omitted-exclusivity negative controls succeed | TESTED | PHASE_2A_CORRECTIONS_VALIDATION.txt; check_rng_policy.py |
+
+
+### Final Phase 2A compiler-boundary correction — 2026-10-12
+
+P2A-RA-L01: FIXED / READY FOR FINAL TARGETED ASTRA VERIFICATION, not independently
+approved. Original Astra evidence and every existing ID/status are preserved.
+All 19 Phase 2 PKI runtime rows remain PLANNED. Actual corrective output is separate.
+
+| ID | Phase | Scenario / required assertion | Status | Evidence |
+|---|---|---|---|---|
+| P2A-BUILD-005 | 2A | Actual final-crate argv rejects 23 cases in initial/reused stages, no new/changed artifact; seven wrapper overrides and six Clippy driver cases reject; forwarding, sensitivity, host/query, recursion/missing-tool controls and explicit-target success | TESTED | check_rng_policy.py; PHASE_2A_L01_CORRECTIONS_VALIDATION.txt |

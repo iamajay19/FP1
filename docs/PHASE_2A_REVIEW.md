@@ -219,3 +219,15 @@ independently approved. Scope, architecture, runtime crypto/CBOR and Phase 1 bou
 are preserved; all 19 PKI tests PLANNED. Separate assessment and actual evidence:
 [PHASE_2A_CORRECTIONS_REVIEW.md](PHASE_2A_CORRECTIONS_REVIEW.md),
 [PHASE_2A_CORRECTIONS_VALIDATION.txt](PHASE_2A_CORRECTIONS_VALIDATION.txt).
+
+
+## Final narrow P2A-RA-L01 correction — 2026-10-12
+
+Astra's targeted re-audit verified backend exclusivity but retained a LOW per-crate
+response-file/duplicate-argument policy gap. The historical independent finding and
+verdict remain unchanged. D-31 adds only Cargo actual-rustc-argv enforcement, required
+wrapper identity and P2A-BUILD-005 controls. Cryptography/CBOR/Phase 1 are unchanged.
+Status: FIXED / READY FOR FINAL TARGETED ASTRA VERIFICATION; no independent approval
+or Phase 2B/3 authorization. Evidence and corrective assessment:
+[PHASE_2A_L01_CORRECTIONS_REVIEW.md](PHASE_2A_L01_CORRECTIONS_REVIEW.md),
+[PHASE_2A_L01_CORRECTIONS_VALIDATION.txt](PHASE_2A_L01_CORRECTIONS_VALIDATION.txt).

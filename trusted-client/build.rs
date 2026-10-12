@@ -119,6 +119,18 @@ fn build() -> Result<(), Box<dyn Error>> {
     }
     println!("cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE");
     let manifest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR")?);
+    // Per-crate `cargo rustc -- ...` flags are invisible here. Require the
+    // actual-argv wrapper even when Cargo configuration/environment overrides it.
+    let rustc_guard = manifest.join("../scripts/guard_rustc.py").canonicalize()?;
+    println!("cargo:rerun-if-env-changed=RUSTC_WRAPPER");
+    println!("cargo:rerun-if-changed={}", rustc_guard.display());
+    if PathBuf::from(std::env::var_os("RUSTC_WRAPPER").ok_or("missing guarded RUSTC_WRAPPER")?)
+        .canonicalize()
+        .map_err(|_| "Phase 2A requires the guarded rustc wrapper")?
+        != rustc_guard
+    {
+        return Err("Phase 2A requires the guarded rustc wrapper".into());
+    }
     // Cargo does not expose configuration-supplied effective rustdocflags to a
     // build script. Require the argument-checking launcher for that separate path.
     let rustdoc_guard = manifest

@@ -1,4 +1,4 @@
-"""P2A-BUILD-003/004: actual offline Cargo/rustdoc rejections and cfg defense.
+"""P2A-BUILD-003/004/005: actual Cargo/compiler policy and cfg defense.
 
 Only disposable public fixtures. Never load response files in production guards.
 The compile-time controls compile the exact root guard without unrelated modules.
@@ -9,6 +9,7 @@ import re
 import shlex
 import subprocess
 import tempfile
+import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,6 +41,118 @@ def rejected(command, env, name):
              if "Phase 2A" in line or "could not compile `getrandom`" in line
              or "multiple input filenames" in line]
     print(f"{name}: rejected exit={result.returncode}; " + " / ".join(lines), flush=True)
+    return result
+
+
+def compiler_boundary(work, env, files):
+    """Actual unmodified crate: initially empty target, then approved reused target."""
+    base = dict(env, CARGO_TARGET_DIR=str(work / "compiler-target"))
+    for key in ("RUSTFLAGS", "CARGO_ENCODED_RUSTFLAGS", "RUSTDOCFLAGS",
+                "CARGO_ENCODED_RUSTDOCFLAGS", "RUSTC_WRAPPER", "RUSTC_WORKSPACE_WRAPPER"):
+        base.pop(key, None)
+    rustc = ["cargo", "rustc", "--offline", "--locked", "--manifest-path",
+             ROOT / "trusted-client/Cargo.toml"]
+    cases = [("response-" + name, ["@" + str(files[name])])
+             for name in ("duplicate", "custom", "alternate", "nested")]
+    cases += [("duplicate-split", ["--cfg", 'getrandom_backend="linux_getrandom"']),
+              ("duplicate-equals", [APPROVED])]
+    for backend in sorted(BACKENDS - {"linux_getrandom"}):
+        value = f'getrandom_backend="{backend}"'
+        cases += [(backend + "-split", ["--cfg", value]),
+                  (backend + "-equals", ["--cfg=" + value])]
+    cases.append(("whitespace", ["--cfg", 'getrandom_backend = "custom"']))
+    assert not Path(base["CARGO_TARGET_DIR"]).exists()
+    for stage in ("fresh", "reused"):
+        before = {p: hashlib.sha256(p.read_bytes()).hexdigest()
+                  for p in Path(base["CARGO_TARGET_DIR"]).rglob("libcadp_pqc*.rlib")}
+        for name, extra in cases:
+            result = rejected([*rustc, "--", *extra], base,
+                              f"P2A-BUILD-005 {stage} {name}")
+            assert "Phase 2A rustc policy rejected" in result.stderr
+            # Per-crate args must reach the actual final-crate wrapper, rather
+            # than fail at an unrelated tool lookup/dependency/probe.
+            assert "--crate-name cadp_pqc" in result.stderr
+            after = {p: hashlib.sha256(p.read_bytes()).hexdigest()
+                     for p in Path(base["CARGO_TARGET_DIR"]).rglob("libcadp_pqc*.rlib")}
+            assert before == after  # No artifact initially; no replacement when reused.
+            if stage == "fresh":
+                assert not list(Path(base["CARGO_TARGET_DIR"]).rglob("libcadp_pqc*.rmeta"))
+        if stage == "fresh":
+            command = ["cargo", "build", *rustc[2:]]
+            print("$ " + shlex.join(map(str, command)), flush=True)
+            subprocess.run(command, cwd=ROOT, env=base, check=True)
+            assert list(Path(base["CARGO_TARGET_DIR"]).rglob("libcadp_pqc*.rlib"))
+    # Removing or replacing the wrapper via ordinary Cargo routes must fail too.
+    passthrough = work / "passthrough.py"
+    passthrough.write_text('#!/usr/bin/env python3\nimport os,sys\n'
+                           'os.execvp(sys.argv[1],sys.argv[1:])\n')
+    passthrough.chmod(0o755)
+    for name, updates, extra in [
+        ("env-disable", {"RUSTC_WRAPPER": ""}, []),
+        ("env-replace", {"RUSTC_WRAPPER": str(passthrough)}, []),
+        ("cargo-env-disable", {"CARGO_BUILD_RUSTC_WRAPPER": ""}, []),
+        ("cargo-env-replace", {"CARGO_BUILD_RUSTC_WRAPPER": str(passthrough)}, []),
+        ("config-disable", {}, ["--config", 'build.rustc-wrapper=""']),
+        ("config-replace", {}, ["--config", 'build.rustc-wrapper=' +
+                                json.dumps(str(passthrough))]),
+        ("workspace-replace", {"RUSTC_WORKSPACE_WRAPPER": str(passthrough)}, []),
+    ]:
+        rejected([*rustc, *extra, "--", "@" + str(files["duplicate"])],
+                 dict(base, **updates), "P2A-BUILD-005 " + name)
+    # Cargo's native explicit-target host build scripts omit target cfgs.
+    subprocess.run(["cargo", "check", *rustc[2:], "--target", "x86_64-unknown-linux-gnu"],
+                   cwd=ROOT, env=base, check=True)
+    clippy = ["cargo", "clippy", *rustc[2:]]
+    for name, extra in [
+        ("duplicate-response", ["@" + str(files["duplicate"])]),
+        ("custom-response", ["@" + str(files["custom"])]),
+        ("nested-response", ["@" + str(files["nested"])]),
+        ("duplicate-equals", [APPROVED]),
+        ("duplicate-split", ["--cfg", 'getrandom_backend="linux_getrandom"']),
+        ("custom", [CUSTOM]),
+    ]:
+        result = rejected([*clippy, "--", *extra], base, "P2A-BUILD-005 Clippy " + name)
+        assert "Phase 2A rustc policy rejected" in result.stderr
+    print(f"P2A-BUILD-005 PASS: {len(cases)} per-crate cases in fresh/reused stages; "
+          "7 wrapper override + 6 Clippy rejections; approved explicit-target check", flush=True)
+
+
+def wrapper_forwarding(work, env):
+    """Observe exec argv using public stubs; never hook a production compiler."""
+    wrapper = ROOT / "scripts/guard_rustc.py"
+    tool = work / "compiler-stub"
+    capture = work / "argv.json"
+    tool.write_text('#!/usr/bin/env python3\nimport json,sys\n'
+                    f'open({str(capture)!r},"w").write(json.dumps(sys.argv[1:]))\n')
+    tool.chmod(0o755)
+    args = ["--cfg", 'getrandom_backend="linux_getrandom"', "--crate-name", "public_fixture",
+            "--emit=metadata", "file with spaces;$(literal)`literal`.rs"]
+    subprocess.run([wrapper, tool, *args], env=env, check=True)
+    assert json.loads(capture.read_text()) == args
+    driver = work / "clippy-driver"
+    driver.write_text(tool.read_text())
+    driver.chmod(0o755)
+    subprocess.run([wrapper, driver, tool, *args],
+                   env=dict(env, RUSTC_WORKSPACE_WRAPPER=str(driver)), check=True)
+    assert json.loads(capture.read_text()) == [str(tool), *args]
+    # A no-policy pass-through control accepts duplicates, demonstrating that
+    # these argv rejection cases are sensitive to the real wrapper's check.
+    for extra in ([APPROVED], ["@" + str(work / "not-opened.rsp")]):
+        rejected([wrapper, tool, *args, *extra], env, "P2A-BUILD-005 direct argv")
+        subprocess.run([tool, *args, *extra], env=env, check=True)
+        assert json.loads(capture.read_text()) == [*args, *extra]
+    rejected([wrapper, wrapper, *args], env, "P2A-BUILD-005 recursion")
+    rejected([wrapper, work / "missing-compiler", *args], env,
+             "P2A-BUILD-005 missing compiler")
+    for probe in (["--print=cfg"],
+                  ["--crate-name", "build_script_build", "--emit=metadata"]):
+        subprocess.run([wrapper, tool, *probe], env=env, check=True)
+        for extra in ([APPROVED, APPROVED], [CUSTOM], ["@never-opened"]):
+            rejected([wrapper, tool, *probe, *extra], env,
+                     "P2A-BUILD-005 non-runtime probe still rejects forbidden args")
+    rejected([wrapper, tool, "--print=cfg", "--emit=metadata"], env,
+             "P2A-BUILD-005 artifact emission needs cfg")
+    print("P2A-BUILD-005 forwarding/recursion/missing-tool and sensitivity PASS", flush=True)
 
 
 def compile_guard(work, env):
@@ -94,6 +207,8 @@ def controls(env):
             files[name].write_text(contents)
         files["nested"] = work / "outer.rsp"
         files["nested"].write_text("@" + str(files["custom"]) + "\n")
+        wrapper_forwarding(work, env)
+        compiler_boundary(work, env, files)
         # Hold approved dependencies/target separate from adversarial flags.
         base = dict(env, CARGO_TARGET_DIR=str(work / "target"))
         for key in ["RUSTFLAGS", "CARGO_ENCODED_RUSTFLAGS", "RUSTDOCFLAGS",

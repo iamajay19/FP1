@@ -259,3 +259,33 @@ M-01/L-19 fatal upstream failure remains OPEN/accepted and may bypass Rust Drop.
 No TSan, successful LeakSanitizer, AVX-512 hardware or full-backend sanitizer claim.
 Independent targeted review remains required; Phase 2B is unapproved and all 19 PKI
 tests remain PLANNED. See PHASE_2A_CORRECTIONS_REVIEW.md.
+
+
+## Targeted Astra LOW finding and final correction — 2026-10-12
+
+The independent re-audit verified the original MEDIUM backend substitution fix but
+found LOW P2A-RA-L01: cargo rustc per-crate @duplicate arguments escaped build.rs,
+producing an approved-backend library despite the blanket response-file policy.
+Its original report/verdict/evidence remain unchanged; no RNG downgrade was claimed.
+
+P2A-RA-L01 is FIXED / READY FOR FINAL TARGETED ASTRA VERIFICATION by D-31: an actual-
+argv Cargo rustc wrapper, required by build.rs, complements the unchanged compile-
+time exclusivity/rustdoc guards. P2A-BUILD-005 tests initial and approved reused
+targets, duplicate/response/alternate values, wrapper overrides and forwarding.
+This is not independent approval. Hold Phase 2B/3; all 19 PKI IDs remain PLANNED.
+
+The wrapper trusts Cargo's real tool, Clippy/Python/PATH and local source. It permits
+flag-free non-artifact host queries and host build-script tools in explicit-target
+builds, not runtime RNG consumers; it does not inject cfgs. Other workspace wrappers
+are unsupported. Backend upgrades and new host dependencies require renewed policy
+review. Checks do not authenticate/sandbox a malicious toolchain. M-01/L-19 fatal
+termination, dependency copies, software erasure and offline time/rollback limitations
+remain open and unchanged. See PHASE_2A_L01_CORRECTIONS_REVIEW.md and its validation.
+
+Corrective self-review additionally observed that Clippy supplies extra CLI flags
+through CLIPPY_ARGS after the Cargo argv boundary. An actual duplicate @file
+was accepted by the initial wrapper design. The final wrapper conservatively
+rejects @ and getrandom_backend markers in that extra channel without parsing
+Clippy's private separator. Ordinary warning flags remain supported. Six real
+Clippy rejection controls preserve coverage. This is a corrected implementation
+issue, not a new protocol decision or a hidden change to Astra history.

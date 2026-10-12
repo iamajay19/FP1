@@ -8,6 +8,8 @@ directory = ".deps/phase2-vendor"
 offline = true
 
 [build]
+# Cargo passes actual rustc argv, including cargo rustc's per-crate extra flags.
+rustc-wrapper = "scripts/guard_rustc.py"
 # Guard actual rustdoc arguments, including --config overrides not exposed to
 # build.rs. Toolchain/PATH remain trusted build inputs.
 rustdoc = "scripts/guard_rustdoc.py"

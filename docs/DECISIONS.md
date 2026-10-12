@@ -303,3 +303,46 @@ routes and independent cfg guard sensitivity. Historical Astra evidence and verd
 remain unchanged. Phase 2A is not yet independently approved; Phase 2B remains
 unapproved, all 19 PKI runtime tests PLANNED. See PHASE_2A_CORRECTIONS_REVIEW.md and
 PHASE_2A_CORRECTIONS_VALIDATION.txt.
+
+
+## Phase 2A final compiler-boundary correction — 2026-10-12
+
+D-31: close P2A-RA-L01 using Cargo's standard build.rustc-wrapper mechanism,
+selecting scripts/guard_rustc.py. Cargo supplies the actual compiler executable and
+argv, including extra arguments after cargo rustc --. Validate before forwarding:
+no @arguments; exactly one literal approved backend selection for runtime artifact
+compilation; no duplicates, unknown or alternate values. Reuse the unchanged
+guard_rustdoc.allowed parser. Do not read response files, rewrite cfgs or use a shell.
+
+The wrapper execs Cargo's trusted tool with the original argument boundaries, checks
+that it exists, and rejects self-recursion. Support the standard trusted Clippy
+workspace driver chain; other workspace wrappers reject. Toolchain/PATH/local sources
+remain trusted, without authenticating compiler binaries. No fixed rustup/system
+compiler path is introduced. Build.rs requires the canonical checked-in wrapper and
+tracks RUSTC_WRAPPER and its source for rebuilds; disabling/replacing it through
+ordinary Cargo environment/configuration routes rejects. Rustdoc and root compile-
+time exclusivity remain unchanged. No dependency, unsafe Rust or crypto change.
+
+Only exact identity queries, non-artifact --print queries and target-cfg-free host
+build-script tools may omit the backend selection. Explicit --target Cargo builds
+use those host calls. They do not consume the project's runtime RNG in this approved
+graph. Every @token and alternate/duplicate backend remains forbidden even there;
+--print combined with --emit is not a query exemption. All runtime dependencies and
+the project itself still require exactly one approved cfg. No fallback is introduced.
+
+P2A-BUILD-005 adds actual final-crate rejection controls from an initially empty
+target, then from an approved reused target; artifact absence/unchanged hashes are
+asserted. It covers both cfg syntaxes and every alternate, seven wrapper overrides,
+forwarding/sensitivity, missing-tool/recursion and host/query behavior. The old
+configuration's accepted duplicate response-file build is retained separately.
+P2A-RA-L01: FIXED / READY FOR FINAL TARGETED ASTRA VERIFICATION. This is corrective
+self-review, not independent Phase 2A approval. Phase 2B/3 remain unapproved.
+See PHASE_2A_L01_CORRECTIONS_REVIEW.md and PHASE_2A_L01_CORRECTIONS_VALIDATION.txt.
+
+Corrective self-review additionally observed that Clippy supplies extra CLI flags
+through CLIPPY_ARGS after the Cargo argv boundary. An actual duplicate @file
+was accepted by the initial wrapper design. The final wrapper conservatively
+rejects @ and getrandom_backend markers in that extra channel without parsing
+Clippy's private separator. Ordinary warning flags remain supported. Six real
+Clippy rejection controls preserve coverage. This is a corrected implementation
+issue, not a new protocol decision or a hidden change to Astra history.

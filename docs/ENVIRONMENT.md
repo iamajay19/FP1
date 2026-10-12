@@ -853,3 +853,43 @@ PHASE_2A_CORRECTIONS_VALIDATION.txt; assessment in PHASE_2A_CORRECTIONS_REVIEW.m
 Pins/features, audited liboqs configuration, static linkage, algorithms, FFI and
 foundation runtime implementations are unchanged. No Phase 2B/3 implementation or
 independent correction approval is claimed.
+
+
+## Phase 2A P2A-RA-L01 actual rustc argv enforcement — 2026-10-12
+
+Cargo build.rustc-wrapper now selects the executable scripts/guard_rustc.py, alongside
+the unchanged rustdoc launcher. Standard Cargo supplies the real tool and actual
+argv, including per-crate cargo rustc extras that build.rs cannot see. No compiler
+replacement, download, host change or hard-coded toolchain path. Python3 is already
+required. Run supported commands from checkout root with its relative configuration.
+
+The guard rejects response-file tokens before forwarding and shares rustdoc's strict
+backend parser. Exactly one linux_getrandom cfg is required for runtime compilations;
+identity/metadata-only host queries and host build-script tools may omit target cfgs.
+No alternate/duplicate cfg or @file is permitted in those exceptions. Standard Clippy
+nesting and explicit native --target builds are tested. Unrelated workspace wrappers
+are unsupported. Build.rs rejects removal/replacement of the selected rustc wrapper.
+Trusted compiler/PATH/source assumptions remain; this is build policy, not a sandbox.
+
+Before correction, a fresh actual cargo rustc -- @duplicate.rsp produced a project
+library with exit 0. After correction, P2A-BUILD-005 rejects all 23 per-crate cases
+before any accepted project artifact in its initial stage, then rejects the same
+cases with approved artifacts retained unchanged. The initial stage starts empty;
+later failures share its dependency/native cache, not a fresh target per case.
+A normal build populates the target between stages. Seven supported wrapper override
+routes also reject. Existing 36 Cargo and 18 compile-time cfg controls are preserved.
+
+Normal full regression uses an initially empty task-owned Cargo home and new
+.deps/p2a-l01-correction/verified-target, local vendor only and offline/locked mode.
+Subsequent commands share that target/home. Actual outputs and any initial corrective
+failures are retained in PHASE_2A_L01_CORRECTIONS_VALIDATION.txt; final results are
+recorded in PHASE_2A_L01_CORRECTIONS_REVIEW.md. No library pin, CMake option, runtime
+algorithm, FFI, crypto/protocol byte or production secret API changed.
+
+Corrective self-review additionally observed that Clippy supplies extra CLI flags
+through CLIPPY_ARGS after the Cargo argv boundary. An actual duplicate @file
+was accepted by the initial wrapper design. The final wrapper conservatively
+rejects @ and getrandom_backend markers in that extra channel without parsing
+Clippy's private separator. Ordinary warning flags remain supported. Six real
+Clippy rejection controls preserve coverage. This is a corrected implementation
+issue, not a new protocol decision or a hidden change to Astra history.

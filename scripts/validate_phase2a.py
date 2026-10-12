@@ -131,8 +131,11 @@ def controls(env):
             # Conflicting cfgs can make getrandom reject its own dependency setup
             # before Cargo runs our guard. That is also fail-closed, not proof the
             # guard ran; its exact predicate is separately tested via build.rs.
-            assert guard or "could not compile `getrandom`" in result.stderr, result.stderr
-            reason = "project guard" if guard else "dependency configuration rejection"
+            wrapper = "Phase 2A rustc policy rejected" in result.stderr
+            assert (guard or wrapper or "could not compile `getrandom`" in result.stderr), (
+                result.stderr)
+            reason = ("actual-argv wrapper" if wrapper else "project guard" if guard
+                      else "dependency configuration rejection")
             print(f"Rejection source: {reason}", flush=True)
             print(f"P2A-BUILD-002 override rejected: {flags!r}; exit=101", flush=True)
         # Meaningful sensitivity check: remove ONLY wiping in a disposable source
