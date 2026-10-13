@@ -289,3 +289,32 @@ rejects @ and getrandom_backend markers in that extra channel without parsing
 Clippy's private separator. Ordinary warning flags remain supported. Six real
 Clippy rejection controls preserve coverage. This is a corrected implementation
 issue, not a new protocol decision or a hidden change to Astra history.
+
+## Final Astra cache finding and narrow correction — 2026-10-13
+
+Independent final verification CLOSED P2A-RA-L01 but retained LOW P2A-FV-L01:
+Clippy rejection before cacheable compiler identity could make a later valid lint
+command fail using the same target. This was build availability/test sensitivity,
+not a backend downgrade. Original reports/verdicts/evidence remain unchanged.
+
+D-32 separates exact observed identity/metadata handshakes from invocation-specific
+CLIPPY_ARGS checking, without exempting actual compilation. P2A-BUILD-006 retains
+compiler caches across five state sequences; each negative proves an actual compiler
+invocation, with successful valid recovery. P2A-BUILD-005 keeps all existing cases
+and adds recovery sentinels/all alternate Clippy backend controls. The earlier broad
+query exception/comment is narrowed: --print=link-args is not metadata-only.
+
+The exact handshake shapes depend on reviewed Cargo/Clippy 1.98.1/native x86_64.
+A future toolchain change may fail closed and needs query-policy review rather than
+a generic --print exemption. Conservative extra-channel marker rejection remains.
+No cache reset is required by the corrected supported workflow. This is corrective
+self-review pending independent Astra confirmation, not Phase 2A approval.
+M-01/L-19, trusted-toolchain, dependency-copy and offline-time limitations remain.
+No new unsafe, RNG fallback or Phase 2B/3 work. See the separate FV-L01 review/evidence.
+
+
+P2A-FV-L01 corrective status: FIXED / READY FOR FINAL ASTRA CONFIRMATION after
+all required command suites and frozen final-source reruns passed. This status
+records tested corrective work, not independent approval. Exact query shape matching
+can reject otherwise benign compiler flags until reviewed; it intentionally does
+not authorize generic --print handling. All other accepted limitations remain open.

@@ -287,4 +287,14 @@ All 19 Phase 2 PKI runtime rows remain PLANNED. Actual corrective output is sepa
 
 | ID | Phase | Scenario / required assertion | Status | Evidence |
 |---|---|---|---|---|
-| P2A-BUILD-005 | 2A | Actual final-crate argv rejects 23 cases in initial/reused stages, no new/changed artifact; seven wrapper overrides and six Clippy driver cases reject; forwarding, sensitivity, host/query, recursion/missing-tool controls and explicit-target success | TESTED | check_rng_policy.py; PHASE_2A_L01_CORRECTIONS_VALIDATION.txt |
+| P2A-BUILD-005 | 2A | Actual final-crate argv rejects 23 cases in initial/reused stages, no new/changed artifact; seven wrapper overrides and thirteen Clippy driver cases reject with actual compilation diagnostics and valid recovery sentinels; forwarding, sensitivity, host/query, recursion/missing-tool controls and explicit-target success | TESTED | check_rng_policy.py; PHASE_2A_L01_CORRECTIONS_VALIDATION.txt; added recovery/all-alternate evidence PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt |
+
+
+### Phase 2A compiler-information cache recovery — 2026-10-13
+
+P2A-FV-L01 correction is tested at the retained-target boundary, pending final Astra
+confirmation. Historical evidence and all 19 PLANNED PKI rows remain unchanged.
+
+| ID | Phase | Scenario / required assertion | Status | Evidence |
+|---|---|---|---|---|
+| P2A-BUILD-006 | 2A | Same retained target: invalid/valid, valid/invalid/valid, response/valid/CUSTOM/valid, duplicate/valid and repeated lint-only success; exact identity/metadata exceptions, no generic print exemption; no cache reset/disable | TESTED | check_rng_policy.py; PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt; targeted five sequences / 14 steps |

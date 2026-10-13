@@ -893,3 +893,41 @@ rejects @ and getrandom_backend markers in that extra channel without parsing
 Clippy's private separator. Ordinary warning flags remain supported. Six real
 Clippy rejection controls preserve coverage. This is a corrected implementation
 issue, not a new protocol decision or a hidden change to Astra history.
+
+## Phase 2A P2A-FV-L01 cache-safe handshake correction — 2026-10-13
+
+Before editing, an existing empty disposable target reproduced invalid Clippy exit
+101 followed by valid strict-Clippy exit 101 without a cache reset. Its retained
+.rustc_info.json records a failed guarded clippy-driver/rustc -vV invocation. Actual
+argv tracing separately observed the fixed Cargo target-information query and
+CLIPPY_ARGS separator __CLIPPY_HACKERY__. Direct real-driver tests confirm the
+observed metadata/identity calls ignore that invocation-specific extra channel.
+The tracing proxy is an isolated observation fixture, not an accepted project build.
+
+D-32 now exempts only the enumerated exact handshakes from that channel check;
+artifact-producing commands still enforce all policy. Generic --print exemptions
+are removed. Query forms are reviewed for installed Cargo/Clippy 1.98.1 on native
+x86_64-unknown-linux-gnu; future toolchain shapes require reinspection. Compiler,
+Python, PATH and local tools remain trusted. No host configuration, dependency pin,
+.cargo configuration, build.rs, liboqs or runtime cryptography change.
+
+Initial P2A-BUILD-006 targeted run passed all five sequences on one retained target:
+5 compilation rejections / 9 valid runs, with no .rustc_info.json deletion or cache
+bypass. Full offline regression evidence is recorded separately in
+PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt. Existing Astra reports are historical and
+unchanged; this correction is not independent Phase 2A approval. All 19 PKI rows
+remain PLANNED, Phase 2B/3 unapproved.
+
+Unreviewed Rust flags that alter the Cargo placeholder-query shape also fail closed
+independently of CLIPPY_ARGS; ordinary Clippy lint flags remain supported. No generic
+compiler-query parser is introduced.
+
+
+Final verification: all 12 required commands returned 0. Final-source fresh debug
+and release each passed 41 unit tests plus 3 doctests. Frozen-source policy suites,
+make check, all five same-target sequences, 13 independent Clippy negatives with
+valid recovery, ENOSYS/EPERM and Phase 1 checks passed. The original failed-cache
+target also recovered without cache deletion. Recorded tool versions: cargo/rustc
+1.98.1, clippy 0.1.98, Python 3.14.8. The first validation Cargo home was empty;
+no network or dependency downloads were used. Phase 1 docs checks: 6 passed, Mermaid
+render skipped (mmdc unavailable). Status: FIXED / READY FOR FINAL ASTRA CONFIRMATION.

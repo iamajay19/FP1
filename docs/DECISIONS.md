@@ -346,3 +346,28 @@ rejects @ and getrandom_backend markers in that extra channel without parsing
 Clippy's private separator. Ordinary warning flags remain supported. Six real
 Clippy rejection controls preserve coverage. This is a corrected implementation
 issue, not a new protocol decision or a hidden change to Astra history.
+
+## Phase 2A compiler-information cache correction — 2026-10-13
+
+D-32: close LOW P2A-FV-L01 by separating exact trusted Cargo/Clippy compiler
+handshakes from invocation-specific CLIPPY_ARGS policy. Observed identity calls
+are -V/--version/-vV. The metadata handshake is the exact stdin/___ file-name query
+with six crate types, sysroot/split-debuginfo/crate-name/cfg prints and -Wwarnings;
+only optional single approved cfg and reviewed native target are allowed. There
+is no generic --print exception: --print=link-args may compile/link an artifact.
+New toolchain query shapes require review. No cfg is injected or argv rewritten.
+
+The real installed driver ignores CLIPPY_ARGS for those handshakes; Cargo caches
+identity/target information without that channel in the key. All artifact calls,
+including host build scripts, still reject its @/getrandom_backend markers before
+exec. Direct @arguments and duplicate/alternate cfgs remain forbidden even in
+handshake candidates. Wrapper identity, compile-time exclusivity, rustdoc and RNG
+runtime behavior are unchanged. No cache deletion/disable is a production remedy.
+
+P2A-BUILD-006 adds five retained same-target sequences (14 steps), exact-query and
+non-query controls. P2A-BUILD-005 preserves its cases and now requires actual compiler
+invocations plus valid recovery sentinels for 13 Clippy negatives, including all eight
+alternate values. Independent Astra evidence remains unchanged. Corrective evidence:
+PHASE_2A_FV_L01_CORRECTIONS_REVIEW.md / PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt.
+Status: FIXED / READY FOR FINAL ASTRA CONFIRMATION. All 12 required commands and
+final-source reruns passed; Phase 2B/3 remain unapproved.

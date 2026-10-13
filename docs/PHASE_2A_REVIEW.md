@@ -231,3 +231,26 @@ Status: FIXED / READY FOR FINAL TARGETED ASTRA VERIFICATION; no independent appr
 or Phase 2B/3 authorization. Evidence and corrective assessment:
 [PHASE_2A_L01_CORRECTIONS_REVIEW.md](PHASE_2A_L01_CORRECTIONS_REVIEW.md),
 [PHASE_2A_L01_CORRECTIONS_VALIDATION.txt](PHASE_2A_L01_CORRECTIONS_VALIDATION.txt).
+
+## Final narrow P2A-FV-L01 correction — 2026-10-13
+
+Independent final Astra verification CLOSED P2A-RA-L01 and found a LOW cache-recovery
+regression. Its original evidence is unchanged. Before editing, invalid then valid
+Clippy both returned 101 on the same existing target due to cached failed -vV.
+D-32 limits CLIPPY_ARGS exemptions to actual observed identity/metadata handshakes,
+removes generic --print handling, and preserves all artifact-call controls.
+
+New P2A-BUILD-006 tests five same-target sequences without deleting/disabling caches;
+P2A-BUILD-005 retains coverage with actual-compilation diagnostics and valid recovery
+sentinels after every Clippy negative. All eight alternate Clippy backend values are
+covered. No cryptographic/protocol, dependency, FFI or build.rs change. This correction
+awaits final Astra confirmation and does not approve Phase 2B/3. Separate review and
+actual results: PHASE_2A_FV_L01_CORRECTIONS_REVIEW.md /
+PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt.
+
+
+Corrective final result: all required command suites and final-source reruns passed;
+P2A-BUILD-006 verified 5 actual rejections / 9 valid recoveries with no cache reset.
+Debug/release each passed 41 unit tests and 3 doctests; Phase 1 evidence/configuration
+and all historical Astra files were preserved. Status: FIXED / READY FOR FINAL ASTRA
+CONFIRMATION. Phase 2A is not independently approved by this corrective self-review.

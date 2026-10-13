@@ -1,4 +1,4 @@
-"""P2A-BUILD-003/004/005: actual Cargo/compiler policy and cfg defense.
+"""P2A-BUILD-003/004/005/006: Cargo/compiler policy, cfg defense, cache recovery.
 
 Only disposable public fixtures. Never load response files in production guards.
 The compile-time controls compile the exact root guard without unrelated modules.
@@ -42,6 +42,55 @@ def rejected(command, env, name):
              or "multiple input filenames" in line]
     print(f"{name}: rejected exit={result.returncode}; " + " / ".join(lines), flush=True)
     return result
+
+
+def clippy_valid(command, env, name):
+    print(f"$ {shlex.join(map(str, command))}", flush=True)
+    result = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True)
+    assert result.returncode == 0, (name, result.stdout, result.stderr)
+    print(f"{name}: accepted exit=0", flush=True)
+
+
+def clippy_rejected(command, env, name):
+    result = rejected(command, env, name)
+    assert "Phase 2A rustc policy rejected" in result.stderr
+    # Cached compiler-information failure is NOT a distinct negative test pass.
+    # Require an actual artifact-producing compiler invocation, not -vV/--print.
+    assert re.search(r"--crate-name (cadp_pqc|build_script_build)\b", result.stderr), (
+        name, result.stderr)
+
+
+def clippy_cache_sequences(work, env, files):
+    """Existing target: no cache deletion/disable between any sequence steps."""
+    base = dict(env, CARGO_TARGET_DIR=str(work / "clippy-cache-target"))
+    for key in ("RUSTFLAGS", "CARGO_ENCODED_RUSTFLAGS", "RUSTDOCFLAGS",
+                "CARGO_ENCODED_RUSTDOCFLAGS", "RUSTC_WRAPPER", "RUSTC_WORKSPACE_WRAPPER",
+                "CLIPPY_ARGS", "CARGO_CACHE_RUSTC_INFO"):
+        base.pop(key, None)
+    Path(base["CARGO_TARGET_DIR"]).mkdir()  # Empty but existing: original failing condition.
+    command = ["cargo", "clippy", "--offline", "--locked", "--manifest-path",
+               ROOT / "trusted-client/Cargo.toml"]
+    valid = [*command, "--all-targets", "--", "-D", "warnings"]
+    steps = [
+        ("sequence-1", [["@" + str(files["duplicate"])], None]),
+        ("sequence-2", [None, [CUSTOM], None]),
+        ("sequence-3", [["@" + str(files["duplicate"])], None, [CUSTOM], None]),
+        ("sequence-4", [[APPROVED], None]),
+        ("sequence-5", [None, None, None]),
+    ]
+    for name, sequence in steps:
+        for i, extra in enumerate(sequence, 1):
+            label = f"P2A-BUILD-006 {name} step-{i}"
+            if extra is None:
+                # Repeated ordinary lint flags, including a usable non-default lint.
+                lint = ["-W", "clippy::all"] if name == "sequence-5" else []
+                clippy_valid([*valid, *lint], base, label)
+            else:
+                clippy_rejected([*command, "--", *extra], base, label)
+        cache = Path(base["CARGO_TARGET_DIR"]) / ".rustc_info.json"
+        assert cache.is_file(), "Recovery must exercise the retained compiler-information cache"
+    print("P2A-BUILD-006 PASS: five same-target sequences / 14 steps; "
+          "no cache reset/disable; 5 actual compilation rejections / 9 valid runs", flush=True)
 
 
 def compiler_boundary(work, env, files):
@@ -103,18 +152,25 @@ def compiler_boundary(work, env, files):
     subprocess.run(["cargo", "check", *rustc[2:], "--target", "x86_64-unknown-linux-gnu"],
                    cwd=ROOT, env=base, check=True)
     clippy = ["cargo", "clippy", *rustc[2:]]
-    for name, extra in [
+    clippy_cases = [
         ("duplicate-response", ["@" + str(files["duplicate"])]),
         ("custom-response", ["@" + str(files["custom"])]),
         ("nested-response", ["@" + str(files["nested"])]),
         ("duplicate-equals", [APPROVED]),
         ("duplicate-split", ["--cfg", 'getrandom_backend="linux_getrandom"']),
         ("custom", [CUSTOM]),
-    ]:
-        result = rejected([*clippy, "--", *extra], base, "P2A-BUILD-005 Clippy " + name)
-        assert "Phase 2A rustc policy rejected" in result.stderr
+    ]
+    clippy_cases += [("backend-" + backend, ["--cfg", f'getrandom_backend="{backend}"'])
+                     for backend in sorted(BACKENDS - {"linux_getrandom", "custom"})]
+    for name, extra in clippy_cases:
+        clippy_rejected([*clippy, "--", *extra], base, "P2A-BUILD-005 Clippy " + name)
+        # Recovery sentinel also prevents a cached failed identity from satisfying
+        # the next negative assertion. Never clear/reset the target/cache here.
+        clippy_valid([*clippy, "--all-targets", "--", "-D", "warnings"], base,
+                     "P2A-BUILD-005 Clippy recovery " + name)
     print(f"P2A-BUILD-005 PASS: {len(cases)} per-crate cases in fresh/reused stages; "
-          "7 wrapper override + 6 Clippy rejections; approved explicit-target check", flush=True)
+          f"7 wrapper override + {len(clippy_cases)} independent Clippy rejections/recoveries; "
+          "approved explicit-target check", flush=True)
 
 
 def wrapper_forwarding(work, env):
@@ -144,7 +200,13 @@ def wrapper_forwarding(work, env):
     rejected([wrapper, wrapper, *args], env, "P2A-BUILD-005 recursion")
     rejected([wrapper, work / "missing-compiler", *args], env,
              "P2A-BUILD-005 missing compiler")
-    for probe in (["--print=cfg"],
+    # Independent literal fixture from the observed Cargo handshake, not imported
+    # from the production matcher. Generic --print is deliberately unsupported.
+    metadata = ["-", "--crate-name", "___", "--print=file-names", "--crate-type", "bin",
+                "--crate-type", "rlib", "--crate-type", "dylib", "--crate-type", "cdylib",
+                "--crate-type", "staticlib", "--crate-type", "proc-macro", "--print=sysroot",
+                "--print=split-debuginfo", "--print=crate-name", "--print=cfg", "-Wwarnings"]
+    for probe in (metadata,
                   ["--crate-name", "build_script_build", "--emit=metadata"]):
         subprocess.run([wrapper, tool, *probe], env=env, check=True)
         for extra in ([APPROVED, APPROVED], [CUSTOM], ["@never-opened"]):
@@ -152,6 +214,22 @@ def wrapper_forwarding(work, env):
                      "P2A-BUILD-005 non-runtime probe still rejects forbidden args")
     rejected([wrapper, tool, "--print=cfg", "--emit=metadata"], env,
              "P2A-BUILD-005 artifact emission needs cfg")
+    for extra_channel in ("@not-opened.rsp__CLIPPY_HACKERY__",
+                          CUSTOM + "__CLIPPY_HACKERY__"):
+        channel = dict(env, CLIPPY_ARGS=extra_channel)
+        for handshake in (["-vV"], metadata):
+            subprocess.run([wrapper, tool, *handshake], env=channel, check=True)
+            assert json.loads(capture.read_text()) == handshake
+        for artifact in (args, ["--print=link-args"], [*metadata, "--emit=metadata"],
+                         [*metadata, "-o", str(work / "forbidden")],
+                         [*metadata, "--print=link-args"]):
+            rejected([wrapper, tool, *artifact], channel,
+                     "P2A-BUILD-006 Clippy channel guarded outside exact handshake")
+    for query in (["--print=link-args"], ["--print=cfg"],
+                  [*metadata, "-o", str(work / "forbidden")],
+                  [*metadata, APPROVED, "--print=link-args"],
+                  [*metadata, APPROVED, "-Dwarnings"]):
+        rejected([wrapper, tool, *query], env, "P2A-BUILD-006 no generic query exemption")
     print("P2A-BUILD-005 forwarding/recursion/missing-tool and sensitivity PASS", flush=True)
 
 
@@ -208,6 +286,7 @@ def controls(env):
         files["nested"] = work / "outer.rsp"
         files["nested"].write_text("@" + str(files["custom"]) + "\n")
         wrapper_forwarding(work, env)
+        clippy_cache_sequences(work, env, files)
         compiler_boundary(work, env, files)
         # Hold approved dependencies/target separate from adversarial flags.
         base = dict(env, CARGO_TARGET_DIR=str(work / "target"))
