@@ -20,6 +20,10 @@ pub const SHARED_SECRET_LENGTH: usize = 32;
 /// let (_, secret) = kem::generate_keypair().unwrap();
 /// let copy = secret.clone();
 /// ```
+/// ```compile_fail
+/// use cadp_pqc::pqc::kem;
+/// let key = kem::SecretKey::from_storage(vec![0u8; 2400]);
+/// ```
 pub struct SecretKey(pub(super) SecretBuffer);
 
 /// Shared secret remains internal; future HKDF integration belongs to Phase 3.
@@ -67,4 +71,20 @@ pub fn decapsulate(secret_key: &SecretKey, ciphertext: &[u8]) -> Result<SharedSe
     let mut shared = SecretBuffer::zeroed(SHARED_SECRET_LENGTH)?;
     ffi::decapsulate(secret_key.0.as_slice(), ciphertext, shared.as_mut_slice())?;
     Ok(SharedSecret(shared))
+}
+
+// Crate-internal storage boundary only; no public raw getter/importer.
+impl SecretKey {
+    pub(crate) fn with_storage_bytes<R>(&self, f: impl FnOnce(&[u8]) -> R) -> R {
+        f(self.0.as_slice())
+    }
+    pub(crate) fn from_storage(bytes: Vec<u8>) -> Result<Self, Error> {
+        let owner = SecretBuffer::adopt_storage(bytes);
+        super::error::check_length(
+            "stored kem secret key",
+            owner.as_slice().len(),
+            SECRET_KEY_LENGTH,
+        )?;
+        Ok(Self(owner))
+    }
 }

@@ -1,4 +1,4 @@
-//! PQ primitives and Phase 2A foundations; no identity/storage/document workflow.
+//! PQ primitives, security foundations and protected key storage; no PKI/document workflow.
 #![deny(unsafe_code)]
 
 #[cfg(not(all(target_os = "linux", getrandom_backend = "linux_getrandom")))]
@@ -21,3 +21,5 @@ compile_error!("Phase 2A rejects non-approved getrandom backend cfg");
 
 pub mod foundation;
 pub mod pqc;
+
+pub mod storage;

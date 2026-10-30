@@ -371,3 +371,20 @@ alternate values. Independent Astra evidence remains unchanged. Corrective evide
 PHASE_2A_FV_L01_CORRECTIONS_REVIEW.md / PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt.
 Status: FIXED / READY FOR FINAL ASTRA CONFIRMATION. All 12 required commands and
 final-source reruns passed; Phase 2B/3 remain unapproved.
+
+
+## Authorized Phase 2B storage-format decision — 2026-10-23
+
+D-33: the owner explicitly resolved the preflight protocol blocker and approved
+PrivateKeyBundleV1's exact three-field schema, HeaderV1, ProtectedSecret and
+D(["CADP-KEY-BUNDLE-AAD-v1", {header: HeaderV1, role: role}]). Roles are exactly
+"kem" and "signature". The normative field names/types and bounds are now in
+CRYPTO_PROTOCOL.md. This supersedes the preflight PROPOSED format: the approved
+header contains no public keys or certificate hash, and has fixed aead_algorithm
+and the exact kdf algorithm/output_len fields. No alias or optional field exists.
+
+The initial BLOCKED result in PHASE_2B_REVIEW.md and PHASE_2B_VALIDATION.txt remains
+historical. Approval followed that stop; it does not retroactively approve its
+different draft bytes. Phase 1/2A remain approved. Only Phase 2B implementation is
+authorized; no certificates, PoP, CRLs, Phase 2C/2D/3 or dependency changes. Argon2
+creation parameters require actual benchmark evidence; 65536/3/4 is still a candidate.

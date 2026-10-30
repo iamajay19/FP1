@@ -1,0 +1,1819 @@
+Independent Phase 2A Astra audit evidence
+Initial audit: 2026-10-08. Final source verification/evidence: 2026-10-12.
+
+Initial /tmp audit outputs became unavailable across continuation. Those commands
+were actually executed and their results were returned in session tool outputs.
+This durable record contains the repeated mandatory checks, repeated CBOR probes,
+repeated RNG overrides and custom-backend runtime proof. It does not reconstruct
+missing raw output and present it as preserved output.
+
+Initial extra test fixture failed to compile because minimal minicbor lacks Write
+for Vec. The fixture was corrected to hand-encode its short byte-string headers;
+four tests then passed. That was an audit-fixture error, not a production failure.
+The repeated four-test run below uses the corrected fixture.
+
+No network requested; Cargo uses --offline --locked and the existing vendor tree.
+Fresh Cargo home was created and verified empty by run.py before its first command.
+Native test script uses project .deps/cargo-home by its own existing policy.
+Audit fixtures are isolated under ignored .deps/phase2a-astra-audit, not production.
+No real secrets. No production corrections or Phase 2B/3 implementation.
+
+
+===== environment.json =====
+{
+  "CARGO_HOME": "/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/cargo-home",
+  "CARGO_TARGET_DIR": "/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target"
+}
+===== baseline.txt =====
+$ git rev-parse HEAD
+252eb63328195d87a5f922b3439dc9b9f0f477e8
+
+$ git rev-parse 93b4671
+93b467119524e5ff51e8ff8f65794dea82e1345b
+
+$ rustc --version
+rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)
+
+$ cargo --version
+cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)
+
+58267f2d660e424e2882fbe0310c4cb4a8faea5fc4a5faa1333abe844fcba46f  .cargo/config.toml
+c568162fed23b09d970edfdc9ef2e63cc096a8a69956d07694c9a396cbf0b2f1  trusted-client/Cargo.toml
+d1f55567351f624fdafd240363996cdb2fc0500b72c538fef7d332d4264f0a5d  trusted-client/Cargo.lock
+45be4f5da1f94cdf445688d20fcd8dfc1ac2bdbf39907b7ad52ac81d5f53ba08  trusted-client/build.rs
+b364aa5bcd5d2b31b47132fa884d04c0475baede981d093f836cd708476ad910  trusted-client/src/foundation/cbor.rs
+34cc7246a78ff083ace3d8c9ef76ed44be3a3089b7387c5c7b775e46585521e1  trusted-client/src/foundation/crypto.rs
+8f86d6cbe2f5024dd2902c35ec65f0fa70387b3389bd4724929564b84e1bab6f  trusted-client/src/foundation/error.rs
+fd947cfe433a697a6050e09e6d4cefe75e686c9edeae01effc199ae98a670c20  trusted-client/src/foundation/identifiers.rs
+ef2876b1986c98066b127cab2514e244b379bb90131d3241fdb2678878445e5b  trusted-client/src/foundation/mod.rs
+5b89b62a523a131f11a592b19751585693f2a3c32665dfc6cb0dc8b4eeca705a  trusted-client/src/foundation/secret.rs
+562e933edb11da0fc7aa8413d7020745a87827b17d68e1b0abf01f02497af6b2  trusted-client/src/foundation/tests.rs
+71dd8d99388d15f52d5b6ccef381d2d540a3fc5766b681afa1d7304f5872ea1a  trusted-client/src/lib.rs
+f026269cb990c7ea93d457c3327aa554456ec17b9133ee48376ba090fa4ecb90  trusted-client/src/pqc/error.rs
+493672a8695b0df6718dc5dc8191abd76251822189038a30949f2fd37f4b82e3  trusted-client/src/pqc/ffi.rs
+b4fffdf0de3d9ca2ae3add99183aa93cc713d897de2c6c43588d93b262f1e189  trusted-client/src/pqc/kem.rs
+c7cc50b0dbf92ada0f865d92c0d0cd59c93cc4479f4e992235141bd93a54061f  trusted-client/src/pqc/mod.rs
+68c1f64092af931733390b17726ee775cedd60baad066bd5b9fcaf738bacf4fd  trusted-client/src/pqc/secret.rs
+720e89e211e79c72dd881bbb985eefa6782b47d5729c4b5477f2d514ee996c49  trusted-client/src/pqc/signature.rs
+b916e7dacf2e5092daf0af11d013362b1ee0d4f10d944ae1c8aebc7ed7e4aba9  trusted-client/src/pqc/tests.rs
+Production files match HEAD. PQC/native/test/source-pin files match pre-2A baseline. Unsafe inventory 1 extern + 10 call blocks. 19 PKI runtime rows PLANNED.
+
+===== results.json =====
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "trusted-client/Cargo.toml",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 0.06
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "trusted-client/Cargo.toml",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "seconds": 8.66
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "trusted-client/Cargo.toml"
+    ],
+    "exit": 0,
+    "seconds": 9.14
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "trusted-client/Cargo.toml"
+    ],
+    "exit": 0,
+    "seconds": 9.1
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--offline",
+      "--locked",
+      "--manifest-path",
+      "trusted-client/Cargo.toml",
+      "pqc_conc_001",
+      "--",
+      "--test-threads=1"
+    ],
+    "exit": 0,
+    "seconds": 5.7
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/validate_phase2a.py"
+    ],
+    "exit": 0,
+    "seconds": 18.83
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/check_pqc_native.py"
+    ],
+    "exit": 0,
+    "seconds": 6.75
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/check_pqc_source_pin.py"
+    ],
+    "exit": 0,
+    "seconds": 3.04
+  },
+  {
+    "command": [
+      "python3",
+      "scripts/validate_phase1.py"
+    ],
+    "exit": 0,
+    "seconds": 0.23
+  },
+  {
+    "command": [
+      "make",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 6.18
+  },
+  {
+    "command": [
+      "make",
+      "check"
+    ],
+    "exit": 0,
+    "seconds": 38.96
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 0.0
+  }
+]
+===== 00.log =====
+$ cargo fmt --manifest-path trusted-client/Cargo.toml --check
+
+===== 01.log =====
+$ cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+    Checking base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking inout v0.2.2
+    Checking rtoolbox v0.0.6
+    Checking rpassword v7.5.4
+    Checking digest v0.11.3
+    Checking universal-hash v0.6.1
+    Checking cipher v0.5.2
+    Checking aead v0.6.1
+    Checking polyval v0.7.3
+    Checking blake2 v0.11.0
+    Checking hmac v0.13.0
+    Checking sha2 v0.11.0
+    Checking ghash v0.6.0
+    Checking aes v0.9.3
+    Checking ctr v0.10.1
+    Checking hkdf v0.13.0
+    Checking argon2 v0.6.0
+    Checking aes-gcm v0.11.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.63s
+
+===== 02.log =====
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling libc v0.2.190
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+   Compiling rpassword v7.5.4
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.00s
+     Running unittests src/lib.rs (.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+===== 03.log =====
+$ cargo test --offline --locked --release --manifest-path trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling digest v0.11.3
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling aes v0.9.3
+   Compiling ctr v0.10.1
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+    Finished `release` profile [optimized] target(s) in 9.02s
+     Running unittests src/lib.rs (.deps/phase2a-astra-audit/fresh-r9jiilhr/target/release/deps/cadp_pqc-2e9aae472d95fb7f)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+===== 04.log =====
+$ cargo test --offline --locked --manifest-path trusted-client/Cargo.toml pqc_conc_001 -- --test-threads=1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.68s
+     Running unittests src/lib.rs (.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 1 test
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 40 filtered out; finished in 0.00s
+
+
+===== 05.log =====
+$ python3 scripts/validate_phase2a.py
+P2A-DEPS-001 integrity PASS: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets, no symlinks
+P2A-DEPS-001 features PASS: exact ten pins / 31 Linux registry crates
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.49s
+$ cc -shared -fPIC -Wall -Wextra -Werror /tmp/fp1-p2a-controls-62mhgm9f/deny.c -o /tmp/fp1-p2a-controls-62mhgm9f/deny.so
+$ rustc --edition=2024 -D warnings /tmp/fp1-p2a-controls-62mhgm9f/rng.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -o /tmp/fp1-p2a-controls-62mhgm9f/rng
+$ /tmp/fp1-p2a-controls-62mhgm9f/rng
+P2A-RNG-003 production syscall failure ENOSYS: PASS
+$ /tmp/fp1-p2a-controls-62mhgm9f/rng
+P2A-RNG-003 production syscall failure EPERM: PASS
+Rejection source: project guard
+P2A-BUILD-002 override rejected: ''; exit=101
+Rejection source: project guard
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_raw"'; exit=101
+Rejection source: dependency configuration rejection
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'; exit=101
+P2A-SECRET-002 missing-Drop-wipe negative control rejected: exit=101
+Temporary fixtures removed; no production hook or alternate RNG
+
+===== 06.log =====
+$ python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.10s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-76uoda8n/configuration-tests
+$ /tmp/fp1-native-test-76uoda8n/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-76uoda8n/forbidden -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-76uoda8n/forbidden -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-76uoda8n/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-76uoda8n/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-76uoda8n/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C link-arg=/tmp/fp1-native-test-76uoda8n/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-76uoda8n/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-76uoda8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-76uoda8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-76uoda8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-76uoda8n/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+
+===== 07.log =====
+$ python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-duo8mia1/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-duo8mia1/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-duo8mia1/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-duo8mia1/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-duo8mia1/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-duo8mia1/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-duo8mia1/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-duo8mia1/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-duo8mia1/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-duo8mia1/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-duo8mia1/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-duo8mia1/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling inout v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-duo8mia1/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-duo8mia1/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-duo8mia1/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-duo8mia1/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-duo8mia1/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-duo8mia1/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-duo8mia1/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-duo8mia1/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-duo8mia1/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-duo8mia1/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling polyval v0.7.3
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling hmac v0.13.0
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-duo8mia1/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-duo8mia1/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-duo8mia1/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-duo8mia1/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling ghash v0.6.0
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-duo8mia1/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-duo8mia1/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+
+===== 08.log =====
+$ python3 scripts/validate_phase1.py
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.185s
+
+OK (skipped=1)
+
+===== 09.log =====
+$ make build
+cargo build --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.16s
+
+===== 10.log =====
+$ make check
+test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)
+PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok
+test_01_documents (validate_phase0.PhaseZero.test_01_documents)
+P0-DOC-001: required documentation exists and is substantive. ... ok
+test_03_links (validate_phase0.PhaseZero.test_03_links)
+P0-LINK-001: local Markdown links resolve inside the repository. ... ok
+test_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)
+P0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok
+test_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)
+P0-STATIC-001: Python syntax and simple formatting policy. ... ok
+test_07_matrix (validate_phase0.PhaseZero.test_07_matrix)
+P0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok
+test_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)
+P0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.132s
+
+OK (skipped=1)
+cargo fmt --manifest-path trusted-client/Cargo.toml --check
+cargo clippy --offline --locked --manifest-path trusted-client/Cargo.toml --all-targets -- -D warnings
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.44s
+cargo test --offline --locked --manifest-path trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.95s
+     Running unittests src/lib.rs (.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 41 tests
+test foundation::identifiers::tests::p2a_id_002_domain_separation ... ok
+test foundation::tests::p2a_cbor_001_canonical_values_and_exact_schema ... ok
+test foundation::tests::p2a_cbor_002_reject_nonshortest_and_length_encodings ... ok
+test foundation::tests::p2a_cbor_003_forbidden_forms ... ok
+test foundation::identifiers::tests::p2a_rng_002_partial_failure_no_fallback ... ok
+test foundation::tests::p2a_cbor_004_duplicates_unknown_order_trailing ... ok
+test foundation::tests::p2a_cbor_007_fixed_domains ... ok
+test foundation::tests::p2a_cbor_009_acceptance_requires_exact_reencoding ... ok
+test foundation::tests::p2a_cbor_006_item_depth_and_embedded_budget ... ok
+test foundation::tests::p2a_cbor_005_truncation_oversized_and_utf8 ... ok
+test foundation::tests::p2a_hash_001_sha256_vector ... ok
+test foundation::tests::p2a_kdf_001_rfc5869_fixed32 ... ok
+test foundation::tests::p2a_rng_001_os_random_identifiers ... ok
+test foundation::tests::p2a_secret_001_redaction_and_live_drop ... ok
+test foundation::tests::p2a_mac_001_rfc4231_and_rejections ... ok
+test pqc::tests::pqc_backend_001_identity_and_algorithms ... ok
+test pqc::tests::pqc_alloc_001_capacity_failure_is_typed ... ok
+test pqc::tests::pqc_boundary_002_kem_secret_and_output_lengths ... ok
+test pqc::tests::pqc_boundary_001_kem_public_inputs ... ok
+test pqc::tests::pqc_boundary_004_signature_secret_and_capacity_lengths ... ok
+test foundation::tests::p2a_id_001_lengths_determinism_difference_vectors ... ok
+test pqc::tests::pqc_kem_005_noncanonical_public_key_failure_cleanup ... ok
+test pqc::tests::pqc_kem_002_wrong_key_implicit_rejection ... ok
+test pqc::tests::pqc_kem_001_valid_roundtrip ... ok
+test pqc::tests::pqc_kem_003_modified_ciphertext_implicit_rejection ... ok
+test pqc::tests::pqc_kem_004_truncated_before_ffi ... ok
+test pqc::tests::pqc_secret_002_drop_cleanses_live_allocation ... ok
+test pqc::tests::pqc_boundary_003_signature_public_inputs ... ok
+test pqc::tests::pqc_secret_001_redacted_debug ... ok
+test pqc::tests::pqc_size_001_backend_contract ... ok
+test pqc::tests::pqc_sig_001_valid_signature ... ok
+test pqc::tests::pqc_sig_003_modified_message ... ok
+test pqc::tests::pqc_sig_005_truncated_signature ... ok
+test pqc::tests::pqc_life_001_process_initialization_is_once ... ok
+test pqc::tests::pqc_sig_002_wrong_public_key ... ok
+test pqc::tests::pqc_sig_004_modified_signature ... ok
+test pqc::tests::pqc_ctx_001_ordinary_and_empty_context_interoperate ... ok
+test pqc::tests::pqc_conc_001_concurrent_smoke ... ok
+test pqc::tests::pqc_msg_001_empty_and_large_borrowed_messages ... ok
+test foundation::tests::p2a_cbor_008_deterministic_properties_and_mutations ... ok
+test foundation::cbor::boundary_tests::p2a_cbor_010_structural_and_embedded_limits ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+python3 scripts/check_pqc_native.py
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.27s
+PQC-BUILD-002 generated configuration: /* #undef OQS_USE_SHA3_AVX512VL */
+$ rustc --edition=2024 --test -D warnings /home/iamajay/Projects/FP1/trusted-client/build.rs -o /tmp/fp1-native-test-r5c_te5q/configuration-tests
+$ /tmp/fp1-native-test-r5c_te5q/configuration-tests --nocapture
+
+running 2 tests
+test tests::p2a_build_001_rng_configuration_fails_closed ... ok
+test tests::pqc_build_002_generated_configuration_is_fail_closed ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-r5c_te5q/forbidden -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=1: exit=1
+$ cc -std=c11 -fsyntax-only -I /tmp/fp1-native-test-r5c_te5q/forbidden -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c
+/home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c:12:2: error: #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+   12 | #error "Phase 1 forbids OQS_USE_SHA3_AVX512VL"
+      |  ^~~~~
+Expected compile rejection for macro=0: exit=1
+PQC-BUILD-002 generated-header and forbidden-configuration regression PASS
+$ clang -std=c11 -O1 -g -fPIC -Wall -Wextra -Wpedantic -Werror -fsanitize=address,undefined -fno-omit-frame-pointer -I /home/iamajay/Projects/FP1/trusted-client/native -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include /home/iamajay/Projects/FP1/trusted-client/native/oqs_shim.c /home/iamajay/Projects/FP1/trusted-client/tests/native_contract.c /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib/liboqs.a -lpthread -Wl,--wrap=OQS_KEM_new -Wl,--wrap=OQS_SIG_new -Wl,--wrap=OQS_KEM_free -Wl,--wrap=OQS_SIG_free -Wl,--wrap=OQS_version -Wl,--wrap=OQS_KEM_keypair -Wl,--wrap=OQS_KEM_encaps -Wl,--wrap=OQS_KEM_decaps -Wl,--wrap=OQS_SIG_keypair -Wl,--wrap=OQS_SIG_sign -Wl,--wrap=OQS_SIG_verify -o /tmp/fp1-native-test-r5c_te5q/native-contract
+LeakSanitizer detect_leaks=0; set CADP_TEST_LEAKS=1 on an unrestricted host (this execution surface rejects its ptrace use)
+$ /tmp/fp1-native-test-r5c_te5q/native-contract
+PQC-FFI-001 native null/length guards PASS
+PQC-FFI-002 allocation failure/cleanup PASS
+PQC-FFI-003 native operation failure/cleanup PASS
+PQC-FFI-004 inconsistent/null metadata rejection PASS
+$ rustfmt --edition 2024 --check /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs
+$ cc -std=c11 -O2 -fPIC -Wall -Wextra -Wpedantic -Werror -I /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include -c /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.c -o /tmp/fp1-native-test-r5c_te5q/partial_output.o
+$ rustc --edition=2024 -D warnings -C opt-level=2 /home/iamajay/Projects/FP1/trusted-client/tests/support/partial_output.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C link-arg=/tmp/fp1-native-test-r5c_te5q/partial_output.o -C link-arg=-Wl,--wrap=OQS_KEM_keypair -C link-arg=-Wl,--wrap=OQS_SIG_keypair -C link-arg=-Wl,--wrap=OQS_KEM_encaps -C link-arg=-Wl,--wrap=OQS_KEM_decaps -C link-arg=-Wl,--wrap=OQS_MEM_cleanse -C link-arg=-Wl,--wrap=free -o /tmp/fp1-native-test-r5c_te5q/partial-output
+PQC-SECRET-003 mode=kem-keygen; synthetic output only
+$ /tmp/fp1-native-test-r5c_te5q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=sig-keygen; synthetic output only
+$ /tmp/fp1-native-test-r5c_te5q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=encaps; synthetic output only
+$ /tmp/fp1-native-test-r5c_te5q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 mode=decaps; synthetic output only
+$ /tmp/fp1-native-test-r5c_te5q/partial-output
+PQC-SECRET-003 partial write -> error -> Rust Drop -> cleanse -> free PASS
+PQC-SECRET-003 PASS: 4 Rust error/Drop/cleanse/deallocation paths
+4 native contracts, config regression and 4 Rust cleanup cases passed; temporary fixtures removed
+python3 scripts/check_pqc_source_pin.py
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-65v0y72k/missing CARGO_TARGET_DIR=/tmp/fp1-pin-test-65v0y72k/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-65v0y72k/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: approved local liboqs source missing; Cargo never downloads it
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git clone --quiet --shared /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 /tmp/fp1-pin-test-65v0y72k/source
+Note: switching to '5a1a854b0dc9f2141bdc771c555ee60c37950183'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+$ git -C /tmp/fp1-pin-test-65v0y72k/source -c 'user.name=Phase 1 guard test' -c user.email=phase1-test@example.invalid commit --quiet --allow-empty -m 'Temporary source-pin rejection fixture'
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-65v0y72k/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-65v0y72k/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling hybrid-array v0.4.15
+   Compiling libc v0.2.190
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-65v0y72k/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-65v0y72k/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs must be tag 0.16.0 at the approved exact commit
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-65v0y72k/source checkout --quiet 0.16.0
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-65v0y72k/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-65v0y72k/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling libc v0.2.190
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-65v0y72k/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-65v0y72k/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-65v0y72k/source update-index --assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-65v0y72k/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-65v0y72k/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling digest v0.11.3
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling aead v0.6.1
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling rtoolbox v0.0.6
+   Compiling getrandom v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-65v0y72k/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-65v0y72k/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source index must not hide tracked files
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /tmp/fp1-pin-test-65v0y72k/source update-index --no-assume-unchanged CMakeLists.txt
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-65v0y72k/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-65v0y72k/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling polyval v0.7.3
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling rpassword v7.5.4
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-65v0y72k/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-65v0y72k/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ CADP_LIBOQS_SOURCE=/tmp/fp1-pin-test-65v0y72k/source CARGO_TARGET_DIR=/tmp/fp1-pin-test-65v0y72k/target cargo build --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling ghash v0.6.0
+   Compiling argon2 v0.6.0
+   Compiling hkdf v0.13.0
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/fp1-pin-test-65v0y72k/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+  cargo:rerun-if-env-changed=CADP_LIBOQS_SOURCE
+  cargo:rerun-if-changed=/tmp/fp1-pin-test-65v0y72k/source
+  cargo:rerun-if-changed=native/oqs_shim.c
+  cargo:rerun-if-changed=native/oqs_shim.h
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: liboqs source must be clean, with no untracked or ignored artifacts
+warning: build failed, waiting for other jobs to finish...
+exit=101
+$ git -C /home/iamajay/Projects/FP1/.deps/liboqs-0.16.0 status --porcelain --untracked-files=all
+PQC-BUILD-001 PASS: 6 rejected cases; original source untouched; clone removed
+python3 scripts/validate_phase2a.py
+P2A-DEPS-001 integrity PASS: 34 packages / 1435 Cargo files / 1469 owner hashes, exact sets, no symlinks
+P2A-DEPS-001 features PASS: exact ten pins / 31 Linux registry crates
+$ cargo build --offline --locked --message-format=json --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.52s
+$ cc -shared -fPIC -Wall -Wextra -Werror /tmp/fp1-p2a-controls-dd_klih2/deny.c -o /tmp/fp1-p2a-controls-dd_klih2/deny.so
+$ rustc --edition=2024 -D warnings /tmp/fp1-p2a-controls-dd_klih2/rng.rs --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/libcadp_pqc.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -o /tmp/fp1-p2a-controls-dd_klih2/rng
+$ /tmp/fp1-p2a-controls-dd_klih2/rng
+P2A-RNG-003 production syscall failure ENOSYS: PASS
+$ /tmp/fp1-p2a-controls-dd_klih2/rng
+P2A-RNG-003 production syscall failure EPERM: PASS
+Rejection source: project guard
+P2A-BUILD-002 override rejected: ''; exit=101
+Rejection source: project guard
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_raw"'; exit=101
+Rejection source: dependency configuration rejection
+P2A-BUILD-002 override rejected: '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_raw"'; exit=101
+P2A-SECRET-002 missing-Drop-wipe negative control rejected: exit=101
+Temporary fixtures removed; no production hook or alternate RNG
+
+===== 11.log =====
+$ git diff --check
+
+===== overrides.json =====
+[
+  {
+    "case": "missing",
+    "exit": 101
+  },
+  {
+    "case": "alternate",
+    "exit": 101
+  },
+  {
+    "case": "encoded-alternate",
+    "exit": 101
+  },
+  {
+    "case": "duplicate",
+    "exit": 101
+  },
+  {
+    "case": "whitespace",
+    "exit": 101
+  },
+  {
+    "case": "target-specific",
+    "exit": 101
+  },
+  {
+    "case": "cli-conflict",
+    "exit": 101
+  },
+  {
+    "case": "rsp-duplicate",
+    "exit": 0
+  },
+  {
+    "case": "rsp-conflict",
+    "exit": 0
+  },
+  {
+    "case": "rsp-custom",
+    "exit": 0
+  }
+]
+===== rustdoc-overrides.json =====
+[
+  {
+    "case": "missing",
+    "exit": 1
+  },
+  {
+    "case": "alternate",
+    "exit": 1
+  },
+  {
+    "case": "conflicting",
+    "exit": 0
+  }
+]
+===== vectors.json =====
+{
+  "CADP-KEM-ID-v1": "1e41ffea04d255bc186b21eefa9039f6b92347bc005433f6cc11f552c9efbd6d",
+  "CADP-SIG-ID-v1": "7b2447cb726e5a16083ba09e8502cb9761ac6c2027b995024af4849c73462bf7",
+  "SHA256 abc": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+  "RFC4231-1": "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7",
+  "RFC5869-1 first32": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf"
+}
+===== native-config.json =====
+{
+  "/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-bf17d11e98b0752a/out/liboqs-install/include/oqs/oqsconfig.h": {
+    "header_excerpt": [
+      "#define OQS_VERSION_TEXT \"0.16.0\"",
+      "/* #undef OQS_USE_OPENSSL */",
+      "#define OQS_USE_PTHREADS 1",
+      "/* #undef OQS_USE_SHA3_AVX512VL */",
+      "#define OQS_ENABLE_SHA3_xkcp_low_avx2 1",
+      "#define OQS_ENABLE_KEM_ML_KEM 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1",
+      "#define OQS_ENABLE_SIG_ML_DSA 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1"
+    ],
+    "sha256": "69040e7bf73687734d1ccb3244051579a355b902a99ed94d60093d9ba1924432",
+    "archive_members": 100,
+    "AVX512_members": 0
+  },
+  "/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/include/oqs/oqsconfig.h": {
+    "header_excerpt": [
+      "#define OQS_VERSION_TEXT \"0.16.0\"",
+      "/* #undef OQS_USE_OPENSSL */",
+      "#define OQS_USE_PTHREADS 1",
+      "/* #undef OQS_USE_SHA3_AVX512VL */",
+      "#define OQS_ENABLE_SHA3_xkcp_low_avx2 1",
+      "#define OQS_ENABLE_KEM_ML_KEM 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1",
+      "#define OQS_ENABLE_SIG_ML_DSA 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1"
+    ],
+    "sha256": "f5224c66e5f00184bd30f56cf9324b00cb72b4c2bcd3975d32ecaef3447a4783",
+    "archive_members": 100,
+    "AVX512_members": 0
+  },
+  "/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/release/build/cadp-pqc-c21af3febc9c3480/out/liboqs-install/include/oqs/oqsconfig.h": {
+    "header_excerpt": [
+      "#define OQS_VERSION_TEXT \"0.16.0\"",
+      "/* #undef OQS_USE_OPENSSL */",
+      "#define OQS_USE_PTHREADS 1",
+      "/* #undef OQS_USE_SHA3_AVX512VL */",
+      "#define OQS_ENABLE_SHA3_xkcp_low_avx2 1",
+      "#define OQS_ENABLE_KEM_ML_KEM 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768 1",
+      "#define OQS_ENABLE_KEM_ml_kem_768_x86_64 1",
+      "#define OQS_ENABLE_SIG_ML_DSA 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65 1",
+      "#define OQS_ENABLE_SIG_ml_dsa_65_x86_64 1"
+    ],
+    "sha256": "b875eedbaaa0da9a665a14d6f9f9c8c939a6ab1b0470bf8c3cbb0e849d1c86dd",
+    "archive_members": 100,
+    "AVX512_members": 0
+  }
+}
+===== extra-tests.log =====
+['cargo', 'test', '--offline', '--locked', '--manifest-path', '/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/probe-client/Cargo.toml', 'astra_']
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling libc v0.2.190
+   Compiling cpubits v0.1.1
+   Compiling getrandom v0.4.3
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/probe-client)
+   Compiling minicbor v2.3.0
+   Compiling ctutils v0.4.3
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling digest v0.11.3
+   Compiling cipher v0.5.2
+   Compiling universal-hash v0.6.1
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling hmac v0.13.0
+   Compiling blake2 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling hkdf v0.13.0
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.96s
+     Running unittests src/lib.rs (.deps/phase2a-astra-audit/probe-target/debug/deps/cadp_pqc-abbdf6ae4e1e8f99)
+
+running 4 tests
+test foundation::cbor::astra_extra::astra_ordering_independent_bytes ... ok
+test foundation::cbor::astra_extra::astra_nested_embedded_shared_depth ... ok
+test foundation::cbor::astra_extra::astra_exact_byte_limits ... ok
+test foundation::cbor::astra_extra::astra_exact_million_items ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 41 filtered out; finished in 0.07s
+
+
+===== custom-build.log =====
+['cargo', 'build', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml', '--message-format=json']
+   Compiling typenum v1.20.1
+   Compiling zeroize v1.9.1
+   Compiling cmov v0.5.4
+   Compiling cpufeatures v0.3.1
+   Compiling cpubits v0.1.1
+   Compiling cfg-if v1.0.5
+   Compiling base64ct v1.8.3
+   Compiling minicbor v2.3.0
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+   Compiling libc v0.2.190
+   Compiling getrandom v0.4.3
+   Compiling ctutils v0.4.3
+   Compiling rtoolbox v0.0.6
+   Compiling rpassword v7.5.4
+   Compiling hybrid-array v0.4.15
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling inout v0.2.2
+   Compiling digest v0.11.3
+   Compiling universal-hash v0.6.1
+   Compiling cipher v0.5.2
+   Compiling aead v0.6.1
+   Compiling polyval v0.7.3
+   Compiling blake2 v0.11.0
+   Compiling hmac v0.13.0
+   Compiling sha2 v0.11.0
+   Compiling ghash v0.6.0
+   Compiling ctr v0.10.1
+   Compiling aes v0.9.3
+   Compiling hkdf v0.13.0
+   Compiling argon2 v0.6.0
+   Compiling aes-gcm v0.11.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.44s
+
+exit=0
+
+===== custom-control.log =====
+['rustc', '--edition=2024', '/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/custom-control.rs', '--extern', 'cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/libcadp_pqc.rlib', '--extern', 'getrandom=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/deps/libgetrandom-939e1da3f6226f07.rlib', '-L', 'dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/deps', '-o', '/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/custom-control']
+CONFIRMED: unchanged production RandomId invoked hidden CUSTOM backend
+
+===== override-alternate.log =====
+{'RUSTFLAGS': '--cfg=getrandom_backend="linux_raw"'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+    Checking base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/build/cadp-pqc-ab02fd65133c2199/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+warning: build failed, waiting for other jobs to finish...
+
+===== override-cli-conflict.log =====
+{}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml', '--config', 'build.rustflags=["--cfg",\'getrandom_backend="linux_raw"\']']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+error[E0432]: unresolved import `libc`
+ --> /home/iamajay/Projects/FP1/.deps/phase2-vendor/getrandom-0.4.3/src/backends/../utils/get_errno.rs:5:13
+  |
+5 |         use libc::__errno_location as errno_location;
+  |             ^^^^ use of unresolved module or unlinked crate `libc`
+  |
+  = help: if you wanted to use a crate named `libc`, use `cargo add libc` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `libc` in this scope
+  --> /home/iamajay/Projects/FP1/.deps/phase2-vendor/getrandom-0.4.3/src/backends/../utils/sys_fill_exact.rs:30:29
+   |
+30 |                 if errno != libc::EINTR {
+   |                             ^^^^ use of unresolved module or unlinked crate `libc`
+   |
+   = help: if you wanted to use a crate named `libc`, use `cargo add libc` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `libc` in this scope
+  --> /home/iamajay/Projects/FP1/.deps/phase2-vendor/getrandom-0.4.3/src/backends/getrandom.rs:29:9
+   |
+29 |         libc::getrandom(buf.as_mut_ptr().cast(), buf.len(), 0)
+   |         ^^^^ use of unresolved module or unlinked crate `libc`
+   |
+   = help: if you wanted to use a crate named `libc`, use `cargo add libc` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `libc` in this scope
+  --> /home/iamajay/Projects/FP1/.deps/phase2-vendor/getrandom-0.4.3/src/backends/../utils/get_errno.rs:27:30
+   |
+27 | pub(crate) fn get_errno() -> libc::c_int {
+   |                              ^^^^ use of unresolved module or unlinked crate `libc`
+   |
+   = help: if you wanted to use a crate named `libc`, use `cargo add libc` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `libc` in this scope
+  --> /home/iamajay/Projects/FP1/.deps/phase2-vendor/getrandom-0.4.3/src/backends/../utils/sys_fill_exact.rs:16:50
+   |
+16 |     sys_fill: impl Fn(&mut [MaybeUninit<u8>]) -> libc::ssize_t,
+   |                                                  ^^^^ use of unresolved module or unlinked crate `libc`
+   |
+   = help: if you wanted to use a crate named `libc`, use `cargo add libc` to add it to your `Cargo.toml`
+
+Some errors have detailed explanations: E0432, E0433.
+For more information about an error, try `rustc --explain E0432`.
+error: could not compile `getrandom` (lib) due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+
+===== override-duplicate.log =====
+{'RUSTFLAGS': '--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="linux_getrandom"'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+   Compiling getrandom v0.4.3
+    Checking cfg-if v1.0.5
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/build/cadp-pqc-bb6241fe4609551b/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+warning: build failed, waiting for other jobs to finish...
+
+===== override-encoded-alternate.log =====
+{'CARGO_ENCODED_RUSTFLAGS': '--cfg\x1fgetrandom_backend="linux_raw"'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+    Checking cpubits v0.1.1
+   Compiling libc v0.2.190
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/build/cadp-pqc-80735735228b1c7c/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+warning: build failed, waiting for other jobs to finish...
+
+===== override-missing.log =====
+{'RUSTFLAGS': ''}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+    Checking base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/build/cadp-pqc-e0d33177da883962/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+warning: build failed, waiting for other jobs to finish...
+
+===== override-rsp-conflict.log =====
+{'RUSTFLAGS': '--cfg=getrandom_backend="linux_getrandom" @/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/conflict.rsp'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+   Compiling getrandom v0.4.3
+    Checking cfg-if v1.0.5
+    Checking base64ct v1.8.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking inout v0.2.2
+    Checking rtoolbox v0.0.6
+    Checking rpassword v7.5.4
+    Checking digest v0.11.3
+    Checking universal-hash v0.6.1
+    Checking cipher v0.5.2
+    Checking aead v0.6.1
+    Checking polyval v0.7.3
+    Checking blake2 v0.11.0
+    Checking hmac v0.13.0
+    Checking sha2 v0.11.0
+    Checking ghash v0.6.0
+    Checking ctr v0.10.1
+    Checking aes v0.9.3
+    Checking hkdf v0.13.0
+    Checking argon2 v0.6.0
+    Checking aes-gcm v0.11.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.11s
+
+===== override-rsp-custom.log =====
+{'RUSTFLAGS': '--cfg=getrandom_backend="linux_getrandom" @/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/custom.rsp'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+    Checking cpubits v0.1.1
+   Compiling libc v0.2.190
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking inout v0.2.2
+    Checking rtoolbox v0.0.6
+    Checking rpassword v7.5.4
+    Checking digest v0.11.3
+    Checking universal-hash v0.6.1
+    Checking cipher v0.5.2
+    Checking aead v0.6.1
+    Checking polyval v0.7.3
+    Checking blake2 v0.11.0
+    Checking hmac v0.13.0
+    Checking sha2 v0.11.0
+    Checking ghash v0.6.0
+    Checking ctr v0.10.1
+    Checking aes v0.9.3
+    Checking hkdf v0.13.0
+    Checking argon2 v0.6.0
+    Checking aes-gcm v0.11.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.00s
+
+===== override-rsp-duplicate.log =====
+{'RUSTFLAGS': '--cfg=getrandom_backend="linux_getrandom" @/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/duplicate.rsp'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking inout v0.2.2
+    Checking rtoolbox v0.0.6
+    Checking rpassword v7.5.4
+    Checking digest v0.11.3
+    Checking cipher v0.5.2
+    Checking universal-hash v0.6.1
+    Checking aead v0.6.1
+    Checking polyval v0.7.3
+    Checking blake2 v0.11.0
+    Checking hmac v0.13.0
+    Checking sha2 v0.11.0
+    Checking ghash v0.6.0
+    Checking aes v0.9.3
+    Checking ctr v0.10.1
+    Checking hkdf v0.13.0
+    Checking argon2 v0.6.0
+    Checking aes-gcm v0.11.1
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.99s
+
+===== override-target-specific.log =====
+{}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml', '--config', 'target.x86_64-unknown-linux-gnu.rustflags=["--cfg",\'getrandom_backend="linux_raw"\']', '--target', 'x86_64-unknown-linux-gnu']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+   Compiling getrandom v0.4.3
+    Checking cfg-if v1.0.5
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+    Checking hybrid-array v0.4.15
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/build/cadp-pqc-244978b8d718695f/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+warning: build failed, waiting for other jobs to finish...
+
+===== override-whitespace.log =====
+{'CARGO_ENCODED_RUSTFLAGS': '--cfg\x1fgetrandom_backend = "linux_getrandom"'}
+['cargo', 'check', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml']
+    Checking typenum v1.20.1
+    Checking zeroize v1.9.1
+    Checking cmov v0.5.4
+    Checking cpufeatures v0.3.1
+   Compiling libc v0.2.190
+    Checking cpubits v0.1.1
+    Checking cfg-if v1.0.5
+   Compiling getrandom v0.4.3
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Checking base64ct v1.8.3
+    Checking minicbor v2.3.0
+    Checking ctutils v0.4.3
+error: failed to run custom build command for `cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)`
+
+Caused by:
+  process didn't exit successfully: `/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/override-target/debug/build/cadp-pqc-3813ca73d34bf0ff/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rustc-check-cfg=cfg(getrandom_backend, values("linux_getrandom"))
+  cargo:rerun-if-env-changed=CARGO_ENCODED_RUSTFLAGS
+
+  --- stderr
+  Phase 1 pinned liboqs build rejected: Phase 2A requires Cargo-wide getrandom_backend="linux_getrandom" exactly once
+warning: build failed, waiting for other jobs to finish...
+
+===== rustdoc-alternate.log =====
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_raw"'
+['cargo', 'test', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml', '--doc']
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.54s
+   Doc-tests cadp_pqc
+error: Phase 2A requires Linux syscall-only OS randomness
+ --> src/lib.rs:5:1
+  |
+5 | compile_error!("Phase 2A requires Linux syscall-only OS randomness");
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+error: doctest failed, to rerun pass `--doc`
+
+Caused by:
+  process didn't exit successfully: `rustdoc --edition=2024 --crate-type lib --color auto --crate-name cadp_pqc --test src/lib.rs --test-run-directory /home/iamajay/Projects/FP1/trusted-client -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib --deny=unsafe_op_in_unsafe_fn '--deny=clippy::undocumented_unsafe_blocks' --extern aes_gcm=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libaes_gcm-f89e4202fb3329cf.rlib --extern argon2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libargon2-2d71e79c43365fdd.rlib --extern blake2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libblake2-205634e4c9ee545d.rlib --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libcadp_pqc-a1dcd0584188508d.rlib --extern getrandom=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libgetrandom-ee8e9e1bda7dc818.rlib --extern hkdf=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhkdf-e27c0e0833383362.rlib --extern hmac=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhmac-2ff9b99bc0b89277.rlib --extern minicbor=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libminicbor-9547e012b92a56ed.rlib --extern rpassword=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/librpassword-1303712eba52e2e8.rlib --extern sha2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libsha2-aca65ada20a5e535.rlib --extern zeroize=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libzeroize-82eb5d0aa85aeef9.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C embed-bitcode=no --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' --check-cfg 'cfg(getrandom_backend, values("linux_getrandom"))' '--cfg=getrandom_backend="linux_raw"' --error-format human` (exit status: 1)
+note: test exited abnormally; to see the full output pass --no-capture to the harness.
+
+===== rustdoc-conflicting.log =====
+RUSTDOCFLAGS='--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="custom"'
+['cargo', 'test', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml', '--doc']
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.54s
+   Doc-tests cadp_pqc
+
+running 3 tests
+test src/pqc/signature.rs - pqc::signature::SecretKey (line 12) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 13) - compile fail ... ok
+test src/pqc/kem.rs - pqc::kem::SecretKey (line 18) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+===== rustdoc-missing.log =====
+RUSTDOCFLAGS=''
+['cargo', 'test', '--offline', '--locked', '--manifest-path', 'trusted-client/Cargo.toml', '--doc']
+   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.53s
+   Doc-tests cadp_pqc
+error: Phase 2A requires Linux syscall-only OS randomness
+ --> src/lib.rs:5:1
+  |
+5 | compile_error!("Phase 2A requires Linux syscall-only OS randomness");
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+error: doctest failed, to rerun pass `--doc`
+
+Caused by:
+  process didn't exit successfully: `rustdoc --edition=2024 --crate-type lib --color auto --crate-name cadp_pqc --test src/lib.rs --test-run-directory /home/iamajay/Projects/FP1/trusted-client -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib --deny=unsafe_op_in_unsafe_fn '--deny=clippy::undocumented_unsafe_blocks' --extern aes_gcm=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libaes_gcm-f89e4202fb3329cf.rlib --extern argon2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libargon2-2d71e79c43365fdd.rlib --extern blake2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libblake2-205634e4c9ee545d.rlib --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libcadp_pqc-a1dcd0584188508d.rlib --extern getrandom=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libgetrandom-ee8e9e1bda7dc818.rlib --extern hkdf=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhkdf-e27c0e0833383362.rlib --extern hmac=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhmac-2ff9b99bc0b89277.rlib --extern minicbor=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libminicbor-9547e012b92a56ed.rlib --extern rpassword=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/librpassword-1303712eba52e2e8.rlib --extern sha2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libsha2-aca65ada20a5e535.rlib --extern zeroize=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libzeroize-82eb5d0aa85aeef9.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C embed-bitcode=no --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' --check-cfg 'cfg(getrandom_backend, values("linux_getrandom"))' --error-format human` (exit status: 1)
+note: test exited abnormally; to see the full output pass --no-capture to the harness.
+
+===== Verbose normal compiler/rustdoc commands and results =====
+     Running `CARGO=/usr/bin/cargo CARGO_CFG_DEBUG_ASSERTIONS='' CARGO_CFG_FEATURE='' CARGO_CFG_GETRANDOM_BACKEND=linux_getrandom CARGO_CFG_PANIC=unwind CARGO_CFG_TARGET_ABI='' CARGO_CFG_TARGET_ARCH=x86_64 CARGO_CFG_TARGET_ENDIAN=little CARGO_CFG_TARGET_ENV=gnu CARGO_CFG_TARGET_FAMILY=unix CARGO_CFG_TARGET_FEATURE=fxsr,sse,sse2 CARGO_CFG_TARGET_HAS_ATOMIC=16,32,64,8,ptr CARGO_CFG_TARGET_HAS_ATOMIC_PRIMITIVE_ALIGNMENT=16,32,64,8,ptr CARGO_CFG_TARGET_OS=linux CARGO_CFG_TARGET_POINTER_WIDTH=64 CARGO_CFG_TARGET_VENDOR=unknown CARGO_CFG_UNIX='' CARGO_ENCODED_RUSTFLAGS='--cfggetrandom_backend="linux_getrandom"' CARGO_MANIFEST_DIR=/home/iamajay/Projects/FP1/trusted-client CARGO_MANIFEST_PATH=/home/iamajay/Projects/FP1/trusted-client/Cargo.toml CARGO_PKG_AUTHORS='' CARGO_PKG_DESCRIPTION='Pinned PQ primitives and bounded Phase 2A security utilities' CARGO_PKG_HOMEPAGE='' CARGO_PKG_LICENSE='' CARGO_PKG_LICENSE_FILE='' CARGO_PKG_NAME=cadp-pqc CARGO_PKG_README=README.md CARGO_PKG_REPOSITORY='' CARGO_PKG_RUST_VERSION=1.89 CARGO_PKG_VERSION=0.1.0 CARGO_PKG_VERSION_MAJOR=0 CARGO_PKG_VERSION_MINOR=1 CARGO_PKG_VERSION_PATCH=0 CARGO_PKG_VERSION_PRE='' DEBUG=true HOST=x86_64-unknown-linux-gnu LD_LIBRARY_PATH='/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug:/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps:/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib' NUM_JOBS=16 OPT_LEVEL=0 OUT_DIR=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out PROFILE=debug RUSTC=rustc RUSTDOC=rustdoc TARGET=x86_64-unknown-linux-gnu /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-1240c186d29ae2ef/build-script-build`
+     Running `CADP_LIBOQS_COMMIT=5a1a854b0dc9f2141bdc771c555ee60c37950183 CARGO=/usr/bin/cargo CARGO_CRATE_NAME=cadp_pqc CARGO_MANIFEST_DIR=/home/iamajay/Projects/FP1/trusted-client CARGO_MANIFEST_PATH=/home/iamajay/Projects/FP1/trusted-client/Cargo.toml CARGO_PKG_AUTHORS='' CARGO_PKG_DESCRIPTION='Pinned PQ primitives and bounded Phase 2A security utilities' CARGO_PKG_HOMEPAGE='' CARGO_PKG_LICENSE='' CARGO_PKG_LICENSE_FILE='' CARGO_PKG_NAME=cadp-pqc CARGO_PKG_README=README.md CARGO_PKG_REPOSITORY='' CARGO_PKG_RUST_VERSION=1.89 CARGO_PKG_VERSION=0.1.0 CARGO_PKG_VERSION_MAJOR=0 CARGO_PKG_VERSION_MINOR=1 CARGO_PKG_VERSION_PATCH=0 CARGO_PKG_VERSION_PRE='' CARGO_PRIMARY_PACKAGE=1 LD_LIBRARY_PATH=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps OUT_DIR=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out rustc --crate-name cadp_pqc --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --deny=unsafe_op_in_unsafe_fn '--deny=clippy::undocumented_unsafe_blocks' --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=cd34c0713498c715 -C extra-filename=-a1dcd0584188508d --out-dir /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C incremental=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/incremental -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps --extern aes_gcm=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libaes_gcm-f89e4202fb3329cf.rmeta --extern argon2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libargon2-2d71e79c43365fdd.rmeta --extern blake2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libblake2-205634e4c9ee545d.rmeta --extern getrandom=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libgetrandom-ee8e9e1bda7dc818.rmeta --extern hkdf=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhkdf-e27c0e0833383362.rmeta --extern hmac=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhmac-2ff9b99bc0b89277.rmeta --extern minicbor=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libminicbor-9547e012b92a56ed.rmeta --extern rpassword=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/librpassword-1303712eba52e2e8.rmeta --extern sha2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libsha2-aca65ada20a5e535.rmeta --extern zeroize=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libzeroize-82eb5d0aa85aeef9.rmeta --cfg 'getrandom_backend="linux_getrandom"' -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib -l static=cadp_oqs_shim -l static=oqs -l pthread --check-cfg 'cfg(getrandom_backend, values("linux_getrandom"))'`
+     Running `CADP_LIBOQS_COMMIT=5a1a854b0dc9f2141bdc771c555ee60c37950183 CARGO=/usr/bin/cargo CARGO_CRATE_NAME=cadp_pqc CARGO_MANIFEST_DIR=/home/iamajay/Projects/FP1/trusted-client CARGO_MANIFEST_PATH=/home/iamajay/Projects/FP1/trusted-client/Cargo.toml CARGO_PKG_AUTHORS='' CARGO_PKG_DESCRIPTION='Pinned PQ primitives and bounded Phase 2A security utilities' CARGO_PKG_HOMEPAGE='' CARGO_PKG_LICENSE='' CARGO_PKG_LICENSE_FILE='' CARGO_PKG_NAME=cadp-pqc CARGO_PKG_README=README.md CARGO_PKG_REPOSITORY='' CARGO_PKG_RUST_VERSION=1.89 CARGO_PKG_VERSION=0.1.0 CARGO_PKG_VERSION_MAJOR=0 CARGO_PKG_VERSION_MINOR=1 CARGO_PKG_VERSION_PATCH=0 CARGO_PKG_VERSION_PRE='' CARGO_PRIMARY_PACKAGE=1 LD_LIBRARY_PATH=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps OUT_DIR=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out rustc --crate-name cadp_pqc --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --deny=unsafe_op_in_unsafe_fn '--deny=clippy::undocumented_unsafe_blocks' --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=7d64a21fd25353c3 -C extra-filename=-abbdf6ae4e1e8f99 --out-dir /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C incremental=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/incremental -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps --extern aes_gcm=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libaes_gcm-f89e4202fb3329cf.rlib --extern argon2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libargon2-2d71e79c43365fdd.rlib --extern blake2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libblake2-205634e4c9ee545d.rlib --extern getrandom=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libgetrandom-ee8e9e1bda7dc818.rlib --extern hkdf=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhkdf-e27c0e0833383362.rlib --extern hmac=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhmac-2ff9b99bc0b89277.rlib --extern minicbor=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libminicbor-9547e012b92a56ed.rlib --extern rpassword=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/librpassword-1303712eba52e2e8.rlib --extern sha2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libsha2-aca65ada20a5e535.rlib --extern zeroize=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libzeroize-82eb5d0aa85aeef9.rlib --cfg 'getrandom_backend="linux_getrandom"' -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib -l static=cadp_oqs_shim -l static=oqs -l pthread --check-cfg 'cfg(getrandom_backend, values("linux_getrandom"))'`
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+     Running `CADP_LIBOQS_COMMIT=5a1a854b0dc9f2141bdc771c555ee60c37950183 CARGO=/usr/bin/cargo CARGO_CRATE_NAME=cadp_pqc CARGO_MANIFEST_DIR=/home/iamajay/Projects/FP1/trusted-client CARGO_MANIFEST_PATH=/home/iamajay/Projects/FP1/trusted-client/Cargo.toml CARGO_PKG_AUTHORS='' CARGO_PKG_DESCRIPTION='Pinned PQ primitives and bounded Phase 2A security utilities' CARGO_PKG_HOMEPAGE='' CARGO_PKG_LICENSE='' CARGO_PKG_LICENSE_FILE='' CARGO_PKG_NAME=cadp-pqc CARGO_PKG_README=README.md CARGO_PKG_REPOSITORY='' CARGO_PKG_RUST_VERSION=1.89 CARGO_PKG_VERSION=0.1.0 CARGO_PKG_VERSION_MAJOR=0 CARGO_PKG_VERSION_MINOR=1 CARGO_PKG_VERSION_PATCH=0 CARGO_PKG_VERSION_PRE='' LD_LIBRARY_PATH='/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out:/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib:/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps' OUT_DIR=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out rustdoc --edition=2024 --crate-type lib --color auto --crate-name cadp_pqc --test src/lib.rs --test-run-directory /home/iamajay/Projects/FP1/trusted-client -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out -L native=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/build/cadp-pqc-e56b1ca31150a7b5/out/liboqs-install/lib --deny=unsafe_op_in_unsafe_fn '--deny=clippy::undocumented_unsafe_blocks' --extern aes_gcm=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libaes_gcm-f89e4202fb3329cf.rlib --extern argon2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libargon2-2d71e79c43365fdd.rlib --extern blake2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libblake2-205634e4c9ee545d.rlib --extern cadp_pqc=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libcadp_pqc-a1dcd0584188508d.rlib --extern getrandom=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libgetrandom-ee8e9e1bda7dc818.rlib --extern hkdf=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhkdf-e27c0e0833383362.rlib --extern hmac=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libhmac-2ff9b99bc0b89277.rlib --extern minicbor=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libminicbor-9547e012b92a56ed.rlib --extern rpassword=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/librpassword-1303712eba52e2e8.rlib --extern sha2=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libsha2-aca65ada20a5e535.rlib --extern zeroize=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps/libzeroize-82eb5d0aa85aeef9.rlib -L dependency=/home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/deps -C embed-bitcode=no --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' --check-cfg 'cfg(getrandom_backend, values("linux_getrandom"))' --cfg 'getrandom_backend="linux_getrandom"' --error-format human`
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+getrandom fingerprint /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/.fingerprint/getrandom-e51f1159bb054448/lib-getrandom.json
+{
+  "features": "[]",
+  "rustflags": [
+    "--cfg",
+    "getrandom_backend=\"linux_getrandom\""
+  ],
+  "target": 5479159445871601843
+}
+
+getrandom fingerprint /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/debug/.fingerprint/getrandom-ee8e9e1bda7dc818/lib-getrandom.json
+{
+  "features": "[]",
+  "rustflags": [
+    "--cfg",
+    "getrandom_backend=\"linux_getrandom\""
+  ],
+  "target": 5479159445871601843
+}
+
+getrandom fingerprint /home/iamajay/Projects/FP1/.deps/phase2a-astra-audit/fresh-r9jiilhr/target/release/.fingerprint/getrandom-e8aa76eb9635d804/lib-getrandom.json
+{
+  "features": "[]",
+  "rustflags": [
+    "--cfg",
+    "getrandom_backend=\"linux_getrandom\""
+  ],
+  "target": 5479159445871601843
+}
+
+===== Reproducible audit fixture sources and execution commands =====
+
+--- run.py ---
+import os,pathlib,subprocess,json,time,tempfile
+root=pathlib.Path.cwd(); w=root/'.deps/phase2a-astra-audit'; e=os.environ.copy();fresh=pathlib.Path(tempfile.mkdtemp(prefix='fresh-',dir=w));(fresh/'cargo-home').mkdir();assert not list((fresh/'cargo-home').iterdir());e.update(CARGO_HOME=str(fresh/'cargo-home'),CARGO_TARGET_DIR=str(fresh/'target'));(w/'environment.json').write_text(json.dumps({k:e[k] for k in ['CARGO_HOME','CARGO_TARGET_DIR']},indent=2))
+cmds=[['cargo','fmt','--manifest-path','trusted-client/Cargo.toml','--check'],['cargo','clippy','--offline','--locked','--manifest-path','trusted-client/Cargo.toml','--all-targets','--','-D','warnings'],['cargo','test','--offline','--locked','--manifest-path','trusted-client/Cargo.toml'],['cargo','test','--offline','--locked','--release','--manifest-path','trusted-client/Cargo.toml'],['cargo','test','--offline','--locked','--manifest-path','trusted-client/Cargo.toml','pqc_conc_001','--','--test-threads=1'],['python3','scripts/validate_phase2a.py'],['python3','scripts/check_pqc_native.py'],['python3','scripts/check_pqc_source_pin.py'],['python3','scripts/validate_phase1.py'],['make','build'],['make','check'],['git','diff','--check']]
+res=[]
+for i,c in enumerate(cmds):
+ t=time.monotonic()
+ with (w/f'{i:02}.log').open('w') as f:
+  f.write('$ '+' '.join(c)+'\n');f.flush();p=subprocess.run(c,env=e,stdout=f,stderr=subprocess.STDOUT)
+ res.append(dict(command=c,exit=p.returncode,seconds=round(time.monotonic()-t,2)));(w/'results.json').write_text(json.dumps(res,indent=2));print(res[-1],flush=True)
+
+--- controls.py ---
+import os,pathlib,subprocess,json
+root=pathlib.Path.cwd();w=root/'.deps/phase2a-astra-audit';e=os.environ.copy();e.update(json.loads((w/'environment.json').read_text()));e['CARGO_TARGET_DIR']=str(w/'override-target')
+base=['cargo','check','--offline','--locked','--manifest-path','trusted-client/Cargo.toml'];allowed='--cfg=getrandom_backend="linux_getrandom"'
+for name,flag in [('duplicate',allowed),('conflict','--cfg=getrandom_backend="unsupported"'),('custom','--cfg=getrandom_backend="custom"')]: (w/(name+'.rsp')).write_text(flag+'\n')
+cases=[('missing',{'RUSTFLAGS':''},[]),('alternate',{'RUSTFLAGS':'--cfg=getrandom_backend="linux_raw"'},[]),('encoded-alternate',{'CARGO_ENCODED_RUSTFLAGS':'--cfg\x1fgetrandom_backend="linux_raw"'},[]),('duplicate',{'RUSTFLAGS':allowed+' '+allowed},[]),('whitespace',{'CARGO_ENCODED_RUSTFLAGS':'--cfg\x1fgetrandom_backend = "linux_getrandom"'},[]),('target-specific',{},['--config','target.x86_64-unknown-linux-gnu.rustflags=["--cfg",\'getrandom_backend="linux_raw"\']','--target','x86_64-unknown-linux-gnu']),('cli-conflict',{},['--config','build.rustflags=["--cfg",\'getrandom_backend="linux_raw"\']'])]
+for name in ['duplicate','conflict','custom']:cases.append(('rsp-'+name,{'RUSTFLAGS':allowed+' @'+str(w/(name+'.rsp'))},[]))
+results=[]
+for name,updates,args in cases:
+ env=e.copy();env.pop('RUSTFLAGS',None);env.pop('CARGO_ENCODED_RUSTFLAGS',None);env.update(updates)
+ with (w/('override-'+name+'.log')).open('w') as f:
+  f.write(repr(updates)+'\n'+repr(base+args)+'\n');f.flush();p=subprocess.run(base+args,env=env,stdout=f,stderr=subprocess.STDOUT)
+ results.append(dict(case=name,exit=p.returncode));(w/'overrides.json').write_text(json.dumps(results,indent=2));print(results[-1],flush=True)
+env=e.copy();env['RUSTFLAGS']=allowed+' @'+str(w/'custom.rsp');env.pop('CARGO_ENCODED_RUSTFLAGS',None)
+c=['cargo','build','--offline','--locked','--manifest-path','trusted-client/Cargo.toml','--message-format=json'];p=subprocess.run(c,env=env,capture_output=True,text=True);(w/'custom-build.log').write_text(repr(c)+'\n'+p.stderr+'\nexit='+str(p.returncode)+'\n');assert p.returncode==0
+art={}
+for line in p.stdout.splitlines():
+ m=json.loads(line)
+ if m.get('reason')=='compiler-artifact' and m['target']['name'] in ['cadp_pqc','getrandom']:art[m['target']['name']]=next(f for f in m['filenames'] if f.endswith('.rlib'))
+src=w/'custom-control.rs';src.write_text('''// Audit-only external-symbol fixture, no production changes.
+use std::sync::atomic::{AtomicBool, Ordering};
+static CALLED: AtomicBool = AtomicBool::new(false);
+#[unsafe(no_mangle)]
+pub fn __getrandom_v03_custom(_: *mut u8, _: usize) -> Result<(), getrandom::Error> {
+ CALLED.store(true, Ordering::SeqCst); Err(getrandom::Error::UNSUPPORTED)
+}
+fn main(){
+ assert_eq!(cadp_pqc::foundation::RandomId::generate(),Err(cadp_pqc::foundation::Error::RandomnessUnavailable));
+ assert!(CALLED.load(Ordering::SeqCst));
+ println!("CONFIRMED: unchanged production RandomId invoked hidden CUSTOM backend");
+}
+''')
+c=['rustc','--edition=2024',str(src),'--extern','cadp_pqc='+art['cadp_pqc'],'--extern','getrandom='+art['getrandom'],'-L','dependency='+str(w/'override-target/debug/deps'),'-o',str(w/'custom-control')]
+with (w/'custom-control.log').open('w') as f:
+ f.write(repr(c)+'\n');f.flush();p=subprocess.run(c,stdout=f,stderr=subprocess.STDOUT);assert p.returncode==0;p=subprocess.run([str(w/'custom-control')],stdout=f,stderr=subprocess.STDOUT);assert p.returncode==0
+print((w/'custom-control.log').read_text(),flush=True)
+
+--- custom-control.rs ---
+// Audit-only external-symbol fixture, no production changes.
+use std::sync::atomic::{AtomicBool, Ordering};
+static CALLED: AtomicBool = AtomicBool::new(false);
+#[unsafe(no_mangle)]
+pub fn __getrandom_v03_custom(_: *mut u8, _: usize) -> Result<(), getrandom::Error> {
+ CALLED.store(true, Ordering::SeqCst); Err(getrandom::Error::UNSUPPORTED)
+}
+fn main(){
+ assert_eq!(cadp_pqc::foundation::RandomId::generate(),Err(cadp_pqc::foundation::Error::RandomnessUnavailable));
+ assert!(CALLED.load(Ordering::SeqCst));
+ println!("CONFIRMED: unchanged production RandomId invoked hidden CUSTOM backend");
+}
+
+--- extras.py ---
+import pathlib,shutil,os,json,subprocess,hashlib,hmac
+root=pathlib.Path.cwd();w=root/'.deps/phase2a-astra-audit';copy=w/'probe-client';shutil.copytree(root/'trusted-client',copy,ignore=shutil.ignore_patterns('target'));p=copy/'src/foundation/cbor.rs';p.write_text(p.read_text()+(w/'cbor_extra.rs').read_text());e=os.environ.copy();e.update(json.loads((w/'environment.json').read_text()));e.update(CARGO_TARGET_DIR=str(w/'probe-target'),CADP_LIBOQS_SOURCE=str(root/'.deps/liboqs-0.16.0'))
+c=['cargo','test','--offline','--locked','--manifest-path',str(copy/'Cargo.toml'),'astra_']
+with (w/'extra-tests.log').open('w') as f:
+ f.write(repr(c)+'\n');f.flush();r=subprocess.run(c,env=e,stdout=f,stderr=subprocess.STDOUT);assert r.returncode==0
+out={}
+for label,n in [('CADP-KEM-ID-v1',1184),('CADP-SIG-ID-v1',1952)]:out[label]=hashlib.sha256(b'\x82\x6e'+label.encode()+b'\x59'+n.to_bytes(2,'big')+bytes(n)).hexdigest()
+out['SHA256 abc']=hashlib.sha256(b'abc').hexdigest();out['RFC4231-1']=hmac.digest(bytes([11])*20,b'Hi There','sha256').hex();prk=hmac.digest(bytes(range(13)),bytes([11])*22,'sha256');out['RFC5869-1 first32']=hmac.digest(prk,bytes(range(240,250))+b'\x01','sha256').hex();(w/'vectors.json').write_text(json.dumps(out,indent=2));print((w/'extra-tests.log').read_text());print(out)
+
+--- cbor_extra.rs ---
+#[cfg(test)]
+mod astra_extra {
+    use super::*;
+    fn check(b: &[u8], c: Class) -> Result<(), Error> {
+        preflight(b,c,&mut Budget {remaining:c.items()},1)
+    }
+    struct Blob<'a>(&'a [u8]);
+    impl Encode for Blob<'_> { fn encode(&self,w:&mut Writer)->Result<(),Error>{w.bytes(self.0)} }
+    impl<'a> Decode<'a> for Blob<'a> { fn decode(r:&mut Reader<'a,'_>)->Result<Self,Error>{Ok(Self(r.bytes()?))} }
+    #[test]
+    fn astra_exact_byte_limits() {
+        for (class,max,header) in [(Class::Small,16384,3),(Class::Bundle,32768,3),(Class::Crl,16777216,5)] {
+            for delta in [-1isize,0,1] {
+                let n=(max as isize+delta) as usize;
+                let payload=vec![0;n-header];
+                let mut b=if header==3 {let mut v=vec![0x59];v.extend_from_slice(&((n-header)as u16).to_be_bytes());v}
+                    else {let mut v=vec![0x5a];v.extend_from_slice(&((n-header)as u32).to_be_bytes());v};
+                b.extend_from_slice(&payload);assert_eq!(b.len(),n);
+                if delta<=0 {assert!(validated::<Blob>(&b,class).is_ok());assert_eq!(deterministic(&Blob(&payload),class).unwrap(),b);}
+                else {assert!(matches!(validated::<Blob>(&b,class),Err(Error::SizeLimit)));assert!(matches!(deterministic(&Blob(&payload),class),Err(Error::SizeLimit)));}
+            }
+        }
+    }
+    #[test]
+    fn astra_exact_million_items() {
+        let mut b=vec![0x9a,0,1,0x86,0xa0];
+        for _ in 0..99999 {b.push(0x89);b.extend_from_slice(&[0;9]);}
+        b.push(0x88);b.extend_from_slice(&[0;8]);assert!(check(&b,Class::Crl).is_ok());
+        let last=b.len()-9;b[last]=0x89;b.push(0);assert_eq!(check(&b,Class::Crl),Err(Error::ItemLimit));
+        let mut s=vec![0x98,255];s.extend_from_slice(&[0;255]);assert!(check(&s,Class::Small).is_ok());
+        s=vec![0x99,1,0];s.extend_from_slice(&[0;256]);assert_eq!(check(&s,Class::Small),Err(Error::ItemLimit));
+    }
+    struct Keys;
+    impl Encode for Keys {fn encode(&self,w:&mut Writer)->Result<(),Error>{w.map([("aa",&0u64 as &dyn Encode),("z",&0u64),("a",&0u64),("b",&0u64)])}}
+    #[test]
+    fn astra_ordering_independent_bytes() {
+        let expected=[0xa4,0x61,b'a',0,0x61,b'b',0,0x61,b'z',0,0x62,b'a',b'a',0];
+        assert_eq!(deterministic(&Keys,Class::Small).unwrap(),expected);assert!(check(&expected,Class::Small).is_ok());
+        assert_eq!(check(&[0xa2,0x62,b'a',b'a',0,0x61,b'z',0],Class::Small),Err(Error::NonCanonical));
+        assert!([0x19u8,1,0].as_slice()<[0x20u8].as_slice());
+        for b in [&[0xa1,0x19,1,0,0][..],&[0xa1,0x20,0],&[0xa1,0x40,0]] {assert_eq!(check(b,Class::Small),Err(Error::Schema));}
+    }
+    #[test]
+    fn astra_nested_embedded_shared_depth() {
+        struct E<'a>(&'a[u8]);
+        impl Encode for E<'_>{fn encode(&self,w:&mut Writer)->Result<(),Error>{w.bytes(self.0)}}
+        impl<'a> Decode<'a> for E<'a>{fn decode(r:&mut Reader<'a,'_>)->Result<Self,Error>{
+            let start=r.d.position();let raw=r.d.input();if raw.get(start)==Some(&0x40){return Ok(Self(r.bytes()?));}
+            let _:E=r.embedded(Class::Small)?;let end=r.d.position();let mut d=Decoder::new(&raw[start..end]);Ok(Self(d.bytes().map_err(|_|Error::Schema)?))
+        }}
+        let mut b=vec![0x40];
+        for depth in 2..=9 {let mut next=vec![0x40+b.len()as u8];next.extend_from_slice(&b);b=next;
+            let r=validated::<E>(&b,Class::Small);if depth<=8{assert!(r.is_ok());}else{assert!(matches!(r,Err(Error::DepthLimit)));}}
+    }
+}
+
+--- final_checks.py ---
+import pathlib,os,subprocess,json,hashlib,re
+root=pathlib.Path.cwd();w=root/'.deps/phase2a-astra-audit';e=os.environ.copy();e.update(json.loads((w/'environment.json').read_text()));target=pathlib.Path(e['CARGO_TARGET_DIR'])
+results={}
+for profile in ['debug','release']:
+ for h in sorted((target/profile/'build').glob('cadp-pqc-*/out/liboqs-install/include/oqs/oqsconfig.h')):
+  text=h.read_text();generated=h.parents[3]/'liboqs-build/include/oqs/oqsconfig.h';assert generated.read_bytes()==h.read_bytes()
+  for line in ['#define OQS_VERSION_TEXT "0.16.0"','/* #undef OQS_USE_SHA3_AVX512VL */','/* #undef OQS_USE_OPENSSL */','#define OQS_USE_PTHREADS 1','#define OQS_ENABLE_KEM_ml_kem_768 1','#define OQS_ENABLE_SIG_ml_dsa_65 1']:assert line in text
+  a=h.parents[2]/'lib/liboqs.a';members=subprocess.check_output(['ar','t',str(a)],text=True).splitlines();assert not any('avx512' in l.lower() for l in members);nm=subprocess.check_output(['nm','--defined-only',str(a)],stderr=subprocess.DEVNULL,text=True);assert not any('avx512' in l.lower() and ('sha3' in l.lower() or 'keccak' in l.lower()) for l in nm.splitlines())
+  results[str(h)]={'header_excerpt':[l for l in text.splitlines() if any(k in l for k in ['OQS_VERSION_TEXT','OQS_USE_SHA3_AVX512VL','OQS_USE_OPENSSL','OQS_USE_PTHREADS'])]+[l for l in text.splitlines() if l.startswith('#define OQS_ENABLE_')],'sha256':hashlib.sha256(a.read_bytes()).hexdigest(),'archive_members':len(members),'AVX512_members':0}
+(w/'native-config.json').write_text(json.dumps(results,indent=2))
+for path in ['trusted-client/src/pqc','trusted-client/native','trusted-client/tests','scripts/check_pqc_source_pin.py']:assert subprocess.check_output(['git','diff','93b4671','HEAD','--',path])==b''
+p=(root/'trusted-client/src/pqc/ffi.rs').read_text();assert len(re.findall(r'unsafe extern',p))==1 and len(re.findall(r'unsafe\s*\{',p))==10
+rows=[l for l in (root/'docs/TEST_MATRIX.md').read_text().splitlines() if l.startswith('| PKI-')];assert len(rows)==19 and all('| PLANNED |' in l for l in rows)
+with (w/'baseline.txt').open('w') as f:
+ for c in [['git','rev-parse','HEAD'],['git','rev-parse','93b4671'],['rustc','--version'],['cargo','--version']]:f.write('$ '+' '.join(c)+'\n'+subprocess.check_output(c,text=True)+'\n')
+ for p in [root/'.cargo/config.toml',root/'trusted-client/Cargo.toml',root/'trusted-client/Cargo.lock',root/'trusted-client/build.rs']+sorted((root/'trusted-client/src').rglob('*.rs')):
+  assert subprocess.check_output(['git','show','HEAD:'+str(p.relative_to(root))])==p.read_bytes();f.write(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+str(p.relative_to(root))+'\n')
+ f.write('Production files match HEAD. PQC/native/test/source-pin files match pre-2A baseline. Unsafe inventory 1 extern + 10 call blocks. 19 PKI runtime rows PLANNED.\n')
+c=['cargo','test','--offline','--locked','--manifest-path','trusted-client/Cargo.toml','-vv']
+with (w/'verbose-test.log').open('w') as f:
+ f.write(repr(c)+'\n');f.flush();p=subprocess.run(c,env=e,stdout=f,stderr=subprocess.STDOUT);assert p.returncode==0
+res=[]
+for name,flags in [('missing',''),('alternate','--cfg=getrandom_backend="linux_raw"'),('conflicting','--cfg=getrandom_backend="linux_getrandom" --cfg=getrandom_backend="custom"')]:
+ env=e.copy();env['RUSTDOCFLAGS']=flags;c=['cargo','test','--offline','--locked','--manifest-path','trusted-client/Cargo.toml','--doc']
+ with (w/('rustdoc-'+name+'.log')).open('w') as f:
+  f.write('RUSTDOCFLAGS='+repr(flags)+'\n'+repr(c)+'\n');f.flush();p=subprocess.run(c,env=env,stdout=f,stderr=subprocess.STDOUT)
+ res.append(dict(case=name,exit=p.returncode))
+(w/'rustdoc-overrides.json').write_text(json.dumps(res,indent=2));print('Final source/config verification complete:',res,flush=True)
+
+===== Result interpretation =====
+All 12 mandatory top-level commands exit 0. Debug/release each 41 unit tests and
+3 compile-fail doctests pass. Isolated concurrency 1 pass, 40 filtered. Documentation
+6 pass, Mermaid 1 skip (mmdc absent). Expected failure controls are intentional.
+4 added independent CBOR tests pass. Seven ordinary RNG overrides reject; three
+response-file overrides unexpectedly pass (security requirement failure).
+Custom-backend external-symbol fixture proves the actual unchanged RandomId path
+can select custom. This needs build-configuration control and a final custom symbol,
+not attacker CBOR input. Default approved builds retain the Linux syscall backend.
+No production source changes, no new production unsafe, 19 PKI rows PLANNED.
+P2A-A-M01 remains OPEN. PHASE 2A SECURITY AUDIT: APPROVED WITH REQUIRED FIXES.
+
+Post-document validation: python3 scripts/validate_phase1.py: 6 passed, 1 Mermaid skip; git diff --check: exit 0.
+Only this audit's disposable native/Cargo targets, copied client and fixture binary removed after evidence capture. Scripts/logs remain in ignored .deps/phase2a-astra-audit.

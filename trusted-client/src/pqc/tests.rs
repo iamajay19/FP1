@@ -368,3 +368,25 @@ fn pqc_conc_001_concurrent_smoke() {
     });
     assert_eq!(ffi::test_support::INITIALIZATIONS.load(Ordering::SeqCst), 1);
 }
+
+#[test]
+fn p2b_secret_006_storage_adoption_uses_existing_cleanse() {
+    let (before, _) = ffi::test_support::cleanses();
+    for len in [0, 2399, 2401] {
+        assert!(matches!(
+            kem::SecretKey::from_storage(vec![0x5a; len]),
+            Err(Error::IncorrectInputLength { .. })
+        ));
+    }
+    for len in [0, 4031, 4033] {
+        assert!(matches!(
+            signature::SecretKey::from_storage(vec![0x5a; len]),
+            Err(Error::IncorrectInputLength { .. })
+        ));
+    }
+    drop(kem::SecretKey::from_storage(vec![0x5a; 2400]).unwrap());
+    drop(signature::SecretKey::from_storage(vec![0x5a; 4032]).unwrap());
+    let (after, clean) = ffi::test_support::cleanses();
+    assert_eq!(after - before, 8);
+    assert!(clean);
+}

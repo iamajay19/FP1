@@ -140,18 +140,79 @@ valid matching commit. No output file on failed or unknown commit.
 
 ## Password-protected private-key bundle
 
-Status: design only, implemented in Phase 2. Use Argon2id version 0x13 with random
-16-byte salt and 32-byte output, then AES-256-GCM separately for each independent
-private key under that local KEK with distinct random 12-byte nonces. Include the
-full public bundle header and role (`kem`/`signature`) in canonical AAD. Reject
-nonce equality, metadata substitution and wrong passwords without secret diagnostics.
-Fresh salt/nonces on each rewrite; never edit ciphertext under an old nonce.
+Status: exact version-1 format APPROVED by explicit owner decision D-33 after
+the Phase 2B preflight stop. Implementation/testing status is recorded separately.
+This replaces the earlier draft header that included public keys/certificate hash.
 
-Header: schema_version, recipient_id, both key IDs/public keys/algorithm names,
-certificate hash, KDF name/version/memory/time/parallelism/salt; body contains the
-two nonce/ciphertext pairs. Envelope max 32 KiB. Before running Argon2, bound
-memory to 64..256 MiB, time cost 3..6, parallelism 1..4. Initial candidate is
-64 MiB, 3 passes, parallelism 4; benchmark on target hosts before selecting an
-approved profile. No silent cost reduction. See [RFC 9106](https://www.rfc-editor.org/rfc/rfc9106.html).
-Passwords are read from a protected terminal, never argv/environment/logs.
-CA and publisher private-key storage needs the same protection and role separation.
+All maps below have exactly their listed text fields; no aliases or optional fields.
+D is the existing RFC 8949 core deterministic CBOR profile.
+
+```text
+PrivateKeyBundleV1 = {header: HeaderV1, kem: ProtectedSecret, signature: ProtectedSecret}
+HeaderV1 = {
+  schema_version: 1, recipient_id: B[32],
+  kem_algorithm: "ML-KEM-768", kem_key_id: B[32],
+  signature_algorithm: "ML-DSA-65", signature_key_id: B[32],
+  aead_algorithm: "AES-256-GCM",
+  kdf: {algorithm: "Argon2id", version: 19, memory_kib: U64,
+        time_cost: U64, parallelism: U64, output_len: 32, salt: B[16]}
+}
+ProtectedSecret = {nonce: B[12], ciphertext_and_tag: <byte string>}
+AAD(role) = D(["CADP-KEY-BUNDLE-AAD-v1", {header: HeaderV1, role: role}])
+```
+
+The only roles are text "kem" and "signature", fixed by the trusted operation.
+HeaderV1 is the complete nested map in AAD, not a hash or encoded byte string.
+All header fields, including both key IDs, all algorithms and complete KDF metadata,
+are authenticated in both entries. Key IDs retain the approved Phase 2A rules.
+Public keys used to establish/validate those IDs are external to this stored schema.
+
+Encrypt independent expanded ML-KEM and ML-DSA private keys separately with
+AES-256-GCM under one local 32-byte KEK. Plaintext lengths are 2400 and 4032;
+ciphertext_and_tag lengths for a valid bundle are 2416 and 4048 respectively,
+including a full 16-byte tag. There is no separate tag field or password verifier.
+Generate fresh independent OS-random 12-byte nonces; reject equality, including on
+unlock before releasing material. Fresh 16-byte salt and new nonces on every rewrite.
+
+Use Argon2id v0x13 (19), output 32. Validate before parameter-dependent allocation
+or KDF: memory_kib 65536..262144, time_cost 3..6, parallelism 1..4, salt length 16,
+fixed algorithm/version/output. Candidate 65536/3/4 requires a measured benchmark
+before selecting a creation default. No silent cost reduction or alternate KDF.
+
+Envelope max 32 KiB, depth 8, aggregate items 256. Enforce bounded structural scan,
+exact typed schemas, deterministic re-encoding and whole-original-byte equality
+before cryptographic processing. Reject unknown/duplicate fields and unsupported
+versions/algorithms. Generic AuthenticationFailure covers wrong password and all
+AEAD-authentication failures; structural and bounded-KDF errors may reject earlier.
+No secrets in diagnostics. Passwords come from a protected terminal, not argv,
+environment or logs. CA/publisher storage is separate future role-specific work.
+
+## Phase 2 codec and provisioning clarification — 2026-10-07
+
+D-23 selects a minimal minicbor-backed low-level codec plus project schema checks,
+subject to local source verification and offline build before adoption. D remains
+RFC 8949 section 4.2.1, not a new format. The parser must bound input, declared
+lengths, aggregate items and depth DURING parsing, reject unsupported types/duplicate
+or unknown fields/indefinite forms, require complete consumption, then deterministic
+re-encode and compare EXACT bytes before cryptographic use. Signing/verification
+uses original bytes only after equality, not a normalized replacement for bad input.
+Encoded map keys sort bytewise by their shortest CBOR encoding, not Rust/text order.
+Do not use derive defaults, generic unbounded values or skip unknown fields.
+
+For Phase 2 use maximum nesting 8 and aggregate decoded-item ceilings 256 for
+certificate/bundle/PoP objects, 1,000,000 for CRLs, in addition to existing byte/entry
+limits. Count maps/arrays/keys/values and the contents of embedded CBOR byte strings
+that the schema parses, using one shared budget per object. Declared lengths must
+fit remaining budget before loops/allocation; fixed schemas require exact counts.
+No floats, tags (including bignums), indefinite strings/containers, unsupported
+simple values or signed-negative numbers enter these Phase 2 schemas. Supported
+unsigned numbers use U64. These parser bounds refine implementation limits without
+changing any approved valid certificate/bundle/CRL representation.
+
+Q-02's exact PoP labels/transcripts and Q-03's zero-skew local-time/CRL rules are
+in [KEY_MANAGEMENT.md](KEY_MANAGEMENT.md). Recipient signing keys may sign enrollment
+PoP as well as receipts, with distinct message labels and no added CA/publisher
+permission. Pure ML-DSA with empty context, independent keypairs, fixed algorithms,
+key IDs, certificate signed bytes and cumulative CRL signed bytes are unchanged.
+The new enrollment transcript is DESIGN ONLY; no production PoP has been implemented.
+No claim of trusted clock or host anti-rollback follows from local validation.

@@ -1,0 +1,62 @@
+› continue
+• No new finding has emerged. The remaining checks cover the recognized alternate backends, reused-target behavior, wrapper overrides and rustdoc routes. The closure test for the cache failure remains passed.
+ 
+• Explored
+  └ Read single-5.log
+    + Show details                                                                                                                                                                                                                          
+ 
+• Fresh-target checks are still passing. The report will separate completed test results from interrupted attempts and record the supported-toolchain limitation of the exact query matcher.
+ 
+• Ran python3 - <<'PY' …
+  └ fresh: 20 reused: 0 recoveries: 0
+    + Show details                                                                                                                                                                                                                          
+ 
+• Twenty of the 23 fresh-target cases have completed successfully. The validator will next repeat them against a target containing a valid library, then check the Clippy rejection/recovery pairs.
+ 
+⚠ Heads up, you have less than 10% of your weekly limit left. Run /status for a breakdown.
+ 
+⚠ Heads up, you have less than 25% of your 5h limit left. Run /status for a breakdown.
+ 
+• Ran python3 - <<'PY' …
+  └ $ cargo rustc --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml -- @/tmp/fp1-rng-policy-9e0x5326/custom.rsp
+    fresh: 23 reused: 1
+    + Show details                                                                                                                                                                                                                          
+ 
+• All fresh-target cases passed, and reused-target checks have started. Normal approved compilation succeeded between stages. No RNG policy change or runtime-code modification was needed.
+ 
+• Ran python3 - <<'PY' …
+  └ reused: 6 recoveries: 0
+    + Show details                                                                                                                                                                                                                          
+ 
+• Reused-target response-file and duplicate-cfg cases are passing. The suite confirms that rejected commands leave the valid library unchanged; it has not observed a backend-policy bypass.
+ 
+• Ran python3 - <<'PY' …
+  └ reused: 11 recoveries: 0
+    + Show details                                                                                                                                                                                                                          
+ 
+• The validator is continuing through reused-target alternate-backend checks without unexpected failures. The independent query probes also confirmed that CUSTOM does not appear in the accepted metadata-query output.
+ 
+⚠ Heads up, you have less than 10% of your 5h limit left. Run /status for a breakdown.
+ 
+⚠ Heads up, you have less than 5% of your 5h limit left. Run /status for a breakdown.
+ 
+• Ran python3 - <<'PY' …
+  └ reused: 16 recoveries: 0
+    + Show details                                                                                                                                                                                                                          
+ 
+• Sixteen reused-target cases have passed. Once these finish, the remaining checks are wrapper overrides, independent Clippy rejection/recovery pairs and rustdoc routes. No security regression has surfaced.
+ 
+• Ran python3 - <<'PY' …
+  └ reused: 21 recoveries: 0
+    $ cargo rustc --offline --locked --manifest-path /home/iamajay/Projects/FP1/trusted-client/Cargo.toml -- '--cfg=getrandom_backend="windows_legacy"'
+    + Show details                                                                                                                                                                                                                          
+ 
+■ You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at 5:55 AM.
+ 
+  1 background terminal running · /ps to view · /stop to close
+ 
+ 
+› Ask Codex to do anything
+ 
+  GPT-6-Astra high fast · ~/Projects/FP1 · Review security project documents
+  ? for shortcuts                                                                                                                                                                                                 ⚠ 6 warnings · f2 to view

@@ -384,6 +384,7 @@ pub(crate) enum Domain {
     PopKemKey,
     PopKem,
     PopSignature,
+    KeyBundleAad,
 }
 impl Domain {
     fn label(self) -> &'static str {
@@ -396,6 +397,7 @@ impl Domain {
             Self::PopKemKey => "CADP-POP-KEM-KEY-v1",
             Self::PopKem => "CADP-POP-KEM-v1",
             Self::PopSignature => "CADP-POP-SIG-v1",
+            Self::KeyBundleAad => "CADP-KEY-BUNDLE-AAD-v1",
         }
     }
 }

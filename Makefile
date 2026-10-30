@@ -4,12 +4,12 @@ CARGO_HOME ?= $(CURDIR)/.deps/cargo-home
 export CARGO_HOME
 PQC_ARGS := --offline --locked --manifest-path trusted-client/Cargo.toml
 .DEFAULT_GOAL := help
-.PHONY: help check docs-check test lint fmt-check native-check source-pin-check foundation-check environment build encrypt decrypt pki ledger forensic
+.PHONY: help check docs-check test lint fmt-check native-check source-pin-check foundation-check storage-check environment build encrypt decrypt pki ledger forensic
 
 help:
-	@printf '%s\n' 'Phase 1 PQ primitives and Phase 2A foundation only.' 'make check       Documentation, Rust, native, source-pin and foundation checks.' 'make build       Build pinned primitives and utilities offline.' 'make environment Inspect tools without installing dependencies.' 'encrypt/decrypt/pki/ledger/forensic: unavailable until approved phases.'
+	@printf '%s\n' 'Phase 1 primitives, Phase 2A foundation and Phase 2B storage only.' 'make check       Documentation, Rust, native, source-pin, foundation and storage checks.' 'make build       Build pinned primitives and utilities offline.' 'make environment Inspect tools without installing dependencies.' 'encrypt/decrypt/pki/ledger/forensic: unavailable until approved phases.'
 
-check: docs-check fmt-check lint test native-check source-pin-check foundation-check
+check: docs-check fmt-check lint test native-check source-pin-check foundation-check storage-check
 
 docs-check:
 	@$(PYTHON) scripts/validate_phase1.py
@@ -32,6 +32,9 @@ source-pin-check:
 foundation-check:
 	$(PYTHON) scripts/validate_phase2a.py
 
+storage-check:
+	$(PYTHON) scripts/validate_phase2b.py
+
 environment:
 	@$(PYTHON) scripts/inspect_environment.py
 
@@ -39,5 +42,5 @@ build:
 	$(CARGO) build $(PQC_ARGS)
 
 encrypt decrypt pki ledger forensic:
-	@printf '%s\n' 'NOT IMPLEMENTED: primitives and Phase 2A utilities only; workflows require explicit approval.' >&2
+	@printf '%s\n' 'NOT IMPLEMENTED: primitives, Phase 2A utilities and Phase 2B storage only; PKI/document workflows require explicit approval.' >&2
 	@exit 2

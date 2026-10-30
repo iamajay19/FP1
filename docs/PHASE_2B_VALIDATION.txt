@@ -1,0 +1,277 @@
+PHASE 2B PREFLIGHT VALIDATION — 2026-10-23
+Status: BLOCKED BEFORE PRODUCTION IMPLEMENTATION.
+Reason: user sections 11/33 require stopping because the exact storage AAD/domain
+label and typed bundle wire schema have not been finalized in the authoritative
+protocol. No production storage code, new protocol bytes, Argon2 benchmark,
+recipient identity, password or secret fixture was created.
+
+Approval evidence: docs/PHASE_2A_ASTRA_CONFIRMATION.md records
+PHASE 2A SECURITY FINAL CONFIRMATION: APPROVED.
+HEAD 35d2164c15ce5d6888d01c65dd88ee690f814c4e adds only the two final confirmation
+documents relative to reviewed implementation ce67343cff345dd74052b2103c8dc3f725b32d9c.
+No staged changes at entry. Existing owner protocol/key-management changes and
+untracked original audit/history files are preserved.
+
+Existing offline build first returned 0 before any project-file edit. The retained
+run below additionally uses an initially nonexistent task-owned Cargo target.
+CARGO_HOME is the existing approved project home, not claimed empty. Local vendor
+replacement and --offline --locked remain active. GIT_OPTIONAL_LOCKS=0 suppresses
+optional Git metadata writes; no compiler policy or Cargo cache is disabled.
+No network access or automatic dependency download occurred.
+
+Four preflight commands returned 0: fresh locked offline build, cargo fmt --check,
+Phase 1 documentation/scope validator and git diff --check. Documentation validator
+reports six passed and one skipped (Mermaid renderer mmdc unavailable).
+No Phase 2B runtime test, full debug/release test suite, strict Clippy, benchmark,
+AEAD/KDF/bundle/filesystem/cleanup test or Phase 2B validator was executed/created.
+Historical Phase 1/2A passes are not represented as fresh test execution.
+All 19 existing PKI runtime rows remain PLANNED and unchanged.
+
+Only docs/PHASE_2B_REVIEW.md and this new evidence record are added. The review's
+schema/AAD bytes are PROPOSED ONLY, not approved normative protocol or code.
+No historical evidence, production source, dependencies, protocol or unsafe boundary
+was modified. All entry-snapshotted files remain byte-identical.
+
+EXACT RETAINED COMMAND ENVIRONMENT AND OUTPUTS
+{
+  "environment": {
+    "CARGO_HOME": "/home/iamajay/Projects/FP1/.deps/cargo-home",
+    "CARGO_TARGET_DIR": "/home/iamajay/Projects/FP1/.deps/p2b-preflight/fresh-target",
+    "GIT_OPTIONAL_LOCKS": "0"
+  },
+  "results": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "trusted-client/Cargo.toml"
+      ],
+      "exit": 0,
+      "seconds": 8.59,
+      "stdout": "",
+      "stderr": "   Compiling typenum v1.20.1\n   Compiling zeroize v1.9.1\n   Compiling cmov v0.5.4\n   Compiling cpufeatures v0.3.1\n   Compiling libc v0.2.190\n   Compiling cpubits v0.1.1\n   Compiling cfg-if v1.0.5\n   Compiling getrandom v0.4.3\n   Compiling cadp-pqc v0.1.0 (/home/iamajay/Projects/FP1/trusted-client)\n   Compiling base64ct v1.8.3\n   Compiling minicbor v2.3.0\n   Compiling ctutils v0.4.3\n   Compiling hybrid-array v0.4.15\n   Compiling crypto-common v0.2.2\n   Compiling block-buffer v0.12.1\n   Compiling inout v0.2.2\n   Compiling rtoolbox v0.0.6\n   Compiling rpassword v7.5.4\n   Compiling digest v0.11.3\n   Compiling universal-hash v0.6.1\n   Compiling cipher v0.5.2\n   Compiling aead v0.6.1\n   Compiling polyval v0.7.3\n   Compiling hmac v0.13.0\n   Compiling blake2 v0.11.0\n   Compiling sha2 v0.11.0\n   Compiling ctr v0.10.1\n   Compiling aes v0.9.3\n   Compiling ghash v0.6.0\n   Compiling hkdf v0.13.0\n   Compiling argon2 v0.6.0\n   Compiling aes-gcm v0.11.1\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 8.58s\n"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "trusted-client/Cargo.toml",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.04,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/validate_phase1.py"
+      ],
+      "exit": 0,
+      "seconds": 0.17,
+      "stdout": "",
+      "stderr": "test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)\nPQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok\ntest_01_documents (validate_phase0.PhaseZero.test_01_documents)\nP0-DOC-001: required documentation exists and is substantive. ... ok\ntest_03_links (validate_phase0.PhaseZero.test_03_links)\nP0-LINK-001: local Markdown links resolve inside the repository. ... ok\ntest_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)\nP0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok\ntest_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)\nP0-STATIC-001: Python syntax and simple formatting policy. ... ok\ntest_07_matrix (validate_phase0.PhaseZero.test_07_matrix)\nP0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok\ntest_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)\nP0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'\n\n----------------------------------------------------------------------\nRan 7 tests in 0.133s\n\nOK (skipped=1)\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
+
+REPOSITORY/TOOL CHECKS
+[
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "35d2164c15ce5d6888d01c65dd88ee690f814c4e\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--name-only"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "rustc",
+      "--version",
+      "--verbose"
+    ],
+    "exit": 0,
+    "stdout": "rustc 1.98.1 (48a229cea 2026-09-01) (Fedora 1.98.1-1.fc44)\nbinary: rustc\ncommit-hash: 48a229ceaefd4985c50990b14116b6d856af0985\ncommit-date: 2026-09-01\nhost: x86_64-unknown-linux-gnu\nrelease: 1.98.1\nLLVM version: 22.1.8\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "cargo",
+      "--version",
+      "--verbose"
+    ],
+    "exit": 0,
+    "stdout": "cargo 1.98.1 (797e8a9bc 2026-08-05) (Fedora 1.98.1-1.fc44)\nrelease: 1.98.1\ncommit-hash: 797e8a9bca276c1c9f9f738d2a20f484fa4eea9d\ncommit-date: 2026-08-05\nhost: x86_64-unknown-linux-gnu\nlibgit2: 1.9.7 (sys:0.21.0 system)\nlibcurl: 8.18.0 (sys:0.4.90+curl-8.21.0 system ssl:OpenSSL/3.5.9)\nos: Fedora 44.0.0 [64-bit]\n",
+    "stderr": ""
+  }
+]
+
+ENTRY STATE AND PRESERVATION HASHES
+{
+  "head": "35d2164c15ce5d6888d01c65dd88ee690f814c4e",
+  "status": " M docs/CRYPTO_PROTOCOL.md\n M docs/KEY_MANAGEMENT.md\n?? \"codex _history/...05.txt\"\n?? \"codex _history/...06.txt\"\n?? \"codex _history/...07.txt\"\n?? \"codex _history/...08.txt\"\n?? \"codex _history/...09.txt\"\n?? \"codex _history/...10.txt\"\n?? \"codex _history/...11.txt\"\n?? \"codex _history/...12.txt\"\n?? \"codex _history/...13.txt\"\n?? \"codex _history/...14.txt\"\n?? \"codex _history/...15.txt\"\n?? \"codex _history/...16.txt\"\n?? \"codex _history/...17.txt\"\n?? docs/PHASE_2A_ASTRA_AUDIT.md\n?? docs/PHASE_2A_ASTRA_VALIDATION.txt\n",
+  "staged": "",
+  "hashes": {
+    ".cargo/config.toml": "8e2f9bee774fa1104b1e1f2efb585990004118f329838ff4e7ef7d41af113d42",
+    ".gitignore": "19248edf70f42564bebe59d5485f8d885fb1ece510dca3de366f98171228969b",
+    "AGENTS.md": "f829e75b2ec05084dffc83e6a566b689a42b0d97c616ad7ed810323e3557e72e",
+    "LICENSE": "4c0081a20196695277e24c5fe4d385cd6c0ab242af1a510ae0daf7d713e20811",
+    "Makefile": "42624ccaebca9ce647c0270a79fd0dc992f592b0a0ddef9f083b2835e17e1ddc",
+    "README.md": "e2e421e48e30391a14cfbeefacc16daf47ead4846132d5096e6eab03840af430",
+    "codex _history/...01.txt": "b24d3b8470e7202c647cb210e6513d093efe39fc12b55e92cadc1b23f5fa1989",
+    "codex _history/...02.txt": "165963708fdd0fdae08132eeb86dd854cf15e0b8bd3f48918b0a311a6fc342e6",
+    "codex _history/...03.txt": "d3d3f9cdf7d91a84ca4ae17f533f16c65d52ef19b0c5e70277bfdedf1e147920",
+    "codex _history/...04.txt": "09f203357ce7e280a41b503b9722998db2de6dcd24526932a4a1c38efbfa1d52",
+    "docs/ARCHITECTURE.md": "a94e7694853d85d30217ddf71869147e15558bc917e34800b45cb8cffc5ddc9a",
+    "docs/ATTACK_SURFACE.md": "bf35d360efab6badb6c1a59e3166710061e1f94205ab94f3d85605bb4d360770",
+    "docs/CRYPTOGRAPHIC_SCOPE.md": "35dbf5f38afd3f20f5cf5d775f7dec504bd66bf4088861262c4b6afdb9e8910e",
+    "docs/CRYPTO_PROTOCOL.md": "95b5cfe7bb1adc79ef10033ff2580e02d48b323c44c3f2fbfaeb59585f87e3ed",
+    "docs/DECISIONS.md": "a12f08ddfba1d7895491b162f87364393bc0ad25186dadac7d77dc5e2e256740",
+    "docs/ENVIRONMENT.md": "2ca64fc710efab9dc13bc220566a44eaff1abce3691dd7f105dc0da4b245faa4",
+    "docs/IMPLEMENTATION_PLAN.md": "e3a1d9f69360c6538806d9140c916311648eef0cabe38378b8a133f9a3c7bf3a",
+    "docs/KEY_MANAGEMENT.md": "04643eb1bc6ce9cb613c6b7dbd7a58705427cf910138b59f7b9207269d7b08a9",
+    "docs/KNOWN_LIMITATIONS.md": "99d926ef08c0d46f7ff5e0de41d4b237d03203d65b94ce32dd5ffa6b1475f131",
+    "docs/LEDGER_PROTOCOL.md": "fe3d28b72b30224d6e5d2eacea9578b00de0c80580a03c769f1fc66ec6599298",
+    "docs/OFFLINE_DEPLOYMENT.md": "461c578895864d6fdb161518416a0fa91b1b0eee0c0942a24ff944ed6ca01451",
+    "docs/PACKAGE_FORMAT.md": "88923e235d88467984c7cb6984e2d1e20027bfefe94f14726d544c8de1fa7a51",
+    "docs/PHASE_0_REVIEW.md": "9368748d552e3ba33f5c035c68b986ccbac26cd72819de57932a28853d345315",
+    "docs/PHASE_0_VALIDATION.txt": "e17c808f32d348dfb6619f619f91d0beb3edc08aee3716dfb3d721a267f88e90",
+    "docs/PHASE_1_ASTRA_REAUDIT.txt": "4f1b9fa9f63d81d861694a71558f9120e5a1941285943ad9ef2f401530b0e5f4",
+    "docs/PHASE_1_CORRECTIONS_VALIDATION.txt": "7895d7ba34470deeafdd412f2e00998c7dd5f75751f09406512aeeab6a644973",
+    "docs/PHASE_1_ENVIRONMENT_RECHECK.txt": "03fe19d110fe7f0b63affedc3a3636a80ad246dc058d252f4557571192214234",
+    "docs/PHASE_1_ENVIRONMENT_VALIDATION.txt": "2a28b6f4cddad79a59ed14a342c89f28faa2999d42713bae40a96e372efc7968",
+    "docs/PHASE_1_Q01_READINESS.txt": "dd00050565077bef110fcc9f697b7411e4675ed7b842c169b44a4c7a3b3a17b1",
+    "docs/PHASE_1_REVIEW.md": "7b54cd1326d1dc1061f6e46ff27e6f115892ec0c29875a74197a01bc12ab22fc",
+    "docs/PHASE_1_VALIDATION.txt": "5b1b3f7377569ffe440d6b37033305b361551f0e42961745c21524257abd64b6",
+    "docs/PHASE_2A_ASTRA_CONFIRMATION.md": "e952b959d9994ca59a1dbee051ce40f9becbf2400a8cedb122c29112cac5a954",
+    "docs/PHASE_2A_ASTRA_CONFIRMATION_VALIDATION.txt": "441c3479bcb687ab6b244ee2a2e04b5f8a3e5d8a3e6e3d7d471f2cc09e5451b7",
+    "docs/PHASE_2A_ASTRA_FINAL_VALIDATION.txt": "170304f7123dc9062db5ab8ba621886601f51ff7d6817f2cade6a9df5cc8b239",
+    "docs/PHASE_2A_ASTRA_FINAL_VERIFICATION.md": "695bbf36a751059d3a3f96f546f208ac7a5161066bc7f1dafd4919f8eceb05cf",
+    "docs/PHASE_2A_ASTRA_REAUDIT.md": "3a8ec4d6fb0189f3cb9842c3c786401e049aed3faaec4420ba4235f296579b80",
+    "docs/PHASE_2A_ASTRA_REAUDIT_VALIDATION.txt": "521e55a487405e6e54d6071242ac575f192b15cd3c5ddfdcfe555f767f86426d",
+    "docs/PHASE_2A_CORRECTIONS_REVIEW.md": "ab3631ca8b46e86f8278d994562120eef2cbc07d86475c9eff6c5c6ec06f8dab",
+    "docs/PHASE_2A_CORRECTIONS_VALIDATION.txt": "d01e5736384b635e84ef4d761d9d98db71850800f373db64adeabc9810c73291",
+    "docs/PHASE_2A_FV_L01_CORRECTIONS_REVIEW.md": "3c11b6a8477d0ec453321180751476c2c20e15cc9ae4718d87712930de37465a",
+    "docs/PHASE_2A_FV_L01_CORRECTIONS_VALIDATION.txt": "2307cf7702e2a967444b6e2f08151a964f0b3b414c2a9763baa517bfca2da2b5",
+    "docs/PHASE_2A_L01_CORRECTIONS_REVIEW.md": "430400d0967bc8c86b5cf6dbc976ac2008d5cda58ea2d5e581d608c7eb88e032",
+    "docs/PHASE_2A_L01_CORRECTIONS_VALIDATION.txt": "ca47a0b708dfa46b033e0d3c1235e005a740ba0d73cb7f28c3ef39eb44f4220e",
+    "docs/PHASE_2A_REVIEW.md": "de13697761c902fdd09ba97746c8150cfd7d09f416839b7ac2d8cf64dda05e96",
+    "docs/PHASE_2A_VALIDATION.txt": "4a860fa882003455df6e10531bb8a77e9c616f609875e6b6d7741867b9b50ab8",
+    "docs/PHASE_2_REVIEW.md": "1b712315d1b9e27997f3a072d2ddd695a314346b4c6d86952fe83daf78bd9d12",
+    "docs/PHASE_2_VALIDATION.txt": "5d07a06bf6320b44ef4e20c1fa8a4e7af0220cc79296aaa30501ceb29067cd51",
+    "docs/PROJECT_SPEC.md": "6c7422be9bdd4cc29cd3813ac2bed96f4c6767b9f13e11cb533a21a8275ab933",
+    "docs/SECURITY_ASSUMPTIONS.md": "510bdc409df8441a80d3a38244b0979c038fb44604ca8617bfc36051659e4134",
+    "docs/TEST_MATRIX.md": "d746687220b6456c268aff6ed7d6f1321c0f9ceeed03ff5d2b26545bb9e20141",
+    "docs/THREAT_MODEL.md": "c84565c2df91e0237eeccf7971e2a6ff614cec3de5c0fd916381afbc1f547031",
+    "docs/USER_GUIDE.md": "8be1533ab05d4a143d46707a9c95030fb6ff842ba7b8bc17b4b2f07ff1f2306b",
+    "docs/WATERMARK_DESIGN.md": "34b612ed61c893076a5261b78afdc7a176cca1e5a25cbcee441077528c3a9168",
+    "forensic/README.md": "716072559c0dd8101c9f6ee8a2995c3b3e69e426eae8f4f3dd13164a126b492a",
+    "ledger/chaincode/README.md": "88c8f8f87ed51a9742127e007c91e347feaae7e2146f0d1f86a7cf7e844c6b20",
+    "ledger/network/README.md": "a58b9a44eaa10c660b00a01e3b455b63840cee87f8061ff5a4b53d58c9ce7c24",
+    "pki/README.md": "0ad2acdfcc38dfcfb0514624446623ce4998dcf13e82d89e7b6d8a936a067e0c",
+    "publisher/README.md": "edf47bf36968fe38b29740dc6bc48e11ec47f5cb179dfd478c100af06225837f",
+    "scripts/README.md": "a6a6c8b4d2920bd9beb7dc08c057fa594501a5958ab478e690b98681cd49e611",
+    "scripts/check_pqc_native.py": "e952717ad5c0ce67bc0499d1e778c7128eda1dfd11f286414b44a91a2a010063",
+    "scripts/check_pqc_source_pin.py": "154e7fa6b49bb994061bb0356c067082c7e2d44a52d4bdf3bd6202ce31992c2d",
+    "scripts/check_rng_policy.py": "e412a2aa22543fe0a8d6847dc2fb7a20b8b8acbe93f2de30c1ba39c267581c71",
+    "scripts/guard_rustc.py": "1c5c3e32c378c610643955dfdc810d2e67ac1a5493fc72f92f3ada63d816366f",
+    "scripts/guard_rustdoc.py": "1e2667afbf0e7f1dae9f21b0ee8e2ffdacbad1010abdc2289989d0271150c635",
+    "scripts/inspect_environment.py": "ca08eaaadf6e0f7bb76d79dbb104aa31abe0b9c28c33adeb389ce2e447b0f29f",
+    "scripts/probe_liboqs_readiness.py": "1b227aad8de753ea1acc5bbfa2740b96b98a633008c07946ac4dd65ff597447b",
+    "scripts/validate_phase0.py": "34952f138246ffce6b3520a8519a8809c0467cfda8721442418717f8e6363187",
+    "scripts/validate_phase1.py": "eb3a95894e5205095d75479aa71ffad83244f91e20a615d5db8e6db5ddb76dec",
+    "scripts/validate_phase2a.py": "75512286a01f50844f99771cd241c10abd6a43c528e956de4e4fadbe8acbb52b",
+    "tests/adversarial/README.md": "0ac754e2c23a85c3ebd18e8107c912500abb8bbf09169bb082c04c1ca2a1db2c",
+    "tests/fixtures/README.md": "e3f3d4c3638f5d73dc44604342c527801d7186ea75b6a34578574df3dbfee9fe",
+    "tests/integration/README.md": "6a5298d4b8450c8e06b3ddaed1ff3e8a6f2df8444c55fd797dd05761801594ad",
+    "trusted-client/Cargo.lock": "d1f55567351f624fdafd240363996cdb2fc0500b72c538fef7d332d4264f0a5d",
+    "trusted-client/Cargo.toml": "c568162fed23b09d970edfdc9ef2e63cc096a8a69956d07694c9a396cbf0b2f1",
+    "trusted-client/README.md": "969f28873e4cc9715dc5ecf7bf5e2b2d4006cebbcca5d9d104b85462d9389ab6",
+    "trusted-client/build.rs": "cea75a366ffa9417c25308c45072d16a629198099c6ea1c0f8f80b0bd19d7e63",
+    "trusted-client/native/oqs_shim.c": "e2bf14dfa38396108c7b5f4560b0d9627aa3258e726aa13ac434265699ced4c2",
+    "trusted-client/native/oqs_shim.h": "ef3145595ac60526d628c770038e0c44782a9cb4aa1f94e404d10000e31487e5",
+    "trusted-client/src/foundation/cbor.rs": "b364aa5bcd5d2b31b47132fa884d04c0475baede981d093f836cd708476ad910",
+    "trusted-client/src/foundation/crypto.rs": "34cc7246a78ff083ace3d8c9ef76ed44be3a3089b7387c5c7b775e46585521e1",
+    "trusted-client/src/foundation/error.rs": "8f86d6cbe2f5024dd2902c35ec65f0fa70387b3389bd4724929564b84e1bab6f",
+    "trusted-client/src/foundation/identifiers.rs": "fd947cfe433a697a6050e09e6d4cefe75e686c9edeae01effc199ae98a670c20",
+    "trusted-client/src/foundation/mod.rs": "ef2876b1986c98066b127cab2514e244b379bb90131d3241fdb2678878445e5b",
+    "trusted-client/src/foundation/secret.rs": "5b89b62a523a131f11a592b19751585693f2a3c32665dfc6cb0dc8b4eeca705a",
+    "trusted-client/src/foundation/tests.rs": "562e933edb11da0fc7aa8413d7020745a87827b17d68e1b0abf01f02497af6b2",
+    "trusted-client/src/lib.rs": "12ab3e1f7f22c72cbab7c6b86f66e59e2985da63b15ed1294227d5b492863bf0",
+    "trusted-client/src/pqc/error.rs": "f026269cb990c7ea93d457c3327aa554456ec17b9133ee48376ba090fa4ecb90",
+    "trusted-client/src/pqc/ffi.rs": "493672a8695b0df6718dc5dc8191abd76251822189038a30949f2fd37f4b82e3",
+    "trusted-client/src/pqc/kem.rs": "b4fffdf0de3d9ca2ae3add99183aa93cc713d897de2c6c43588d93b262f1e189",
+    "trusted-client/src/pqc/mod.rs": "c7cc50b0dbf92ada0f865d92c0d0cd59c93cc4479f4e992235141bd93a54061f",
+    "trusted-client/src/pqc/secret.rs": "68c1f64092af931733390b17726ee775cedd60baad066bd5b9fcaf738bacf4fd",
+    "trusted-client/src/pqc/signature.rs": "720e89e211e79c72dd881bbb985eefa6782b47d5729c4b5477f2d514ee996c49",
+    "trusted-client/src/pqc/tests.rs": "b916e7dacf2e5092daf0af11d013362b1ee0d4f10d944ae1c8aebc7ed7e4aba9",
+    "trusted-client/tests/native_contract.c": "091f35fe415a2bafe689854b22439550b7cb597f3051831e7e5a4e7b54b6f9ed",
+    "trusted-client/tests/support/partial_output.c": "4e0989e94595ba577f05927c1d9f6d309d28b184620e6919771ca31017d926cc",
+    "trusted-client/tests/support/partial_output.rs": "99b8f127bd375f40337635302f985ddea4abcf3768c8f4b98c5bf4536c7bd9ea",
+    "docs/PHASE_2A_ASTRA_AUDIT.md": "b35a54dedefed405fb9d0dd4719139b0c15d0eb196519cb43d5ec0cf1345b56f",
+    "docs/PHASE_2A_ASTRA_VALIDATION.txt": "98cc64a086c64bdaabf703fafce37f6edda91851dc1c8564e1e740ff1d4b7a5b"
+  }
+}
+
+POST-DOCUMENTATION CHECKS
+[
+  {
+    "command": [
+      "python3",
+      "scripts/validate_phase1.py"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "test_phase1_scope (__main__.PhaseOneScope.test_phase1_scope)\nPQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist. ... ok\ntest_01_documents (validate_phase0.PhaseZero.test_01_documents)\nP0-DOC-001: required documentation exists and is substantive. ... ok\ntest_03_links (validate_phase0.PhaseZero.test_03_links)\nP0-LINK-001: local Markdown links resolve inside the repository. ... ok\ntest_04_fences_and_examples (validate_phase0.PhaseZero.test_04_fences_and_examples)\nP0-SYNTAX-001: balanced fences and parseable shell/Python examples. ... ok\ntest_06_static_and_format (validate_phase0.PhaseZero.test_06_static_and_format)\nP0-STATIC-001: Python syntax and simple formatting policy. ... ok\ntest_07_matrix (validate_phase0.PhaseZero.test_07_matrix)\nP0-MATRIX-001: planned test IDs are unique and cover plan IDs. ... ok\ntest_08_mermaid_render (validate_phase0.PhaseZero.test_08_mermaid_render)\nP0-MERMAID-001: actual Mermaid rendering when tooling is installed. ... skipped 'mmdc unavailable; Mermaid render untested'\n\n----------------------------------------------------------------------\nRan 7 tests in 0.135s\n\nOK (skipped=1)\n"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

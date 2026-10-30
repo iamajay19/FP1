@@ -1,0 +1,62 @@
+› MODEL GPT-6 Astra Reasoning: HIGH This is the FINAL independent confirmation for Phase 2A. Do NOT perform another full Phase 2A audit. Do NOT begin Phase 2B. Do NOT begin Phase 3. The previous final Astra verification concluded: PHA…
+            ("doc-hidden-conflict", {"RUSTDOCFLAGS": APPROVED + " @" + str(files["conflict"])}, []),
+            ("doc-nested", {"RUSTDOCFLAGS": APPROVED + " @" + str(files["nested"])}, []),
+            ("doc-custom", {"RUSTDOCFLAGS": APPROVED + ' --cfg=getrandom_backend="custom"'}, []),
+            ("doc-missing", {"RUSTDOCFLAGS": ""}, []),
+            ("doc-encoded-response", {"CARGO_ENCODED_RUSTDOCFLAGS":
+                                      APPROVED + "\x1f@" + str(files["custom"])}, []),
+            ("doc-cli-response", {}, config_flags("build.rustdocflags",
+                                                  ["@" + str(files["custom"])])),
+            ("doc-cli-duplicate-response", {}, config_flags("build.rustdocflags",
+                                                            ["@" + str(files["duplicate"])])),
+            ("doc-cli-conflict", {}, config_flags("build.rustdocflags", [CUSTOM])),
+            ("doc-conflicting-sources", {"CARGO_ENCODED_RUSTDOCFLAGS": APPROVED,
+                                         "RUSTDOCFLAGS": '--cfg=getrandom_backend="custom"'}, []),
+            ("doc-cli-launcher-override", {}, ["--config", 'build.rustdoc="rustdoc"']),
+        ]
+        for name, updates, extra in doc_cases:
+            rejected([*doc, *extra], dict(env, **updates), "P2A-BUILD-003 " + name)
+        print(f"P2A-BUILD-003 PASS: {len(cases) + 1 + len(doc_cases)} actual Cargo "
+              "rejections; disposable response files removed", flush=True)
+ 
+ 
+def main():
+    env = os.environ.copy()
+    env.setdefault("CARGO_HOME", str(ROOT / ".deps/cargo-home"))
+    controls(env)
+ 
+ 
+if __name__ == "__main__":
+    main()
+✓ • 0ms
+    − Show less                                                                                                                                                                                                                             
+ 
+⚠ Heads up, you have less than 25% of your 5h limit left. Run /status for a breakdown.
+ 
+• Ran python3 - <<'PY' …
+  └ {"path": ".deps/p2a-fv-l01/targeted.log", "lines": 79, "sha256": "1579df923ff212924c88c9b8cefbce3fcddd7d83b9c866c61ce81f57af636df0", "source_matches": true, "exits": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1",…
+    {"path": ".deps/p2a-fv-l01/targeted.py", "lines": 10, "sha256": "784b78d3b49d8be52e98dc98770c7fdb2a7972f5a04ff3f750deb6d7e3599672", "source_matches": true, "exits": [], "assertion_error": false, "pass_lines": []}
+    Complete file consumed: 829104 characters 7059 lines; 48 artifact sections
+    + 104 lines (ctrl+t to expand)                                                                                                                                                                                                          
+ 
+• Ran tail -4 .deps/p2a-astra-confirmation/independent-run.log; cat .deps/p2a-astra-confirmation/core-results.json; git diff 4f265d9..HEAD --name-only; rg -n 'getrandom_backend' .deps/phase2-vendor/getrandom-0.4.3/src/backends.rs
+  └ 29:    } else if #[cfg(getrandom_backend = "windows_legacy")] {
+    32:    } else if #[cfg(getrandom_backend = "unsupported")] {
+    35:    } else if #[cfg(getrandom_backend = "extern_impl")] {
+    + 85 lines (ctrl+t to expand)                                                                                                                                                                                                           
+ 
+⚠ Heads up, you have less than 5% of your 5h limit left. Run /status for a breakdown.
+ 
+• Ran mkdir -p .deps/p2a-astra-confirmation …
+  └ (no output)
+    + Show details                                                                                                                                                                                                                          
+ 
+■ You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 14th, 2026 12:07 AM.
+ 
+  1 background terminal running · /ps to view · /stop to close
+ 
+ 
+› Ask Codex to do anything
+ 
+  GPT-6-Astra high fast · ~/Projects/FP1 · Review security project documents
+  ? for shortcuts                                                                                                                                                                                                 ⚠ 3 warnings · f2 to view

@@ -47,3 +47,19 @@ pub fn sign(secret_key: &SecretKey, message: &[u8]) -> Result<Vec<u8>, Error> {
 pub fn verify(public_key: &[u8], message: &[u8], signature: &[u8]) -> Result<bool, Error> {
     ffi::verify(public_key, message, signature)
 }
+
+// Crate-internal storage boundary only; no public raw getter/importer.
+impl SecretKey {
+    pub(crate) fn with_storage_bytes<R>(&self, f: impl FnOnce(&[u8]) -> R) -> R {
+        f(self.0.as_slice())
+    }
+    pub(crate) fn from_storage(bytes: Vec<u8>) -> Result<Self, Error> {
+        let owner = SecretBuffer::adopt_storage(bytes);
+        super::error::check_length(
+            "stored signature secret key",
+            owner.as_slice().len(),
+            SECRET_KEY_LENGTH,
+        )?;
+        Ok(Self(owner))
+    }
+}

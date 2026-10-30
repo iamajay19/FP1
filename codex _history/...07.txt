@@ -1,0 +1,62 @@
+  ## Residual limitations
+  ## Required corrections
+  ## Phase 2A gate recommendation
+ 
+  Finish with exactly one:
+ 
+  PHASE 2A SECURITY AUDIT: APPROVED
+ 
+  or
+ 
+  PHASE 2A SECURITY AUDIT: APPROVED WITH REQUIRED FIXES
+ 
+  or
+ 
+  PHASE 2A SECURITY AUDIT: REJECTED
+ 
+  Do NOT begin Phase 2B.
+  Do NOT begin Phase 3.
+ 
+  STOP.
+ 
+ 
+• I’ll audit the repository and recorded evidence read-only first, then run fresh offline builds and targeted probes for CBOR canonicality, allocation bounds, RNG overrides and secret cleanup. I’ll record any findings without changing
+  production code.
+ 
+• Ran pwd …
+  └ 93b4671 Close Phase 2 dependency and design gates
+    a157ec7 ignore codex history
+    da8f15c modified gitignore
+    + 25 lines (ctrl+t to expand)                                                                                                                                                                                                           
+ 
+• Ran cat AGENTS.md docs/ARCHITECTURE.md docs/CRYPTOGRAPHIC_SCOPE.md docs/THREAT_MODEL.md docs/ATTACK_SURFACE.md docs/SECURITY_ASSUMPTIONS.md
+  └ debugging, sophisticated collusion, and guaranteed survival after arbitrary OCR
+    are outside the initial prototype, per the project specification. Same-user key
+    access and custom-client bypass are disclosed even without root privileges.
+    + 838 lines (ctrl+t to expand)                                                                                                                                                                                                          
+ 
+• Ran cat docs/CRYPTO_PROTOCOL.md docs/KEY_MANAGEMENT.md docs/DECISIONS.md
+  └ rows remain PLANNED. Q-02/Q-03 design is unchanged, with benchmark/recovery and trusted
+    time/host rollback still open. Phase 2B requires review and explicit approval; no
+    Phase 3 authorization. PHASE_2A_REVIEW.md / PHASE_2A_VALIDATION.txt record current evidence.
+    + 714 lines (ctrl+t to expand)                                                                                                                                                                                                          
+ 
+• Explored
+  └ Read PROJECT_SPEC.md
+    + Show details                                                                                                                                                                                                                          
+ 
+⚠ Heads up, you have less than 5% of your 5h limit left. Run /status for a breakdown.
+ 
+• Ran cat docs/CRYPTO_PROTOCOL.md docs/KEY_MANAGEMENT.md
+  └ whole-host rollback is explicitly residual. Independently retained authenticated
+    checkpoints, restore procedures and protected clock/counter facilities are later
+    operational/deployment decisions under Q-03/Q-04, not implemented in this task.
+    + 438 lines (ctrl+t to expand)                                                                                                                                                                                                          
+ 
+■ You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at 6:28 AM.
+ 
+ 
+› Ask Codex to do anything
+ 
+  GPT-6-Astra high fast · ~/Projects/FP1 · Review security project documents · Main [default]
+  ← for agents · ? for shortcuts                                                                                                                                                                                  ⚠ 3 warnings · f2 to view

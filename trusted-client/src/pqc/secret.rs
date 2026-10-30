@@ -8,6 +8,12 @@ pub(super) struct SecretBuffer {
 }
 
 impl SecretBuffer {
+    // Phase 2B transfers an authenticated, fixed-length heap allocation here.
+    // Wrap before validating so an error still uses the audited cleanse Drop.
+    pub(super) fn adopt_storage(bytes: Vec<u8>) -> Self {
+        Self { bytes }
+    }
+
     pub(super) fn zeroed(length: usize) -> Result<Self, Error> {
         let mut bytes = Vec::new();
         bytes

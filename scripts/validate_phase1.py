@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class PhaseOneScope(unittest.TestCase):
     def test_phase1_scope(self):
-        """PQC-SCOPE-001: only PQ primitives and authorized Phase 2A foundations exist."""
+        """PQC-SCOPE-001: approved PQC/foundation/storage only; other phases stay absent."""
         for directory in (
             "pki", "publisher", "ledger/network", "ledger/chaincode", "forensic",
             "tests/integration", "tests/adversarial", "tests/fixtures",
@@ -30,6 +30,11 @@ class PhaseOneScope(unittest.TestCase):
             "src/foundation/cbor.rs", "src/foundation/crypto.rs",
             "src/foundation/identifiers.rs", "src/foundation/secret.rs",
             "src/foundation/tests.rs",
+            # Explicitly authorized Phase 2B storage; no CA/PoP/CRL workflow.
+            "src/storage/mod.rs", "src/storage/error.rs", "src/storage/secret.rs",
+            "src/storage/kdf.rs", "src/storage/schema.rs", "src/storage/aead.rs",
+            "src/storage/persistence.rs", "src/storage/tests.rs",
+            "src/bin/argon2_bench.rs",
         }
         actual = {
             str(p.relative_to(client)) for p in client.rglob("*")

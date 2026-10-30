@@ -1,0 +1,62 @@
+  - any regression directly introduced by this correction.
+ 
+  Do not reopen unrelated Phase 2A areas without new evidence.
+ 
+  ==================================================
+  11. FINAL REPORT
+  ==================================================
+ 
+  Return:
+ 
+  # Final Phase 2A Astra Confirmation
+ 
+  ## Cache-failure reproduction
+  ## Same-target recovery sequences
+  ## Exact query-exception review
+  ## Artifact-compilation enforcement
+  ## Negative-test independence
+  ## Existing RNG protections
+  ## Preservation check
+  ## Tests executed
+  ## Findings
+ 
+  ### CRITICAL
+  ### HIGH
+  ### MEDIUM
+  ### LOW
+  ### INFORMATIONAL
+ 
+  ## P2A-FV-L01 status
+  ## Phase 2A final gate recommendation
+ 
+  Finish with exactly one:
+ 
+  PHASE 2A SECURITY FINAL CONFIRMATION: APPROVED
+ 
+  or
+ 
+  PHASE 2A SECURITY FINAL CONFIRMATION: APPROVED WITH REQUIRED FIXES
+ 
+  or
+ 
+  PHASE 2A SECURITY FINAL CONFIRMATION: REJECTED
+ 
+  Do NOT begin Phase 2B.
+  Do NOT begin Phase 3.
+ 
+  STOP.
+ 
+ 
+• I’ll independently verify the cache-recovery correction, inspect the query exceptions, and rerun the required tests. I’ll keep the review limited to P2A-FV-L01 and its effect on the existing RNG policy, with no production-code
+  changes.
+ 
+• Ran cat scripts/guard_rustc.py scripts/guard_rustdoc.py .cargo/config.toml trusted-client/src/lib.rs
+  └
+    pub mod foundation;
+    pub mod pqc;
+                                                                                                           ↓ Back to bottom · esc 
+ 
+› Ask Codex to do anything
+ 
+  GPT-6-Astra high fast · ~/Projects/FP1 · Review security project documents
+  Earlier messages available.  enter/esc latest · ? shortcuts                                                                                                                                                      ⚠ 1 warning · f2 to view
